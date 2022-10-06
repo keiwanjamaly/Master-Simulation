@@ -5,9 +5,19 @@
 #ifndef SIMULATION_GRAPH_H
 #define SIMULATION_GRAPH_H
 
+#include "Leave.h"
+#include "Types.h"
+
 namespace dp {
 
-    class Graph {
+    template <Graph_Data T> class Graph {
+    private:
+        Leave<T> root;
+    public:
+        explicit Graph(bool (*func)(std::vector<double>, std::vector<double>));
+        void graph_split(bool force = false);
+        void compute_leaves();
+
 
     };
 

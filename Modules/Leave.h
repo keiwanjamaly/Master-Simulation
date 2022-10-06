@@ -5,12 +5,25 @@
 #ifndef SIMULATION_LEAVE_H
 #define SIMULATION_LEAVE_H
 
+#include "Types.h"
+#include <vector>
+
 namespace dp {
-    template <class T> class Leave {
+    template <Graph_Data T> class Leave {
     public:
-        Leave(T const&, Leave const&);
-        Leave(T const&);
+        std::vector<Leave<T>> children;
+        Leave<T> parent;
+        T data;
+        double x, y;
+
+        explicit Leave(T const& data, Leave const& parent_, double x_, double y_);
+        explicit Leave(T const& data, double x_, double y_);
+
+        void attach_leaves();
+        void compute();
     };
+
+
 
 } // dp
 

@@ -5,6 +5,25 @@
 #include "Leave.h"
 
 namespace dp {
-    template <class T> Leave<T>::Leave(T const& U, Leave const& parent) {}
-    template <class T> Leave<T>::Leave(T const& U) {}
+
+
+    template<Graph_Data T>
+    void Leave<T>::attach_leaves() {
+
+    }
+
+    template<Graph_Data T>
+    void Leave<T>::compute() {
+
+    }
+
+    template<Graph_Data T>
+    Leave<T>::Leave(const T &data, const Leave &parent, double x_, double y_) {
+
+    }
+
+    template<Graph_Data T>
+    Leave<T>::Leave(const T &data, double x_, double y_) {
+
+    }
 } // dp
