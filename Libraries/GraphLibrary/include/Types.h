@@ -14,3 +14,4 @@ concept Graph_Data = requires(T data) {
 enum Direction {NW, NO, SW, SO};
 
 #endif //SIMULATION_TYPES_H
+
