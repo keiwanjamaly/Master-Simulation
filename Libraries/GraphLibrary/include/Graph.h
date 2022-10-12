@@ -10,12 +10,19 @@
 
 namespace dp {
 
-    template <Graph_Data T> class Graph {
+    template<Graph_Data T>
+    class Graph {
     private:
-        Leaf<T> root;
     public:
-        explicit Graph(bool (*func)(std::vector<double>, std::vector<double>));
+        Leaf<T> root;
+
+        explicit Graph();
+
+        explicit Graph(bool (*func)(std::vector<double>, std::vector<double>), double x_, double y_, double x_min,
+                       double x_max, double y_min, double y_max);
+
         void graph_split(bool force = false);
+
         void compute_leaves();
 
 

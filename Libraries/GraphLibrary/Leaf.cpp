@@ -3,27 +3,8 @@
 //
 
 #include "Leaf.h"
+#include <iostream>
 
 namespace dp {
 
-
-    template<Graph_Data T>
-    void Leaf<T>::attach_leaves() {
-
-    }
-
-    template<Graph_Data T>
-    void Leaf<T>::compute() {
-
-    }
-
-    template<Graph_Data T>
-    Leaf<T>::Leaf(const T &data, double x_, double y_, const Leaf &parent) {
-
-    }
-
-    template<Graph_Data T>
-    Leaf<T>::Leaf(const T &data, double x_, double y_) {
-
-    }
 } // dp
