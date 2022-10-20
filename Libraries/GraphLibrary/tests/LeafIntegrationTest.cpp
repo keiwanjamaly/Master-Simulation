@@ -90,6 +90,10 @@ namespace dp {
         ASSERT_EQ(leaf_ne->north_neighbour(), nullptr);
         ASSERT_EQ(leaf_sw->north_neighbour(), leaf_nw);
         ASSERT_EQ(leaf_se->north_neighbour(), leaf_ne);
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        leaf_nw_se->attach_leaves();
+        ASSERT_EQ(leaf_sw_sw->children[nw].north_neighbour(), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testEastNeighbourFunction) {
@@ -122,6 +126,10 @@ namespace dp {
         ASSERT_EQ(leaf_ne->east_neighbour(), nullptr);
         ASSERT_EQ(leaf_sw->east_neighbour(), leaf_se);
         ASSERT_EQ(leaf_se->east_neighbour(), nullptr);
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        leaf_nw_se->attach_leaves();
+        ASSERT_EQ(leaf_sw_sw->children[ne].east_neighbour(), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testSouthNeighbourFunction) {
@@ -154,6 +162,10 @@ namespace dp {
         ASSERT_EQ(leaf_ne->south_neighbour(), leaf_se);
         ASSERT_EQ(leaf_sw->south_neighbour(), nullptr);
         ASSERT_EQ(leaf_se->south_neighbour(), nullptr);
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        leaf_nw_se->attach_leaves();
+        ASSERT_EQ(leaf_sw_sw->children[se].south_neighbour(), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testWestNeighbourFunction) {
@@ -186,6 +198,11 @@ namespace dp {
         ASSERT_EQ(leaf_ne->east_neighbour(), leaf_nw);
         ASSERT_EQ(leaf_sw->east_neighbour(), nullptr);
         ASSERT_EQ(leaf_se->east_neighbour(), leaf_sw);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        leaf_nw_se->attach_leaves();
+        ASSERT_EQ(leaf_sw_sw->children[sw].west_neighbour(), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, TestNorthComparison) {
