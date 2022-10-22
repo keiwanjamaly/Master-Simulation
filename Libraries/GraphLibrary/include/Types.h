@@ -5,6 +5,7 @@
 #ifndef SIMULATION_TYPES_H
 #define SIMULATION_TYPES_H
 
+
 template<class T>
 concept Graph_Data = requires(T data, const double x, const double y) {
     data.splitDecisionData();
@@ -17,6 +18,10 @@ concept Graph_Data = requires(T data, const double x, const double y) {
 
 enum ChildDirection {
     nw, ne, sw, se
+};
+
+enum Direction {
+    north, east, south, west
 };
 
 #endif //SIMULATION_TYPES_H

@@ -39,7 +39,7 @@ namespace dp {
         // sw_nw, sw_ne, se_nw, se_ne
         // sw_sw, sw_se, se_sw, se_se
         Leaf<Line> ne_block = root.children[ne];
-        ASSERT_EQ(ne_block.children[nw].children.size(), 4);
+        ASSERT_EQ(ne_block.children[nw].children.size(), 0);
         ASSERT_EQ(ne_block.children[ne].children.size(), 4);
         ASSERT_EQ(ne_block.children[sw].children.size(), 4);
         ASSERT_EQ(ne_block.children[se].children.size(), 4);
@@ -50,7 +50,7 @@ namespace dp {
         // sw_nw, sw_ne, se_nw, se_ne
         // sw_sw, sw_se, se_sw, se_se
         Leaf<Line> sw_block = root.children[sw];
-        ASSERT_EQ(sw_block.children[nw].children.size(), 4);
+        ASSERT_EQ(sw_block.children[nw].children.size(), 0);
         ASSERT_EQ(sw_block.children[ne].children.size(), 4);
         ASSERT_EQ(sw_block.children[sw].children.size(), 4);
         ASSERT_EQ(sw_block.children[se].children.size(), 4);

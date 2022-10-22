@@ -41,6 +41,7 @@ namespace dp {
     public:
         double x{}, y{};
         std::vector<double> value;
+        bool computed = false;
 
         Line() = default;
 

@@ -21,20 +21,26 @@ namespace dp {
     }
 
     std::vector<double> Data::splitDecisionData() {
+        if (!computed)
+            this->compute();
         return value;
     }
 
     Line::Line(double x_, double y_) : x(x_), y(y_) {}
 
     void Line::compute() {
-        if (y >= x) {
-            value = {0.0};
-        } else {
-            value = {1.0};
+        if (!computed) {
+            if (y >= x) {
+                value = {0.0};
+            } else {
+                value = {1.0};
+            }
         }
     }
 
     std::vector<double> Line::splitDecisionData() {
+        if (!computed)
+            this->compute();
         return value;
     }
 
@@ -59,6 +65,8 @@ namespace dp {
     }
 
     std::vector<double> Data_H::splitDecisionData() {
+        if (!computed)
+            this->compute();
         return value;
     }
 } // dp
