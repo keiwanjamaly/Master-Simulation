@@ -4,11 +4,11 @@
 #include "gtest/gtest.h"
 #include "Leaf.h"
 #include "Types.h"
-#include "TestData.cpp"
+#include "TestData.h"
 
 namespace dp {
 
-    class NeighbourLeafTestFixture : public ::testing::Test {
+    class NeighbourLeafTestFixture_H : public ::testing::Test {
         // I'm going to test the neighbours of the following points
         // test points      test labels
         // x, 0, 0, x       nw_nw, nw_ne, ne_nw, ne_ne
@@ -23,13 +23,17 @@ namespace dp {
             x = 0.0;
             y = 0.0;
             box_size = 1.0;
-            test_leaf = Leaf<Data>(x, y, box_size, split_decision);
+            test_leaf = Leaf<Data_H>(x, y, box_size, split_decision);
 
             test_leaf.attach_leaves();
             leaf_nw = &(test_leaf.children[nw]);
+            leaf_nw->attach_leaves();
             leaf_ne = &(test_leaf.children[ne]);
+            leaf_ne->attach_leaves();
             leaf_sw = &(test_leaf.children[sw]);
+            leaf_sw->attach_leaves();
             leaf_se = &(test_leaf.children[se]);
+            leaf_se->attach_leaves();
 
             leaf_nw_nw = &(leaf_nw->children[nw]);
             leaf_nw_ne = &(leaf_nw->children[ne]);
@@ -50,6 +54,65 @@ namespace dp {
             leaf_se_ne = &(leaf_se->children[ne]);
             leaf_se_sw = &(leaf_se->children[sw]);
             leaf_se_se = &(leaf_se->children[se]);
+
+            leaf_nw_se->attach_leaves();
+        }
+
+        Leaf<Data_H> test_leaf;
+        Leaf<Data_H> *test_child;
+        double x{}, y{}, box_size{};
+        Leaf<Data_H> *leaf_nw_nw, *leaf_nw_ne, *leaf_nw_sw, *leaf_nw_se, *leaf_ne_nw, *leaf_ne_ne, *leaf_ne_sw, *leaf_ne_se, *leaf_sw_nw, *leaf_sw_ne, *leaf_sw_sw, *leaf_sw_se, *leaf_se_nw, *leaf_se_ne, *leaf_se_sw, *leaf_se_se;
+        Leaf<Data_H> *leaf_nw, *leaf_ne, *leaf_sw, *leaf_se;
+    };
+
+    class NeighbourLeafTestFixture : public ::testing::Test {
+        // I'm going to test the neighbours of the following points
+        // test points      test labels
+        // x, 0, 0, x       nw_nw, nw_ne, ne_nw, ne_ne
+        // 0, x, 0, 0       nw_sw, nw_se, ne_sw, ne_se
+        // 0, 0, x, 0       sw_nw, sw_ne, se_nw, se_ne
+        // x, 0, 0, x       sw_sw, sw_se, se_sw, se_se
+
+        // testing values outside the boundary should result in a null-pointer
+
+    protected:
+        void SetUp() override {
+            x = 0.0;
+            y = 0.0;
+            box_size = 1.0;
+            test_leaf = Leaf<Data>(x, y, box_size, split_decision);
+
+            test_leaf.attach_leaves();
+            leaf_nw = &(test_leaf.children[nw]);
+            leaf_nw->attach_leaves();
+            leaf_ne = &(test_leaf.children[ne]);
+            leaf_ne->attach_leaves();
+            leaf_sw = &(test_leaf.children[sw]);
+            leaf_sw->attach_leaves();
+            leaf_se = &(test_leaf.children[se]);
+            leaf_se->attach_leaves();
+
+            leaf_nw_nw = &(leaf_nw->children[nw]);
+            leaf_nw_ne = &(leaf_nw->children[ne]);
+            leaf_nw_sw = &(leaf_nw->children[sw]);
+            leaf_nw_se = &(leaf_nw->children[se]);
+
+            leaf_ne_nw = &(leaf_ne->children[nw]);
+            leaf_ne_ne = &(leaf_ne->children[ne]);
+            leaf_ne_sw = &(leaf_ne->children[sw]);
+            leaf_ne_se = &(leaf_ne->children[se]);
+
+            leaf_sw_nw = &(leaf_sw->children[nw]);
+            leaf_sw_ne = &(leaf_sw->children[ne]);
+            leaf_sw_sw = &(leaf_sw->children[sw]);
+            leaf_sw_se = &(leaf_sw->children[se]);
+
+            leaf_se_nw = &(leaf_se->children[nw]);
+            leaf_se_ne = &(leaf_se->children[ne]);
+            leaf_se_sw = &(leaf_se->children[sw]);
+            leaf_se_se = &(leaf_se->children[se]);
+
+            leaf_nw_se->attach_leaves();
         }
 
         Leaf<Data> test_leaf;
@@ -59,6 +122,36 @@ namespace dp {
         Leaf<Data> *leaf_nw, *leaf_ne, *leaf_sw, *leaf_se;
     };
 
+    TEST_F(NeighbourLeafTestFixture, GetDepthFunction) {
+        ASSERT_EQ(test_leaf.get_depth(), 0);
+        ASSERT_EQ(leaf_nw->get_depth(), 1);
+        ASSERT_EQ(leaf_ne->get_depth(), 1);
+        ASSERT_EQ(leaf_sw->get_depth(), 1);
+        ASSERT_EQ(leaf_se->get_depth(), 1);
+
+        ASSERT_EQ(leaf_nw_nw->get_depth(), 2);
+        ASSERT_EQ(leaf_nw_ne->get_depth(), 2);
+        ASSERT_EQ(leaf_nw_sw->get_depth(), 2);
+        ASSERT_EQ(leaf_nw_se->get_depth(), 2);
+        ASSERT_EQ(leaf_ne_nw->get_depth(), 2);
+        ASSERT_EQ(leaf_ne_ne->get_depth(), 2);
+        ASSERT_EQ(leaf_ne_sw->get_depth(), 2);
+        ASSERT_EQ(leaf_ne_se->get_depth(), 2);
+        ASSERT_EQ(leaf_sw_nw->get_depth(), 2);
+        ASSERT_EQ(leaf_sw_ne->get_depth(), 2);
+        ASSERT_EQ(leaf_sw_sw->get_depth(), 2);
+        ASSERT_EQ(leaf_sw_se->get_depth(), 2);
+        ASSERT_EQ(leaf_se_nw->get_depth(), 2);
+        ASSERT_EQ(leaf_se_ne->get_depth(), 2);
+        ASSERT_EQ(leaf_se_sw->get_depth(), 2);
+        ASSERT_EQ(leaf_se_se->get_depth(), 2);
+
+        // leaf_nw_se
+        ASSERT_EQ(leaf_nw_se->children[nw].get_depth(), 3);
+        ASSERT_EQ(leaf_nw_se->children[ne].get_depth(), 3);
+        ASSERT_EQ(leaf_nw_se->children[sw].get_depth(), 3);
+        ASSERT_EQ(leaf_nw_se->children[se].get_depth(), 3);
+    }
 
     TEST_F(NeighbourLeafTestFixture, testNorthNeighbourFunction) {
         // testing nw_nw neighbour function
@@ -92,8 +185,7 @@ namespace dp {
         ASSERT_EQ(leaf_se->north_neighbour(), leaf_ne);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        leaf_nw_se->attach_leaves();
-        ASSERT_EQ(leaf_sw_sw->children[nw].north_neighbour(), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[nw].north_neighbour(), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testEastNeighbourFunction) {
@@ -128,8 +220,7 @@ namespace dp {
         ASSERT_EQ(leaf_se->east_neighbour(), nullptr);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        leaf_nw_se->attach_leaves();
-        ASSERT_EQ(leaf_sw_sw->children[ne].east_neighbour(), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[ne].east_neighbour(), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testSouthNeighbourFunction) {
@@ -164,8 +255,7 @@ namespace dp {
         ASSERT_EQ(leaf_se->south_neighbour(), nullptr);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        leaf_nw_se->attach_leaves();
-        ASSERT_EQ(leaf_sw_sw->children[se].south_neighbour(), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[se].south_neighbour(), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testWestNeighbourFunction) {
@@ -194,18 +284,17 @@ namespace dp {
         ASSERT_EQ(test_child->west_neighbour(), leaf_se_sw);
 
 // test, that only it gives the neighbour only on one level
-        ASSERT_EQ(leaf_nw->east_neighbour(), nullptr);
-        ASSERT_EQ(leaf_ne->east_neighbour(), leaf_nw);
-        ASSERT_EQ(leaf_sw->east_neighbour(), nullptr);
-        ASSERT_EQ(leaf_se->east_neighbour(), leaf_sw);
+        ASSERT_EQ(leaf_nw->west_neighbour(), nullptr);
+        ASSERT_EQ(leaf_ne->west_neighbour(), leaf_nw);
+        ASSERT_EQ(leaf_sw->west_neighbour(), nullptr);
+        ASSERT_EQ(leaf_se->west_neighbour(), leaf_sw);
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        leaf_nw_se->attach_leaves();
-        ASSERT_EQ(leaf_sw_sw->children[sw].west_neighbour(), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[sw].west_neighbour(), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestNorthComparison) {
+    TEST_F(NeighbourLeafTestFixture_H, TestNorthComparison) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
         ASSERT_FALSE(test_child->north_comparison());
@@ -220,7 +309,7 @@ namespace dp {
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_FALSE(test_child->north_comparison());
+        ASSERT_TRUE(test_child->north_comparison());
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
@@ -269,7 +358,7 @@ namespace dp {
         ASSERT_FALSE(leaf_se->east_comparison());
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestSouthComparison) {
+    TEST_F(NeighbourLeafTestFixture_H, TestSouthComparison) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
         ASSERT_FALSE(test_child->south_comparison());
@@ -280,7 +369,7 @@ namespace dp {
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_FALSE(test_child->south_comparison());
+        ASSERT_TRUE(test_child->south_comparison());
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;

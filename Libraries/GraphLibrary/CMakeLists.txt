@@ -12,3 +12,7 @@ set(GRAPH_TEST_SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/TestData.cpp
         CACHE INTERNAL "")
 
+set(GRAPH_TEST_INCLUDE
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/include
+        CACHE INTERNAL "")
+

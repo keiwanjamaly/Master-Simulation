@@ -14,7 +14,9 @@ set(LIBRARIES "Graph_lib")
 target_link_libraries(Simulation ${LIBRARIES})
 
 set(TEST_SOURCE ${GRAPH_TEST_SOURCE})
+set(TEST_INCLUDES ${GRAPH_TEST_INCLUDE})
 
 add_executable(Test ${TEST_SOURCE})
+target_include_directories(Test PUBLIC ${TEST_INCLUDES})
 target_link_libraries(Test ${LIBRARIES})
 target_link_libraries(Test gtest gtest_main)
