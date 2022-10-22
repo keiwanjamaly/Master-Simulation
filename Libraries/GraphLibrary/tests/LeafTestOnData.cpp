@@ -34,8 +34,8 @@ namespace dp {
         // of the floating point operation.
 
         // ne block
-        // nw_nw, nw_ne, ne_nw, ne_ne
-        // nw_sw, nw_se, ne_sw, ne_se
+        // nw_nw       , ne_nw, ne_ne
+        //             , ne_sw, ne_se
         // sw_nw, sw_ne, se_nw, se_ne
         // sw_sw, sw_se, se_sw, se_se
         Leaf<Line> ne_block = root.children[ne];
@@ -45,8 +45,8 @@ namespace dp {
         ASSERT_EQ(ne_block.children[se].children.size(), 4);
 
         // sw block
-        // nw_nw, nw_ne, ne_nw, ne_ne
-        // nw_sw, nw_se, ne_sw, ne_se
+        // nw          , ne_nw, ne_ne
+        //             , ne_sw, ne_se
         // sw_nw, sw_ne, se_nw, se_ne
         // sw_sw, sw_se, se_sw, se_se
         Leaf<Line> sw_block = root.children[sw];
