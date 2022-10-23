@@ -110,51 +110,6 @@ namespace dp {
         ASSERT_EQ(test_leaf.children[se].children.size(), 0);
     }
 
-// test compute
-    TEST_F(LeafTestFixture, computeIsWorking) {
-        test_leaf.compute();
-        ASSERT_EQ(test_leaf.data.value[0], 1.0);
-
-        // check recursive feature of compute
-        test_leaf.attach_leaves();
-        test_leaf.compute();
-        Leaf<Data> test_child;
-        Data test_data;
-        double child_x, child_y;
-
-        // test compute in nw direction
-        test_child = test_leaf.children[nw];
-        child_x = test_child.x;
-        child_y = test_child.y;
-        test_data = Data(child_x, child_y);
-        test_data.compute();
-        ASSERT_FLOAT_EQ(test_child.data.value[0], test_data.splitDecisionData()[0]);
-
-        // test compute in ne direction
-        test_child = test_leaf.children[ne];
-        child_x = test_child.x;
-        child_y = test_child.y;
-        test_data = Data(child_x, child_y);
-        test_data.compute();
-        ASSERT_FLOAT_EQ(test_child.data.value[0], test_data.splitDecisionData()[0]);
-
-        // test compute in sw direction
-        test_child = test_leaf.children[sw];
-        child_x = test_child.x;
-        child_y = test_child.y;
-        test_data = Data(child_x, child_y);
-        test_data.compute();
-        ASSERT_FLOAT_EQ(test_child.data.value[0], test_data.splitDecisionData()[0]);
-
-        // test compute in se direction
-        test_child = test_leaf.children[se];
-        child_x = test_child.x;
-        child_y = test_child.y;
-        test_data = Data(child_x, child_y);
-        test_data.compute();
-        ASSERT_FLOAT_EQ(test_child.data.value[0], test_data.splitDecisionData()[0]);
-    }
-
     // test isRoot()
     TEST_F(LeafTestFixture, testIsRoot) {
         test_leaf.attach_leaves();

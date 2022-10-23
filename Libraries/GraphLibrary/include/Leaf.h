@@ -125,22 +125,6 @@ namespace dp {
     }
 
     template<Graph_Data T>
-    void Leaf<T>::compute() {
-        data.compute();
-        if (children.size() == 4) {
-            std::thread thread_nw = std::thread(&Leaf<T>::compute, &children[nw]);
-            std::thread thread_ne = std::thread(&Leaf<T>::compute, &children[ne]);
-            std::thread thread_sw = std::thread(&Leaf<T>::compute, &children[sw]);
-            std::thread thread_se = std::thread(&Leaf<T>::compute, &children[se]);
-
-            thread_nw.join();
-            thread_ne.join();
-            thread_sw.join();
-            thread_se.join();
-        }
-    }
-
-    template<Graph_Data T>
     bool Leaf<T>::isRoot() {
         if (parent == nullptr)
             return true;
