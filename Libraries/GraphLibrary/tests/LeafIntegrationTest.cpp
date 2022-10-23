@@ -6,6 +6,8 @@
 #include "Types.h"
 #include "TestData.h"
 
+#include <set>
+
 namespace dp {
 
     class NeighbourLeafTestFixture_H : public ::testing::Test {
@@ -121,6 +123,35 @@ namespace dp {
         Leaf<Data> *leaf_nw_nw, *leaf_nw_ne, *leaf_nw_sw, *leaf_nw_se, *leaf_ne_nw, *leaf_ne_ne, *leaf_ne_sw, *leaf_ne_se, *leaf_sw_nw, *leaf_sw_ne, *leaf_sw_sw, *leaf_sw_se, *leaf_se_nw, *leaf_se_ne, *leaf_se_sw, *leaf_se_se;
         Leaf<Data> *leaf_nw, *leaf_ne, *leaf_sw, *leaf_se;
     };
+
+
+    // test get_all_leafs
+    TEST_F(NeighbourLeafTestFixture, getAllLeafes) {
+        std::vector<Leaf<Data> *> all_leafs = test_leaf.get_all_leafs();
+        std::set<Leaf<Data> *> all_leafs_set(all_leafs.begin(), all_leafs.end());
+        // reference set
+        std::set<Leaf<Data> *> reference_set({&test_leaf, leaf_nw_nw, leaf_nw_ne, leaf_nw_sw, leaf_nw_se, leaf_ne_nw,
+                                              leaf_ne_ne, leaf_ne_sw, leaf_ne_se, leaf_sw_nw, leaf_sw_ne, leaf_sw_sw,
+                                              leaf_sw_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se, leaf_nw,
+                                              leaf_ne, leaf_sw, leaf_se, &(leaf_nw_se->children[nw]),
+                                              &(leaf_nw_se->children[ne]), &(leaf_nw_se->children[sw]),
+                                              &(leaf_nw_se->children[se])});
+
+        // no doubled elements
+        ASSERT_EQ(all_leafs_set.size(), all_leafs.size());
+        // all elements are included
+        ASSERT_EQ(all_leafs_set, reference_set);
+
+        // check, that it also work on a sub_tree and, that it does include only the leafs in the subtree
+        std::vector<Leaf<Data> *> sub_leafs = leaf_se->get_all_leafs();
+        std::set<Leaf<Data> *> sub_leafs_set(sub_leafs.begin(), sub_leafs.end());
+        std::set<Leaf<Data> *> sub_reference_set({leaf_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se});
+
+        // no doubled elements
+        ASSERT_EQ(sub_leafs.size(), sub_leafs_set.size());
+        // all elements are included
+        ASSERT_EQ(sub_leafs_set, sub_reference_set);
+    }
 
     TEST_F(NeighbourLeafTestFixture, GetDepthFunction) {
         ASSERT_EQ(test_leaf.get_depth(), 0);

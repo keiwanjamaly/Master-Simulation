@@ -26,9 +26,9 @@ namespace dp {
 
         std::map<Direction, std::array<ChildDirection, 7>> nm{
                 {north, {sw, nw, se, ne, nw, sw, se}},
-                {east, {nw, ne, sw, se, ne, nw, sw}},
+                {east,  {nw, ne, sw, se, ne, nw, sw}},
                 {south, {nw, sw, ne, se, sw, nw, ne}},
-                {west, {ne, nw, se, sw, nw, ne, se}}
+                {west,  {ne, nw, se, sw, nw, ne, se}}
         };
 
         // Default constructor
@@ -42,6 +42,8 @@ namespace dp {
         void attach_leaves();
 
         void compute();
+
+        std::vector<Leaf<T> *> get_all_leafs();
 
         bool isRoot();
 
@@ -103,6 +105,23 @@ namespace dp {
             children.push_back(Leaf<T>(sw, this));
             children.push_back(Leaf<T>(se, this));
         }
+    }
+
+    template<Graph_Data T>
+    std::vector<Leaf<T> *> Leaf<T>::get_all_leafs() {
+        std::vector<Leaf<T> *> v = {};
+        if (this->children.size() == 4) {
+            std::vector<Leaf<T> *> leaf_nw = this->children[nw].get_all_leafs();
+            std::vector<Leaf<T> *> leaf_ne = this->children[ne].get_all_leafs();
+            std::vector<Leaf<T> *> leaf_sw = this->children[sw].get_all_leafs();
+            std::vector<Leaf<T> *> leaf_se = this->children[se].get_all_leafs();
+            v.insert(v.end(), leaf_nw.begin(), leaf_nw.end());
+            v.insert(v.end(), leaf_ne.begin(), leaf_ne.end());
+            v.insert(v.end(), leaf_sw.begin(), leaf_sw.end());
+            v.insert(v.end(), leaf_se.begin(), leaf_se.end());
+        }
+        v.push_back(this);
+        return v;
     }
 
     template<Graph_Data T>
