@@ -16,7 +16,7 @@ concept Graph_Data = requires(T data, const double x, const double y) {
     data.y;
 };
 
-enum ChildDirection {
+enum DiagonalDirection {
     nw, ne, sw, se
 };
 

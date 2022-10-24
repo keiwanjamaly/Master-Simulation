@@ -185,31 +185,31 @@ namespace dp {
     }
 
     TEST_F(NeighbourLeafTestFixture, testNorthNeighbourFunction) {
-        // testing nw_nw get_neighbour function
+        // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
         ASSERT_EQ(test_child->get_neighbour(north), nullptr);
 
-        // testing ne_ne get_neighbour function
+        // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
         ASSERT_EQ(test_child->get_neighbour(north), nullptr);
 
-        // testing nw_se get_neighbour function
+        // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
         ASSERT_EQ(test_child->get_neighbour(north), leaf_nw_ne);
 
-        // testing se_nw get_neighbour function
+        // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
         ASSERT_EQ(test_child->get_neighbour(north), leaf_ne_sw);
 
-        // testing sw_sw get_neighbour function
+        // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
         ASSERT_EQ(test_child->get_neighbour(north), leaf_sw_nw);
 
-        // testing se_se get_neighbour function
+        // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
         ASSERT_EQ(test_child->get_neighbour(north), leaf_se_ne);
 
-        // test, that only it gives the get_neighbour only on one level
+        // test, that only it gives the get_diagonal_neighbour only on one level
         ASSERT_EQ(leaf_nw->get_neighbour(north), nullptr);
         ASSERT_EQ(leaf_ne->get_neighbour(north), nullptr);
         ASSERT_EQ(leaf_sw->get_neighbour(north), leaf_nw);
@@ -220,31 +220,31 @@ namespace dp {
     }
 
     TEST_F(NeighbourLeafTestFixture, testEastNeighbourFunction) {
-// testing nw_nw get_neighbour function
+// testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
         ASSERT_EQ(test_child->get_neighbour(east), leaf_nw_ne);
 
-// testing ne_ne get_neighbour function
+// testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
         ASSERT_EQ(test_child->get_neighbour(east), nullptr);
 
-// testing nw_se get_neighbour function
+// testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
         ASSERT_EQ(test_child->get_neighbour(east), leaf_ne_sw);
 
-// testing se_nw get_neighbour function
+// testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
         ASSERT_EQ(test_child->get_neighbour(east), leaf_se_ne);
 
-// testing sw_sw get_neighbour function
+// testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
         ASSERT_EQ(test_child->get_neighbour(east), leaf_sw_se);
 
-// testing se_se get_neighbour function
+// testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
         ASSERT_EQ(test_child->get_neighbour(east), nullptr);
 
-// test, that only it gives the get_neighbour only on one level
+// test, that only it gives the get_diagonal_neighbour only on one level
         ASSERT_EQ(leaf_nw->get_neighbour(east), leaf_ne);
         ASSERT_EQ(leaf_ne->get_neighbour(east), nullptr);
         ASSERT_EQ(leaf_sw->get_neighbour(east), leaf_se);
@@ -255,31 +255,31 @@ namespace dp {
     }
 
     TEST_F(NeighbourLeafTestFixture, testSouthNeighbourFunction) {
-// testing nw_nw get_neighbour function
+// testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
         ASSERT_EQ(test_child->get_neighbour(south), leaf_nw_sw);
 
-// testing ne_ne get_neighbour function
+// testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
         ASSERT_EQ(test_child->get_neighbour(south), leaf_ne_se);
 
-// testing nw_se get_neighbour function
+// testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
         ASSERT_EQ(test_child->get_neighbour(south), leaf_sw_ne);
 
-// testing se_nw get_neighbour function
+// testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
         ASSERT_EQ(test_child->get_neighbour(south), leaf_se_sw);
 
-// testing sw_sw get_neighbour function
+// testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
         ASSERT_EQ(test_child->get_neighbour(south), nullptr);
 
-// testing se_se get_neighbour function
+// testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
         ASSERT_EQ(test_child->get_neighbour(south), nullptr);
 
-// test, that only it gives the get_neighbour only on one level
+// test, that only it gives the get_diagonal_neighbour only on one level
         ASSERT_EQ(leaf_nw->get_neighbour(south), leaf_sw);
         ASSERT_EQ(leaf_ne->get_neighbour(south), leaf_se);
         ASSERT_EQ(leaf_sw->get_neighbour(south), nullptr);
@@ -290,31 +290,31 @@ namespace dp {
     }
 
     TEST_F(NeighbourLeafTestFixture, testWestNeighbourFunction) {
-// testing nw_nw get_neighbour function
+// testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
         ASSERT_EQ(test_child->get_neighbour(west), nullptr);
 
-// testing ne_ne get_neighbour function
+// testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
         ASSERT_EQ(test_child->get_neighbour(west), leaf_ne_nw);
 
-// testing nw_se get_neighbour function
+// testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
         ASSERT_EQ(test_child->get_neighbour(west), leaf_nw_sw);
 
-// testing se_nw get_neighbour function
+// testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
         ASSERT_EQ(test_child->get_neighbour(west), leaf_sw_ne);
 
-// testing sw_sw get_neighbour function
+// testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
         ASSERT_EQ(test_child->get_neighbour(west), nullptr);
 
-// testing se_se get_neighbour function
+// testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
         ASSERT_EQ(test_child->get_neighbour(west), leaf_se_sw);
 
-// test, that only it gives the get_neighbour only on one level
+// test, that only it gives the get_diagonal_neighbour only on one level
         ASSERT_EQ(leaf_nw->get_neighbour(west), nullptr);
         ASSERT_EQ(leaf_ne->get_neighbour(west), leaf_nw);
         ASSERT_EQ(leaf_sw->get_neighbour(west), nullptr);
@@ -323,6 +323,150 @@ namespace dp {
 
         // test, that it returns a nullptr, when there is no leaf on the same level
         ASSERT_EQ(leaf_nw_se->children[sw].get_neighbour(west), nullptr);
+    }
+
+    TEST_F(NeighbourLeafTestFixture, testNorthWestNeighbour) {
+        // testing nw_nw get_diagonal_neighbour function
+        test_child = leaf_nw_nw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), nullptr);
+
+// testing ne_ne get_diagonal_neighbour function
+        test_child = leaf_ne_ne;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), nullptr);
+
+// testing nw_se get_diagonal_neighbour function
+        test_child = leaf_nw_se;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), leaf_nw_nw);
+
+// testing se_nw get_diagonal_neighbour function
+        test_child = leaf_se_nw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), leaf_nw_se);
+
+// testing sw_sw get_diagonal_neighbour function
+        test_child = leaf_sw_sw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), nullptr);
+
+// testing se_se get_diagonal_neighbour function
+        test_child = leaf_se_se;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), leaf_se_nw);
+
+// test, that only it gives the get_diagonal_neighbour only on one level
+        ASSERT_EQ(leaf_nw->get_diagonal_neighbour(nw), nullptr);
+        ASSERT_EQ(leaf_ne->get_diagonal_neighbour(nw), nullptr);
+        ASSERT_EQ(leaf_sw->get_diagonal_neighbour(nw), nullptr);
+        ASSERT_EQ(leaf_se->get_diagonal_neighbour(nw), leaf_nw);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        ASSERT_EQ(leaf_nw_se->children[sw].get_diagonal_neighbour(nw), nullptr);
+    }
+
+    TEST_F(NeighbourLeafTestFixture, testNorthEastNeighbour) {
+        // testing nw_nw get_diagonal_neighbour function
+        test_child = leaf_nw_nw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), nullptr);
+
+// testing ne_ne get_diagonal_neighbour function
+        test_child = leaf_ne_ne;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), nullptr);
+
+// testing nw_se get_diagonal_neighbour function
+        test_child = leaf_nw_se;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), leaf_ne_nw);
+
+// testing se_nw get_diagonal_neighbour function
+        test_child = leaf_se_nw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), leaf_ne_se);
+
+// testing sw_sw get_diagonal_neighbour function
+        test_child = leaf_sw_sw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), leaf_sw_ne);
+
+// testing se_se get_diagonal_neighbour function
+        test_child = leaf_se_se;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), nullptr);
+
+// test, that only it gives the get_diagonal_neighbour only on one level
+        ASSERT_EQ(leaf_nw->get_diagonal_neighbour(ne), nullptr);
+        ASSERT_EQ(leaf_ne->get_diagonal_neighbour(ne), nullptr);
+        ASSERT_EQ(leaf_sw->get_diagonal_neighbour(ne), leaf_ne);
+        ASSERT_EQ(leaf_se->get_diagonal_neighbour(ne), nullptr);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        ASSERT_EQ(leaf_nw_se->children[ne].get_diagonal_neighbour(ne), nullptr);
+    }
+
+    TEST_F(NeighbourLeafTestFixture, testSouthEastNeighbour) {
+        // testing nw_nw get_diagonal_neighbour function
+        test_child = leaf_nw_nw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(se), leaf_nw_se);
+
+// testing ne_ne get_diagonal_neighbour function
+        test_child = leaf_ne_ne;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(se), nullptr);
+
+// testing nw_se get_diagonal_neighbour function
+        test_child = leaf_nw_se;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(se), leaf_se_nw);
+
+// testing se_nw get_diagonal_neighbour function
+        test_child = leaf_se_nw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(se), leaf_se_se);
+
+// testing sw_sw get_diagonal_neighbour function
+        test_child = leaf_sw_sw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(se), nullptr);
+
+// testing se_se get_diagonal_neighbour function
+        test_child = leaf_se_se;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(se), nullptr);
+
+// test, that only it gives the get_diagonal_neighbour only on one level
+        ASSERT_EQ(leaf_nw->get_diagonal_neighbour(se), leaf_se);
+        ASSERT_EQ(leaf_ne->get_diagonal_neighbour(se), nullptr);
+        ASSERT_EQ(leaf_sw->get_diagonal_neighbour(se), nullptr);
+        ASSERT_EQ(leaf_se->get_diagonal_neighbour(se), nullptr);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        ASSERT_EQ(leaf_nw_se->children[sw].get_diagonal_neighbour(se), nullptr);
+    }
+
+    TEST_F(NeighbourLeafTestFixture, testSouthWestNeighbour) {
+        // testing nw_nw get_diagonal_neighbour function
+        test_child = leaf_nw_nw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), nullptr);
+
+// testing ne_ne get_diagonal_neighbour function
+        test_child = leaf_ne_ne;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), leaf_ne_sw);
+
+// testing nw_se get_diagonal_neighbour function
+        test_child = leaf_nw_se;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), leaf_sw_nw);
+
+// testing se_nw get_diagonal_neighbour function
+        test_child = leaf_se_nw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), leaf_sw_se);
+
+// testing sw_sw get_diagonal_neighbour function
+        test_child = leaf_sw_sw;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), nullptr);
+
+// testing se_se get_diagonal_neighbour function
+        test_child = leaf_se_se;
+        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), nullptr);
+
+// test, that only it gives the get_diagonal_neighbour only on one level
+        ASSERT_EQ(leaf_nw->get_diagonal_neighbour(sw), nullptr);
+        ASSERT_EQ(leaf_ne->get_diagonal_neighbour(sw), leaf_sw);
+        ASSERT_EQ(leaf_sw->get_diagonal_neighbour(sw), nullptr);
+        ASSERT_EQ(leaf_se->get_diagonal_neighbour(sw), nullptr);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        ASSERT_EQ(leaf_nw_se->children[sw].get_diagonal_neighbour(sw), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture_H, TestNorthComparison) {
@@ -446,11 +590,139 @@ namespace dp {
         test_child = leaf_se_se;
         ASSERT_FALSE(test_child->comparison(west));
 
-// test, that only it gives the get_neighbour only on one level
+// test, that only it gives the get_diagonal_neighbour only on one level
         ASSERT_FALSE(leaf_nw->comparison(west));
         ASSERT_TRUE(leaf_ne->comparison(west));
         ASSERT_FALSE(leaf_sw->comparison(west));
         ASSERT_TRUE(leaf_se->comparison(west));
+    }
+
+    TEST_F(NeighbourLeafTestFixture, TestNorthWestComparison) {
+// testing nw_nw comparison function
+        test_child = leaf_nw_nw;
+        ASSERT_FALSE(test_child->comparison(nw));
+
+// testing ne_ne comparison function
+        test_child = leaf_ne_ne;
+        ASSERT_FALSE(test_child->comparison(nw));
+
+// testing nw_se comparison function
+        test_child = leaf_nw_se;
+        ASSERT_FALSE(test_child->comparison(nw));
+
+// testing se_nw comparison function
+        test_child = leaf_se_nw;
+        ASSERT_TRUE(test_child->comparison(nw));
+
+// testing sw_sw comparison function
+        test_child = leaf_sw_sw;
+        ASSERT_FALSE(test_child->comparison(nw));
+
+// testing se_se comparison function
+        test_child = leaf_se_se;
+        ASSERT_FALSE(test_child->comparison(nw));
+
+// test, that only it gives the get_diagonal_neighbour only on one level
+        ASSERT_FALSE(leaf_nw->comparison(nw));
+        ASSERT_FALSE(leaf_ne->comparison(nw));
+        ASSERT_FALSE(leaf_sw->comparison(nw));
+        ASSERT_TRUE(leaf_se->comparison(nw));
+    }
+
+    TEST_F(NeighbourLeafTestFixture, TestNorthEastComparison) {
+// testing nw_nw comparison function
+        test_child = leaf_nw_nw;
+        ASSERT_FALSE(test_child->comparison(ne));
+
+// testing ne_ne comparison function
+        test_child = leaf_ne_ne;
+        ASSERT_FALSE(test_child->comparison(ne));
+
+// testing nw_se comparison function
+        test_child = leaf_nw_se;
+        ASSERT_TRUE(test_child->comparison(ne));
+
+// testing se_nw comparison function
+        test_child = leaf_se_nw;
+        ASSERT_FALSE(test_child->comparison(ne));
+
+// testing sw_sw comparison function
+        test_child = leaf_sw_sw;
+        ASSERT_FALSE(test_child->comparison(ne));
+
+// testing se_se comparison function
+        test_child = leaf_se_se;
+        ASSERT_FALSE(test_child->comparison(ne));
+
+// test, that only it gives the get_diagonal_neighbour only on one level
+        ASSERT_FALSE(leaf_nw->comparison(ne));
+        ASSERT_FALSE(leaf_ne->comparison(ne));
+        ASSERT_TRUE(leaf_sw->comparison(ne));
+        ASSERT_FALSE(leaf_se->comparison(ne));
+    }
+
+    TEST_F(NeighbourLeafTestFixture, TestSouthEastComparison) {
+// testing nw_nw comparison function
+        test_child = leaf_nw_nw;
+        ASSERT_FALSE(test_child->comparison(se));
+
+// testing ne_ne comparison function
+        test_child = leaf_ne_ne;
+        ASSERT_FALSE(test_child->comparison(se));
+
+// testing nw_se comparison function
+        test_child = leaf_nw_se;
+        ASSERT_TRUE(test_child->comparison(se));
+
+// testing se_nw comparison function
+        test_child = leaf_se_nw;
+        ASSERT_FALSE(test_child->comparison(se));
+
+// testing sw_sw comparison function
+        test_child = leaf_sw_sw;
+        ASSERT_FALSE(test_child->comparison(se));
+
+// testing se_se comparison function
+        test_child = leaf_se_se;
+        ASSERT_FALSE(test_child->comparison(se));
+
+// test, that only it gives the get_diagonal_neighbour only on one level
+        ASSERT_TRUE(leaf_nw->comparison(se));
+        ASSERT_FALSE(leaf_ne->comparison(se));
+        ASSERT_FALSE(leaf_sw->comparison(se));
+        ASSERT_FALSE(leaf_se->comparison(se));
+    }
+
+    TEST_F(NeighbourLeafTestFixture, TestSouthWestComparison) {
+// testing nw_nw comparison function
+        test_child = leaf_nw_nw;
+        ASSERT_FALSE(test_child->comparison(sw));
+
+// testing ne_ne comparison function
+        test_child = leaf_ne_ne;
+        ASSERT_FALSE(test_child->comparison(sw));
+
+// testing nw_se comparison function
+        test_child = leaf_nw_se;
+        ASSERT_FALSE(test_child->comparison(sw));
+
+// testing se_nw comparison function
+        test_child = leaf_se_nw;
+        ASSERT_TRUE(test_child->comparison(sw));
+
+// testing sw_sw comparison function
+        test_child = leaf_sw_sw;
+        ASSERT_FALSE(test_child->comparison(sw));
+
+// testing se_se comparison function
+        test_child = leaf_se_se;
+        ASSERT_FALSE(test_child->comparison(sw));
+
+// test, that only it gives the get_diagonal_neighbour only on one level
+        ASSERT_FALSE(leaf_nw->comparison(sw));
+        ASSERT_TRUE(leaf_ne->comparison(sw));
+        ASSERT_FALSE(leaf_sw->comparison(sw));
+        ASSERT_FALSE(leaf_se->comparison(sw));
     }
 
     TEST_F(NeighbourLeafTestFixture, TestSplitLeafDecision) {
@@ -462,19 +734,19 @@ namespace dp {
         test_child = leaf_ne_ne;
         ASSERT_FALSE(test_child->should_be_split());
 
-// testing nw_se get_neighbour function
+// testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
         ASSERT_TRUE(test_child->should_be_split());
 
-// testing se_nw get_neighbour function
+// testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
         ASSERT_TRUE(test_child->should_be_split());
 
-// testing sw_sw get_neighbour function
+// testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
         ASSERT_FALSE(test_child->should_be_split());
 
-// testing se_se get_neighbour function
+// testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
         ASSERT_FALSE(test_child->should_be_split());
 

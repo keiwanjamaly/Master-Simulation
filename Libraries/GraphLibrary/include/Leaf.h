@@ -24,7 +24,7 @@ namespace dp {
 
         bool (*split_condition)(std::vector<double>, std::vector<double>){};
 
-        std::map<Direction, std::array<ChildDirection, 7>> nm{
+        std::map<Direction, std::array<DiagonalDirection, 7>> nm{
                 {north, {sw, nw, se, ne, nw, sw, se}},
                 {east,  {nw, ne, sw, se, ne, nw, sw}},
                 {south, {nw, sw, ne, se, sw, nw, ne}},
@@ -37,23 +37,25 @@ namespace dp {
         explicit Leaf(double x_, double y_, double initial_box_size_,
                       bool (*split_condition_)(std::vector<double>, std::vector<double>));
 
-        explicit Leaf(ChildDirection dir, Leaf<T> *parent_);
+        explicit Leaf(DiagonalDirection dir, Leaf<T> *parent_);
 
         void attach_leaves();
-
-        void compute();
 
         std::vector<Leaf<T> *> get_all_leafs();
 
         bool isRoot();
 
-        Leaf<T> *get_child_of_parent(ChildDirection dir);
+        Leaf<T> *get_child_of_parent(DiagonalDirection dir);
 
         int get_depth();
 
         Leaf<T> *get_neighbour(Direction dir, bool initial = true);
 
+        Leaf<T> *get_diagonal_neighbour(DiagonalDirection dir);
+
         bool comparison(Direction dir);
+
+        bool comparison(DiagonalDirection dir);
 
         bool should_be_split();
 
@@ -71,7 +73,7 @@ namespace dp {
     }
 
     template<Graph_Data T>
-    Leaf<T>::Leaf(ChildDirection dir, Leaf<T> *parent_) : parent{parent_} {
+    Leaf<T>::Leaf(DiagonalDirection dir, Leaf<T> *parent_) : parent{parent_} {
         box_size = parent->box_size / 2.0;
         double position_offset = box_size / 2.0;
         switch (dir) {
@@ -133,7 +135,7 @@ namespace dp {
     }
 
     template<Graph_Data T>
-    Leaf<T> *Leaf<T>::get_child_of_parent(ChildDirection dir) {
+    Leaf<T> *Leaf<T>::get_child_of_parent(DiagonalDirection dir) {
         if (parent == nullptr)
             return nullptr;
         else
@@ -150,6 +152,9 @@ namespace dp {
 
     template<Graph_Data T>
     Leaf<T> *Leaf<T>::get_neighbour(Direction dir, bool initial) {
+        if (this == nullptr)
+            return nullptr;
+
         // if leaf is a root itself
         if (this->isRoot()) {
             return nullptr;
@@ -160,7 +165,7 @@ namespace dp {
         } else if (this->get_child_of_parent(nm[dir][2]) == this) {
             return this->get_child_of_parent(nm[dir][3]);
         }
-        // find recursively the north get_neighbour
+        // find recursively the north get_diagonal_neighbour
         Leaf<T> *mu = parent->get_neighbour(dir, false);
         Leaf<T> *result;
         if (mu == nullptr or mu->children.size() == 0) {
@@ -177,7 +182,25 @@ namespace dp {
             return result;
         else
             return nullptr;
+    }
 
+    template<Graph_Data T>
+    Leaf<T> *Leaf<T>::get_diagonal_neighbour(DiagonalDirection dir) {
+        Leaf<T> *intermediate_neighbour;
+        switch (dir) {
+            case nw:
+                intermediate_neighbour = this->get_neighbour(west);
+                return intermediate_neighbour->get_neighbour(north);
+            case ne:
+                intermediate_neighbour = this->get_neighbour(east);
+                return intermediate_neighbour->get_neighbour(north);
+            case se:
+                intermediate_neighbour = this->get_neighbour(east);
+                return intermediate_neighbour->get_neighbour(south);
+            case sw:
+                intermediate_neighbour = this->get_neighbour(west);
+                return intermediate_neighbour->get_neighbour(south);
+        }
     }
 
     template<Graph_Data T>
@@ -190,12 +213,26 @@ namespace dp {
     }
 
     template<Graph_Data T>
+    bool Leaf<T>::comparison(DiagonalDirection dir) {
+        Leaf<T> *neighbour = this->get_diagonal_neighbour(dir);
+        if (neighbour == nullptr)
+            return false;
+        else
+            return split_condition(this->data.splitDecisionData(), neighbour->data.splitDecisionData());
+    }
+
+    template<Graph_Data T>
     bool Leaf<T>::should_be_split() {
         bool north_comparison = this->comparison(north);
         bool east_comparison = this->comparison(east);
         bool south_comparison = this->comparison(south);
         bool west_comparison = this->comparison(west);
-        return north_comparison || east_comparison || south_comparison || west_comparison;
+        bool northWest_comparison = this->comparison(nw);
+        bool northEast_comparison = this->comparison(ne);
+        bool southEast_comparison = this->comparison(se);
+        bool southWest_comparison = this->comparison(sw);
+        return north_comparison || east_comparison || south_comparison || west_comparison || northWest_comparison ||
+               northEast_comparison || southEast_comparison || southWest_comparison;
     }
 
     template<Graph_Data T>
