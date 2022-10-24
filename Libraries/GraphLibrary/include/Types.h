@@ -9,9 +9,6 @@
 template<class T>
 concept Graph_Data = requires(T data, const double x, const double y) {
     data.splitDecisionData();
-    // .compute() should check first, if it is already computed and reuse its result.
-    data.compute();
-    data.value;
     data.x;
     data.y;
 };
