@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "Leaf.h"
-#include "Types.h"
+#include "Types_Leaf.h"
 #include "TestData.h"
 
 
@@ -39,9 +39,9 @@ namespace dp {
         Leaf<Data> test_leaf = Leaf<Data>(nw, &parent_leaf);
         ASSERT_EQ(&parent_leaf, test_leaf.parent);
 
-        ASSERT_FLOAT_EQ(test_leaf.x, child_x);
-        ASSERT_FLOAT_EQ(test_leaf.y, child_y);
-        ASSERT_FLOAT_EQ(parent_leaf.box_size / 2.0, test_leaf.box_size);
+        ASSERT_DOUBLE_EQ(test_leaf.x, child_x);
+        ASSERT_DOUBLE_EQ(test_leaf.y, child_y);
+        ASSERT_DOUBLE_EQ(parent_leaf.box_size / 2.0, test_leaf.box_size);
 
         ASSERT_EQ(test_leaf.children.size(), 0);
     }
@@ -59,40 +59,40 @@ namespace dp {
         x_child_pos = x - child_box_size / 2.0;
         y_child_pos = y + child_box_size / 2.0;
         test_child = test_leaf.children[nw];
-        ASSERT_FLOAT_EQ(test_child.x, x_child_pos);
-        ASSERT_FLOAT_EQ(test_child.y, y_child_pos);
-        ASSERT_FLOAT_EQ(test_child.data.x, x_child_pos);
-        ASSERT_FLOAT_EQ(test_child.data.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.data.x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.data.y, y_child_pos);
         ASSERT_EQ(test_child.parent, &test_leaf);
 
         // testing north-east coordinates
         x_child_pos = x + child_box_size / 2.0;
         y_child_pos = y + child_box_size / 2.0;
         test_child = test_leaf.children[ne];
-        ASSERT_FLOAT_EQ(test_child.x, x_child_pos);
-        ASSERT_FLOAT_EQ(test_child.y, y_child_pos);
-        ASSERT_FLOAT_EQ(test_child.data.x, x_child_pos);
-        ASSERT_FLOAT_EQ(test_child.data.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.data.x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.data.y, y_child_pos);
         ASSERT_EQ(test_child.parent, &test_leaf);
 
         // testing south-west coordinates
         x_child_pos = x - child_box_size / 2.0;
         y_child_pos = y - child_box_size / 2.0;
         test_child = test_leaf.children[sw];
-        ASSERT_FLOAT_EQ(test_child.x, x_child_pos);
-        ASSERT_FLOAT_EQ(test_child.y, y_child_pos);
-        ASSERT_FLOAT_EQ(test_child.data.x, x_child_pos);
-        ASSERT_FLOAT_EQ(test_child.data.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.data.x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.data.y, y_child_pos);
         ASSERT_EQ(test_child.parent, &test_leaf);
 
         // testing south-east coordinates
         x_child_pos = x + child_box_size / 2.0;
         y_child_pos = y - child_box_size / 2.0;
         test_child = test_leaf.children[se];
-        ASSERT_FLOAT_EQ(test_child.x, x_child_pos);
-        ASSERT_FLOAT_EQ(test_child.y, y_child_pos);
-        ASSERT_FLOAT_EQ(test_child.data.x, x_child_pos);
-        ASSERT_FLOAT_EQ(test_child.data.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.data.x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child.data.y, y_child_pos);
         ASSERT_EQ(test_child.parent, &test_leaf);
     }
 

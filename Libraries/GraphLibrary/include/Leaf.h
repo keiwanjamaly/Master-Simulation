@@ -5,7 +5,7 @@
 #ifndef SIMULATION_LEAF_H
 #define SIMULATION_LEAF_H
 
-#include "Types.h"
+#include "Types_Leaf.h"
 #include <array>
 #include <map>
 #include <thread>

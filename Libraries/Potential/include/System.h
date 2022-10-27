@@ -1,0 +1,42 @@
+//
+// Created by Keiwan Jamaly on 25.10.22.
+//
+
+#ifndef SIMULATION_SYSTEM_H
+#define SIMULATION_SYSTEM_H
+
+#include "Types_Potential.h"
+
+
+namespace phy {
+
+    class System {
+    public:
+        double dx;
+        int N;
+        grid x_points;
+
+        // diffusion_flux
+        double (*Q)(double t, double u_x);
+        // source
+
+        // left and right boundary condition
+        double (*lbc)(double u1, double u2);
+
+        double (*rbc)(double u1, double u2);
+
+        System() = default;
+
+        System(grid &x_points_,
+               double (*diffusion_flux)(double t, double u_x), double (*left_boundary)(double u1, double u2),
+               double (*right_boundary)(double u1, double u2));
+
+        void operator()(const grid &points, grid &dpointsdt, const double t);
+
+    private:
+        double P_j_plus_1_2(double t, const grid &points, const int &j);
+    };
+
+} // phy
+
+#endif //SIMULATION_SYSTEM_H

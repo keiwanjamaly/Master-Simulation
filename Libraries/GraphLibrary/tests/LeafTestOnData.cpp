@@ -3,7 +3,7 @@
 //
 #include "gtest/gtest.h"
 #include "Leaf.h"
-#include "Types.h"
+#include "Types_Leaf.h"
 #include "TestData.h"
 
 namespace dp {

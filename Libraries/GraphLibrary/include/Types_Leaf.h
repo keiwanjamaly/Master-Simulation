@@ -2,8 +2,8 @@
 // Created by Keiwan Jamaly on 06.10.22.
 //
 
-#ifndef SIMULATION_TYPES_H
-#define SIMULATION_TYPES_H
+#ifndef SIMULATION_TYPES_LEAF_H
+#define SIMULATION_TYPES_LEAF_H
 
 
 template<class T>
@@ -21,5 +21,5 @@ enum Direction {
     north, east, south, west
 };
 
-#endif //SIMULATION_TYPES_H
+#endif //SIMULATION_TYPES_LEAF_H
 
