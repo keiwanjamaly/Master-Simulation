@@ -1,17 +1,15 @@
 //
-// Created by Keiwan Jamaly on 25.10.22.
+// Created by Keiwan Jamaly on 27.10.22.
 //
 
 #include "System.h"
 #include "Types_Potential.h"
 #include "gtest/gtest.h"
-#include <cmath>
 
 namespace phy {
-
     using namespace boost::numeric::odeint;
 
-    class HeatEquationTestFixture : public ::testing::Test {
+    class HeatEquationWithSourceTestFixture : public ::testing::Test {
 
     protected:
         virtual void SetUp() {
@@ -28,11 +26,12 @@ namespace phy {
 
     public:
         double initial_potential(double x) {
-            return sin(M_PI / L * x);
+            return sin(2 * M_PI / L * x);
         }
 
         double analytic_solution(double x, double t) {
-            return exp(-pow(M_PI / L, 2.0) * t) * initial_potential(x);
+            double alpha = pow(M_PI / L, 2);
+            return exp(-4 * alpha * t) * initial_potential(x) + (1 - exp(-alpha * t)) * source(t, x) / alpha;
         }
 
         static double diffusion(double t, double u_x) {
@@ -48,7 +47,8 @@ namespace phy {
         }
 
         static double source(double t, double x) {
-            return 0;
+            // TODO: here should be a L instead of 5.0
+            return 2 * sin(M_PI / 5.0 * x);
         }
 
         grid temperature;
@@ -62,18 +62,7 @@ namespace phy {
         phy::System heat_solver;
     };
 
-    TEST_F(HeatEquationTestFixture, testConstructor) {
-        heat_solver = System(x_points, diffusion, source, left_boundary_condition,
-                             right_boundary_condition);
-        ASSERT_EQ(heat_solver.x_points, x_points);
-        ASSERT_EQ(heat_solver.Q, diffusion);
-        ASSERT_EQ(heat_solver.S, source);
-        ASSERT_EQ(heat_solver.lbc, left_boundary_condition);
-        ASSERT_EQ(heat_solver.rbc, right_boundary_condition);
-        ASSERT_FLOAT_EQ(heat_solver.dx, dx);
-    }
-
-    TEST_F(HeatEquationTestFixture, RHStest) {
+    TEST_F(HeatEquationWithSourceTestFixture, RHStest) {
         heat_solver = System(x_points, diffusion, source, left_boundary_condition,
                              right_boundary_condition);
         unsigned long N_tmp = temperature.size();
@@ -83,46 +72,20 @@ namespace phy {
         for (int i = 1; i < N_tmp - 1; i++) {
             EXPECT_FLOAT_EQ(result[i],
                             (-2 * temperature[i] + temperature[i - 1] + temperature[i + 1]) /
-                            (dx * dx)) << "Vectors differ at index " << i;
+                            (dx * dx) + source(0, x_points[i])) << "Vectors differ at index " << i;
         }
         EXPECT_NEAR(result[N_tmp - 1], 0,
                     1e-14); // expect double eq fails, so I reduce to this, since it is close enough
     }
 
-    TEST_F(HeatEquationTestFixture, RHStestRandom) {
-        heat_solver = System(x_points, diffusion, source, left_boundary_condition,
-                             right_boundary_condition);
-        unsigned long N_tmp = temperature.size();
-
-        // initial vector with random numbers
-        // Modify as needed
-        constexpr int MIN = -10;
-        constexpr int MAX = 10;
-        std::srand(1);
-        std::vector<double> temperature_random(N_tmp);
-        for (double &elem: temperature_random)
-            elem = MIN + (double) (rand()) / ((double) (RAND_MAX / (MAX - MIN)));
-
-        std::vector<double> result(N_tmp, 0.0);
-        heat_solver(temperature_random, result, 0);
-        EXPECT_DOUBLE_EQ(result[0], 0);
-        for (int i = 1; i < N_tmp - 1; i++) {
-            EXPECT_FLOAT_EQ(result[i],
-                            (-2 * temperature_random[i] + temperature_random[i - 1] + temperature_random[i + 1]) /
-                            (dx * dx)) << "Vectors differ at index " << i;
-        }
-        EXPECT_DOUBLE_EQ(result[N_tmp - 1], 0); // expect double eq fails, so I reduce to this, since it is close enough
-    }
-
-    TEST_F(HeatEquationTestFixture, testComputation) {
+    TEST_F(HeatEquationWithSourceTestFixture, testComputation) {
         heat_solver = System(x_points, diffusion, source, left_boundary_condition,
                              right_boundary_condition);
         integrate_adaptive(make_controlled<error_stepper_type>(abs_error, rel_error),
                            heat_solver, temperature, t_min, t_max, 0.01);
         for (int i = 0; i < N; i++) {
-            EXPECT_NEAR(temperature.at(i), analytic_solution(x_points[i], t_max), 1e-5)
+            EXPECT_NEAR(temperature.at(i), analytic_solution(x_points[i], t_max), 1e-4)
                                 << "Vectors differ at index " << i;
         }
     }
-
 } // phy

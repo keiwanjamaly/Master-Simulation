@@ -18,7 +18,9 @@ namespace phy {
 
         // diffusion_flux
         double (*Q)(double t, double u_x);
+
         // source
+        double (*S)(double t, double x);
 
         // left and right boundary condition
         double (*lbc)(double u1, double u2);
@@ -28,13 +30,16 @@ namespace phy {
         System() = default;
 
         System(grid &x_points_,
-               double (*diffusion_flux)(double t, double u_x), double (*left_boundary)(double u1, double u2),
+               double (*diffusion_flux)(double t, double u_x),
+               double (*source)(double t, double x),
+               double (*left_boundary)(double u1, double u2),
                double (*right_boundary)(double u1, double u2));
 
-        void operator()(const grid &points, grid &dpointsdt, const double t);
+        void operator()(const grid &points, grid &dpointsdt,
+                        const double t); // NOLINT(readability-avoid-const-params-in-decls)
 
     private:
-        double P_j_plus_1_2(double t, const grid &points, const int &j);
+        double P_j_plus_1_2(double t, const grid &points, const int &j) const;
     };
 
 } // phy
