@@ -14,7 +14,7 @@ namespace phy {
     public:
         double dx;
         int N;
-        grid x_points;
+        dbl_vec x_points;
 
         // diffusion_flux
         double (*Q)(double t, double u_x);
@@ -29,17 +29,17 @@ namespace phy {
 
         System() = default;
 
-        System(grid &x_points_,
+        System(dbl_vec &x_points_,
                double (*diffusion_flux)(double t, double u_x),
                double (*source)(double t, double x),
                double (*left_boundary)(double u1, double u2),
                double (*right_boundary)(double u1, double u2));
 
-        void operator()(const grid &points, grid &dpointsdt,
+        void operator()(const dbl_vec &points, dbl_vec &dpointsdt,
                         const double t); // NOLINT(readability-avoid-const-params-in-decls)
 
     private:
-        double P_j_plus_1_2(double t, const grid &points, const int &j) const;
+        double P_j_plus_1_2(double t, const dbl_vec &points, const int &j) const;
     };
 
 } // phy

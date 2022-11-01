@@ -11,9 +11,9 @@
 namespace phy {
     using namespace boost::numeric::odeint;
 
-    typedef std::vector<double> grid;
+    typedef std::vector<double> dbl_vec;
 
-    typedef boost::numeric::odeint::runge_kutta_cash_karp54<grid> error_stepper_type;
+    typedef boost::numeric::odeint::runge_kutta_cash_karp54<dbl_vec> error_stepper_type;
 
 } // phy
 

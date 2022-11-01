@@ -51,8 +51,8 @@ namespace phy {
             return 2 * sin(M_PI / 5.0 * x);
         }
 
-        grid temperature;
-        grid x_points;
+        dbl_vec temperature;
+        dbl_vec x_points;
         double x_min = 0.0, x_max = 5.0;
         double dx;
         double t_min = 0.0, t_max = 5.0;

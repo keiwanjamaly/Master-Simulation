@@ -51,8 +51,8 @@ namespace phy {
             return 0;
         }
 
-        grid temperature;
-        grid x_points;
+        dbl_vec temperature;
+        dbl_vec x_points;
         double x_min = 0.0, x_max = 5.0;
         double dx;
         double t_min = 0.0, t_max = 5.0;

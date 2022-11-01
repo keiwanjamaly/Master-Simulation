@@ -7,6 +7,9 @@ add_subdirectory(Libraries/GraphLibrary)
 add_subdirectory(Libraries/Potential)
 add_subdirectory(Libraries/googletest)
 
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+add_subdirectory(Libraries/json)
+
 #set(Boost_INCLUDE_DIRS Libraries/odeint/include CACHE PATH "")
 #include_directories(Libraries/odeint/include)
 
@@ -26,4 +29,4 @@ target_link_libraries(Simulation ${LIBRARIES})
 add_executable(Test ${TEST_SOURCE})
 target_include_directories(Test PUBLIC ${TEST_INCLUDES})
 target_link_libraries(Test ${LIBRARIES})
-target_link_libraries(Test gtest gtest_main)
+target_link_libraries(Test gtest gtest_main nlohmann_json::nlohmann_json)

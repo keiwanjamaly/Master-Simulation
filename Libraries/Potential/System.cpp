@@ -5,7 +5,7 @@
 #include "System.h"
 
 namespace phy {
-    System::System(grid &x_points_,
+    System::System(dbl_vec &x_points_,
                    double (*diffusion_flux)(double t, double u_x),
                    double (*source)(double t, double x),
                    double (*left_boundary)(double u1, double u2),
@@ -18,7 +18,7 @@ namespace phy {
         dx = (x_points[N - 1] - x_points[0]) / double(N - 1);
     }
 
-    double System::P_j_plus_1_2(double t, const grid &u, const int &j) const {
+    double System::P_j_plus_1_2(double t, const dbl_vec &u, const int &j) const {
         double derivative;
         if (j == -1)
             derivative = (u[j + 1] - lbc(u[j + 1], u[j + 2])) / dx;
@@ -30,7 +30,7 @@ namespace phy {
         return Q(t, derivative);
     }
 
-    void System::operator()(const grid &points, grid &dpointsdt, const double t) {
+    void System::operator()(const dbl_vec &points, dbl_vec &dpointsdt, const double t) {
         // handle diffusion
         dpointsdt[0] = (P_j_plus_1_2(t, points, 0) - P_j_plus_1_2(t, points, -1)) / (dx);
         for (int i = 1; i < points.size() - 1; i++)
