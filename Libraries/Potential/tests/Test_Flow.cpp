@@ -46,5 +46,34 @@ namespace phy {
         ASSERT_DOUBLE_EQ(f.right_boundary_condition()(90.0, 85.0), 80.0);
     }
 
+    TEST(TestStaticFlowFunctions, TestBosonDencity) {
+        EXPECT_FLOAT_EQ(Flow::n_b(1.2), 0.4310127606933332);
+        EXPECT_FLOAT_EQ(Flow::n_b(15.324892), 2.210467147176071e-7);
+    }
+
+    TEST(TestStaticFlowFunctions, TestFermionDencity) {
+        EXPECT_FLOAT_EQ(Flow::n_f(0), 1.0 / 2.0);
+        EXPECT_FLOAT_EQ(Flow::n_f(15.324892), 2.210466169943501e-7);
+    }
+
+    TEST(TestStaticFlowFunctions, TestFermionEnergy) {
+        EXPECT_FLOAT_EQ(Flow::E_f(3, 0), 3);
+        EXPECT_FLOAT_EQ(Flow::E_f(3, 4), 5.0);
+        EXPECT_FLOAT_EQ(Flow::E_f(0, 0), 0);
+    }
+
+    TEST(TestStaticFlowFunctions, TestBosonEnergy) {
+        EXPECT_FLOAT_EQ(Flow::E_b(3, 0), 3);
+        EXPECT_FLOAT_EQ(Flow::E_b(0, 2), M_SQRT2);
+        EXPECT_FLOAT_EQ(Flow::E_b(3, 16), 5);
+    }
+
+    TEST_F(TestFlowFixture, TestRGImpulseFunction) {
+        Flow f(mu, T, Lambda, t_max, N_flavor, N_grid, sigma_max);
+        ASSERT_DOUBLE_EQ(f.k(1.1), 3.328710836980795e9);
+        ASSERT_DOUBLE_EQ(f.k(12.12), 54494.27503696815);
+        ASSERT_DOUBLE_EQ(f.k(123.123), 3.375674045869994e-44);
+    }
+
 
 } // phy

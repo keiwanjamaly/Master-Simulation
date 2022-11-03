@@ -49,13 +49,13 @@ namespace phy {
         void set_initial_condition();
 
 
-        double n_b(double val);
+        static double n_b(double val);
 
-        double n_f(double val);
+        static double n_f(double val);
 
-        double E_b(double k_val, double u_x_val);
+        static double E_b(double k_val, double u_x_val);
 
-        double E_f(double k_val, double sigma_val);
+        static double E_f(double k_val, double sigma_val);
 
         double k(double t_val);
 
