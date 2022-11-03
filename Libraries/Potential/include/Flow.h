@@ -6,6 +6,7 @@
 #define SIMULATION_FLOW_H
 
 #include <vector>
+#include <memory>
 #include "System.h"
 #include "Types_Potential.h"
 
@@ -18,10 +19,11 @@ namespace phy {
         int N_grid;
         int N_flavor;
         double y, x;
+        double T, mu;
         double t = 0;
-        dbl_vec x_points, u;
+        dbl_vec sigma_points, u;
 
-        System heat_solver;
+        std::shared_ptr<System> heat_solver;
 
         Flow() = default;
 
@@ -31,19 +33,31 @@ namespace phy {
 
         dbl_vec splitDecisionData();
 
-        dbl_vec set_initial_condition();
 
-        double (*diffusion())(double, double);
+        std::function<double(double, double)> diffusion();
 
-        double (*source())(double, double);
+        std::function<double(double, double)> source();
 
-        double (*left_boundary_condition())(double, double);
+        std::function<double(double, double)> left_boundary_condition();
 
-        double (*right_boundary_condition())(double, double);
+        std::function<double(double, double)> right_boundary_condition();
 
         dbl_vec get_minimum();
 
         dbl_vec get_pressure();
+
+        void set_initial_condition();
+
+
+        double n_b(double val);
+
+        double n_f(double val);
+
+        double E_b(double k_val, double u_x_val);
+
+        double E_f(double k_val, double sigma_val);
+
+        double k(double t_val);
 
     private:
         double one_over_N;

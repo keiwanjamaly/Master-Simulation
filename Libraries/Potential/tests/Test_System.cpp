@@ -66,10 +66,6 @@ namespace phy {
         heat_solver = System(x_points, diffusion, source, left_boundary_condition,
                              right_boundary_condition);
         ASSERT_EQ(heat_solver.x_points, x_points);
-        ASSERT_EQ(heat_solver.Q, diffusion);
-        ASSERT_EQ(heat_solver.S, source);
-        ASSERT_EQ(heat_solver.lbc, left_boundary_condition);
-        ASSERT_EQ(heat_solver.rbc, right_boundary_condition);
         ASSERT_FLOAT_EQ(heat_solver.dx, dx);
     }
 

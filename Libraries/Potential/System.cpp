@@ -4,17 +4,22 @@
 
 #include "System.h"
 
+#include <utility>
+
 namespace phy {
     System::System(dbl_vec &x_points_,
-                   double (*diffusion_flux)(double t, double u_x),
-                   double (*source)(double t, double x),
-                   double (*left_boundary)(double u1, double u2),
-                   double (*right_boundary)(double u1, double u2)) : x_points{x_points_},
-                                                                     Q{diffusion_flux},
-                                                                     S{source},
-                                                                     lbc{left_boundary},
-                                                                     rbc{right_boundary} {
+                   std::function<double(double, double)> diffusion_flux,
+                   std::function<double(double, double)> source,
+                   std::function<double(double, double)> left_boundary,
+                   std::function<double(double, double)> right_boundary) : x_points{x_points_},
+                                                                           Q{std::move(diffusion_flux)},
+                                                                           S{std::move(source)},
+                                                                           lbc{std::move(left_boundary)},
+                                                                           rbc{std::move(right_boundary)} {
         N = int(x_points.size());
+        if (N == 0 || N == 1) {
+            throw std::invalid_argument("The sigma_points vector has one (no) element(s)!");
+        }
         dx = (x_points[N - 1] - x_points[0]) / double(N - 1);
     }
 
@@ -41,4 +46,6 @@ namespace phy {
         for (int i = 0; i < points.size(); i++)
             dpointsdt[i] += S(t, x_points[i]);
     }
+
+
 } // phy

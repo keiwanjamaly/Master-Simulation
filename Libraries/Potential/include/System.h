@@ -16,24 +16,21 @@ namespace phy {
         int N;
         dbl_vec x_points;
 
-        // diffusion_flux
-        double (*Q)(double t, double u_x);
+        std::function<double(double, double)> Q;
 
-        // source
-        double (*S)(double t, double x);
+        std::function<double(double, double)> S;
 
-        // left and right boundary condition
-        double (*lbc)(double u1, double u2);
+        std::function<double(double, double)> lbc;
 
-        double (*rbc)(double u1, double u2);
+        std::function<double(double, double)> rbc;
 
         System() = default;
 
         System(dbl_vec &x_points_,
-               double (*diffusion_flux)(double t, double u_x),
-               double (*source)(double t, double x),
-               double (*left_boundary)(double u1, double u2),
-               double (*right_boundary)(double u1, double u2));
+               std::function<double(double, double)> diffusion_flux,
+               std::function<double(double, double)> source,
+               std::function<double(double, double)> left_boundary,
+               std::function<double(double, double)> right_boundary);
 
         void operator()(const dbl_vec &points, dbl_vec &dpointsdt,
                         const double t); // NOLINT(readability-avoid-const-params-in-decls)

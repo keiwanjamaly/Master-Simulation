@@ -2,6 +2,7 @@
 // Created by Keiwan Jamaly on 27.10.22.
 //
 
+#include <memory>
 #include "System.h"
 #include "Types_Potential.h"
 #include "gtest/gtest.h"

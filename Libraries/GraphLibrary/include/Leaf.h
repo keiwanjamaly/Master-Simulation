@@ -152,8 +152,6 @@ namespace dp {
 
     template<Graph_Data T>
     Leaf<T> *Leaf<T>::get_neighbour(Direction dir, bool initial) {
-        if (this == nullptr)
-            return nullptr;
 
         // if leaf is a root itself
         if (this->isRoot()) {
@@ -190,15 +188,29 @@ namespace dp {
         switch (dir) {
             case nw:
                 intermediate_neighbour = this->get_neighbour(west);
-                return intermediate_neighbour->get_neighbour(north);
+                break;
             case ne:
                 intermediate_neighbour = this->get_neighbour(east);
-                return intermediate_neighbour->get_neighbour(north);
+                break;
             case se:
                 intermediate_neighbour = this->get_neighbour(east);
-                return intermediate_neighbour->get_neighbour(south);
+                break;
             case sw:
                 intermediate_neighbour = this->get_neighbour(west);
+                break;
+        }
+
+        if (intermediate_neighbour == nullptr)
+            return intermediate_neighbour;
+
+        switch (dir) {
+            case nw:
+                return intermediate_neighbour->get_neighbour(north);
+            case ne:
+                return intermediate_neighbour->get_neighbour(north);
+            case se:
+                return intermediate_neighbour->get_neighbour(south);
+            case sw:
                 return intermediate_neighbour->get_neighbour(south);
         }
     }
