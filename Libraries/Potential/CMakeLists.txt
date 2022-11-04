@@ -11,7 +11,7 @@ set(POTENTIAL_TEST_SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/Test_System.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/Test_with_Source.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/Test_Flow.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/tests/1_plus_1_MF.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/1_plus_1_N=1.cpp
         CACHE INTERNAL "")
 
 set(POTENTIAL_TEST_INCLUDE

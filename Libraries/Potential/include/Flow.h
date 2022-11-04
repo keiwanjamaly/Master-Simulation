@@ -59,6 +59,8 @@ namespace phy {
 
         double k(double t_val);
 
+        static double sech(double x);
+
     private:
         double one_over_N;
     };

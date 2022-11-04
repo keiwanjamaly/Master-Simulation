@@ -17,5 +17,4 @@ namespace phy {
 
 } // phy
 
-
 #endif //SIMULATION_TYPES_POTENTIAL_H

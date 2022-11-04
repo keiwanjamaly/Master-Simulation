@@ -38,8 +38,11 @@ namespace phy {
         return [this](double t_val, double u_x) -> double {
             double E = E_b(k(t_val), u_x);
             double b = 1 / T; // betta
-            return -pow(k(t_val), 3) * (1 + 2 * n_b(E * b)) /
-                   (M_PI * N_flavor * 2 * E);
+            double return_value = -pow(k(t_val), 3) * (1 + 2 * n_b(E * b)) /
+                                  (M_PI * N_flavor * 2 * E);
+//            double return_value = -pow(k(t_val), 3) /
+//                                  (M_PI * N_flavor * 2 * E) * coth(E * b / 2);
+            return return_value;
         };
     }
 
@@ -47,10 +50,10 @@ namespace phy {
         return [this](double t_val, double sigma) -> double {
             double E = E_f(k(t_val), sigma);
             double b = 1 / T; // betta
-            double plus_term = b / pow(E, 2) * (exp(b * (E - mu)) / pow(n_f(b * (E - mu)), 2) +
-                                                exp(b * (E + mu)) / pow(n_f(b * (E + mu)), 2));
-            double minus_term = 1 / pow(E, 3) * (1 - n_f(b * (E + mu)) - n_f(b * (E - mu)));
-            return pow(k(t_val), 3) * sigma / M_PI * (plus_term - minus_term);
+            double plus_term = b * E * (sech(b * (E - mu) / 2) + sech(b * (E + mu) / 2));
+            double minus_term = 2 * (tanh(b * (E - mu) / 2) + tanh(b * (E + mu) / 2));
+            double return_value = pow(k(t_val), 3) / (4 * M_PI * pow(E, 3)) * sigma * (plus_term - minus_term);
+            return return_value;
         };
     }
 
@@ -87,6 +90,10 @@ namespace phy {
 
     double Flow::k(double t_val) {
         return Lambda * exp(-t_val);
+    }
+
+    double Flow::sech(double x) {
+        return 1 / cosh(x);
     }
 
 

@@ -31,7 +31,6 @@ namespace phy {
             derivative = (rbc(u[j - 1], u[j]) - u[j]) / dx;
         else
             derivative = (u[j + 1] - u[j]) / dx;
-
         return Q(t, derivative);
     }
 

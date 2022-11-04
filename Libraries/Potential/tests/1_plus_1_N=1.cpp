@@ -92,16 +92,55 @@ namespace phy {
 
     }
 
-    TEST_F(OnePlusOneTestFixture, 1Plus1MF) {
-        for (int i = 1; i < t_vector.size(); i += 2) {
-            f = Flow(mu, T, Lambda, t_vector[i], N_flavor, N_grid, sigma_max);
-            f.compute();
-            for (int n = 0; n < N_grid; n++) {
-                ASSERT_NEAR(f.u[n], u_vector[i][n], 1e-4)
-                                            << "Vectors differ at index " << n << " for integration time "
-                                            << t_vector[i];
-            }
+    TEST_F(OnePlusOneTestFixture, TestSourceTerm) {
+        f = Flow(mu, T, Lambda, t_vector[0], N_flavor, N_grid, sigma_max);
+        EXPECT_NEAR(f.source()(1.87674, 3.88856), -1.237767929469203, 1e-5);
+        EXPECT_NEAR(f.source()(11.7463, 4.59578), -0.00716250554559492, 1e-5);
+        EXPECT_NEAR(f.source()(5.75602, 0.812431), -0.2586023231985309, 1e-5);
+        EXPECT_NEAR(f.source()(3.09129, 3.36587), -1.071389841937635, 1e-5);
+    }
 
+    TEST_F(OnePlusOneTestFixture, TestDiffusionTerm) {
+        f = Flow(mu, T, Lambda, t_vector[0], N_flavor, N_grid, sigma_max);
+        EXPECT_NEAR(f.diffusion()(1.87674, 3.88856), -1.864971958479753e7, 1e2);
+        EXPECT_NEAR(f.diffusion()(11.7463, 4.59578), -0.01729131284274761, 1e-1);
+        EXPECT_NEAR(f.diffusion()(5.75602, 0.812431), -7964.734848642339, 1e1);
+        EXPECT_NEAR(f.diffusion()(3.09129, 3.36587), -1.643358841565547e6, 1e2);
+    }
+
+    TEST_F(OnePlusOneTestFixture, 1Plus1MFt1) {
+        f = Flow(mu, T, Lambda, t_vector[1], N_flavor, N_grid, sigma_max);
+        f.compute();
+        for (int n = 0; n < N_grid; n++) {
+            EXPECT_NEAR(f.u[n], u_vector[1][n], 1e-7)
+                                << "Vectors differ at index " << n << " for integration time ";
+        }
+    }
+
+    TEST_F(OnePlusOneTestFixture, 1Plus1MFt3) {
+        f = Flow(mu, T, Lambda, t_vector[3], N_flavor, N_grid, sigma_max);
+        f.compute();
+        for (int n = 0; n < N_grid; n++) {
+            EXPECT_NEAR(f.u[n], u_vector[3][n], 1e-5)
+                                << "Vectors differ at index " << n << " for integration time ";
+        }
+    }
+
+    TEST_F(OnePlusOneTestFixture, 1Plus1MFt5) {
+        f = Flow(mu, T, Lambda, t_vector[5], N_flavor, N_grid, sigma_max);
+        f.compute();
+        for (int n = 0; n < N_grid; n++) {
+            EXPECT_NEAR(f.u[n], u_vector[5][n], 1e-5)
+                                << "Vectors differ at index " << n << " for integration time ";
+        }
+    }
+
+    TEST_F(OnePlusOneTestFixture, 1Plus1MFtLast) {
+        f = Flow(mu, T, Lambda, t_vector[t_vector.size() - 1], N_flavor, N_grid, sigma_max);
+        f.compute();
+        for (int n = 0; n < N_grid; n++) {
+            EXPECT_NEAR(f.u[n], u_vector[t_vector.size() - 1][n], 1e-2)
+                                << "Vectors differ at index " << n << " for integration time ";
         }
     }
 
