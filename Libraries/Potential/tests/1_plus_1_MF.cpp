@@ -32,7 +32,13 @@ namespace phy {
             for (auto element: graphs) {
                 sigma.clear();
                 u.clear();
+                // get t value
+                std::string_view t_string = element.find_field("label").get_string();
+                std::string t_value(t_string);
+                t_value.replace(0, 2, "");
+                t = std::stod(t_value);
                 // store sigma values
+
                 for (auto x_val: element.find_field("x").get_array()) {
                     sigma.push_back(x_val.get_double());
                 }
@@ -86,17 +92,18 @@ namespace phy {
 
     }
 
-//    TEST_F(OnePlusOneTestFixture, 1Plus1MF) {
-//
-//
-//        for (int i = 0; i < t_vector.size(); i++) {
-//            f = Flow(T, mu, Lambda, t_vector[i], N_flavor, N_grid, sigma_max);
-//            f.compute();
-//            for (int n = 0; n < N_grid; n++) {
-//                EXPECT_NEAR(f.u[n], u_vector[i][n], 1e-4)
-//                                    << "Vectors differ at index " << i << "for integration time " << t;
-//            }
-//
-//        }
-//    }
+    TEST_F(OnePlusOneTestFixture, 1Plus1MF) {
+        for (int i = 1; i < t_vector.size(); i += 2) {
+            f = Flow(mu, T, Lambda, t_vector[i], N_flavor, N_grid, sigma_max);
+            f.compute();
+            for (int n = 0; n < N_grid; n++) {
+                ASSERT_NEAR(f.u[n], u_vector[i][n], 1e-4)
+                                            << "Vectors differ at index " << n << " for integration time "
+                                            << t_vector[i];
+            }
+
+        }
+    }
+
+// TODO: check that the time gets updated after computation
 } // phy
