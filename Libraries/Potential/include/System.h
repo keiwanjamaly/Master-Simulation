@@ -9,6 +9,16 @@
 
 
 namespace phy {
+    class Derivative {
+    public:
+        dbl_vec div;
+
+        Derivative(const std::shared_ptr<std::function<double(double, double)>> &left_boundary,
+                   const std::shared_ptr<std::function<double(double, double)>> &right_boundary, const dbl_vec &points,
+                   double dx);
+
+        double &operator[](int index);
+    };
 
     class System {
     public:
@@ -36,7 +46,7 @@ namespace phy {
                         const double t); // NOLINT(readability-avoid-const-params-in-decls)
 
     private:
-        double P_j_plus_1_2(double t, const dbl_vec &points, const int &j) const;
+        double P_j_plus_1_2(double t, Derivative &ux, const int &j) const;
     };
 
 } // phy

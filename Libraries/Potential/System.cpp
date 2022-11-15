@@ -3,10 +3,31 @@
 //
 
 #include "System.h"
-
+#include <functional>
+#include <algorithm>
 #include <utility>
+#include <memory>
 
 namespace phy {
+    Derivative::Derivative(const std::shared_ptr<std::function<double(double, double)>> &left_boundary,
+                           const std::shared_ptr<std::function<double(double, double)>> &right_boundary,
+                           const dbl_vec &points,
+                           double dx) {
+        int N = int(points.size());
+        div.reserve(N + 2);
+        double left = (points[0] - (*left_boundary)(points[0], points[1])) / dx;
+        double right = ((*right_boundary)(points[N - 2], points[N - 1]) - points[N - 1]) / dx;
+        div.push_back(left);
+        for (int i = 0; i < N - 1; i++) {
+            div.push_back((points[i + 1] - points[i]) / dx);
+        }
+        div.push_back(right);
+    }
+
+    double &Derivative::operator[](int index) {
+        return div[index + 1];
+    }
+
     System::System(dbl_vec &x_points_,
                    std::function<double(double, double)> diffusion_flux,
                    std::function<double(double, double)> source,
@@ -23,23 +44,18 @@ namespace phy {
         dx = (x_points[N - 1] - x_points[0]) / double(N - 1);
     }
 
-    double System::P_j_plus_1_2(double t, const dbl_vec &u, const int &j) const {
-        double derivative;
-        if (j == -1)
-            derivative = (u[j + 1] - lbc(u[j + 1], u[j + 2])) / dx;
-        else if (j == N - 1)
-            derivative = (rbc(u[j - 1], u[j]) - u[j]) / dx;
-        else
-            derivative = (u[j + 1] - u[j]) / dx;
-        return Q(t, derivative);
+    double System::P_j_plus_1_2(double t, Derivative &ux, const int &j) const {
+        return Q(t, ux[j]);
     }
 
     void System::operator()(const dbl_vec &points, dbl_vec &dpointsdt, const double t) {
+        Derivative ux(std::make_shared<std::function<double(double, double)>>(lbc),
+                      std::make_shared<std::function<double(double, double)>>(rbc), points, dx);
         // handle diffusion
-        dpointsdt[0] = (P_j_plus_1_2(t, points, 0) - P_j_plus_1_2(t, points, -1)) / (dx);
+        dpointsdt[0] = (P_j_plus_1_2(t, ux, 0) - P_j_plus_1_2(t, ux, -1)) / (dx);
         for (int i = 1; i < points.size() - 1; i++)
-            dpointsdt[i] = (P_j_plus_1_2(t, points, i) - P_j_plus_1_2(t, points, i - 1)) / (dx);
-        dpointsdt[N - 1] = (P_j_plus_1_2(t, points, N - 1) - P_j_plus_1_2(t, points, N - 2)) / (dx);
+            dpointsdt[i] = (P_j_plus_1_2(t, ux, i) - P_j_plus_1_2(t, ux, i - 1)) / (dx);
+        dpointsdt[N - 1] = (P_j_plus_1_2(t, ux, N - 1) - P_j_plus_1_2(t, ux, N - 2)) / (dx);
 
         // handle source
         for (int i = 0; i < points.size(); i++)

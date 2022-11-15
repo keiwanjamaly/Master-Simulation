@@ -17,7 +17,8 @@ namespace phy {
         double Lambda, t_max;
         double sigma_max;
         int N_grid;
-        int N_flavor;
+        double N_flavor;
+        double one_over_N;
         double y, x;
         double T, mu;
         double t = 0;
@@ -27,7 +28,7 @@ namespace phy {
 
         Flow() = default;
 
-        Flow(double mu_, double T_, double Lambda_, double t_max_, int N_flavor_, int N_grid, double sigma_max_);
+        Flow(double mu_, double T_, double Lambda_, double t_max_, double N_flavor_, int N_grid, double sigma_max_);
 
         void compute();
 
@@ -60,9 +61,6 @@ namespace phy {
         double k(double t_val);
 
         static double sech(double x);
-
-    private:
-        double one_over_N;
     };
 
 }

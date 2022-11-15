@@ -13,7 +13,7 @@ namespace phy {
         const double T = 0.2;
         const double Lambda = 1e10;
         const double t_max = 20.0;
-        const int N_flavor = 2;
+        const double N_flavor = 2;
         const int N_grid = 200;
         const double sigma_max = 6.0;
     };

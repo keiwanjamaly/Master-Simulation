@@ -9,7 +9,7 @@ using namespace boost::numeric::odeint;
 
 namespace phy {
 
-    Flow::Flow(double mu_, double T_, double Lambda_, double t_max_, int N_flavor_, int N_grid, double sigma_max_) :
+    Flow::Flow(double mu_, double T_, double Lambda_, double t_max_, double N_flavor_, int N_grid, double sigma_max_) :
             x{mu_}, y{T_}, Lambda(Lambda_), t_max{t_max_}, t{0.0}, N_flavor{N_flavor_}, N_grid{N_grid},
             sigma_max{sigma_max_} {
         sigma_points.reserve(N_grid);
@@ -36,12 +36,15 @@ namespace phy {
 
     std::function<double(double, double)> Flow::diffusion() {
         return [this](double t_val, double u_x) -> double {
+            if (std::isinf(N_flavor))
+                return 0;
             double E = E_b(k(t_val), u_x);
             double b = 1 / T; // betta
             double return_value = -pow(k(t_val), 3) * (1 + 2 * n_b(E * b)) /
                                   (M_PI * N_flavor * 2 * E);
-//            double return_value = -pow(k(t_val), 3) /
-//                                  (M_PI * N_flavor * 2 * E) * coth(E * b / 2);
+//            if (std::isnan(return_value))
+//                throw std::runtime_error("The change of a point evaluated to nan.");
+
             return return_value;
         };
     }
@@ -50,7 +53,7 @@ namespace phy {
         return [this](double t_val, double sigma) -> double {
             double E = E_f(k(t_val), sigma);
             double b = 1 / T; // betta
-            double plus_term = b * E * (sech(b * (E - mu) / 2) + sech(b * (E + mu) / 2));
+            double plus_term = b * E * (pow(sech(b * (E - mu) / 2), 2) + pow(sech(b * (E + mu) / 2), 2));
             double minus_term = 2 * (tanh(b * (E - mu) / 2) + tanh(b * (E + mu) / 2));
             double return_value = pow(k(t_val), 3) / (4 * M_PI * pow(E, 3)) * sigma * (plus_term - minus_term);
             return return_value;
@@ -58,7 +61,7 @@ namespace phy {
     }
 
     void Flow::compute() {
-        integrate_adaptive(make_controlled<error_stepper_type>(1.0e-10, 1.0e-6),
+        integrate_adaptive(make_controlled<error_stepper_type>(1.0e-10, 1.0e-10),
                            *heat_solver, u, t, t_max, 0.01);
     }
 
