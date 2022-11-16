@@ -10,62 +10,7 @@
 
 namespace dp {
 
-    class NeighbourLeafTestFixture_H : public ::testing::Test {
-        // I'm going to test the neighbours of the following points
-        // test points      test labels
-        // x, 0, 0, x       nw_nw, nw_ne, ne_nw, ne_ne
-        // 0, x, 0, 0       nw_sw, nw_se, ne_sw, ne_se
-        // 0, 0, x, 0       sw_nw, sw_ne, se_nw, se_ne
-        // x, 0, 0, x       sw_sw, sw_se, se_sw, se_se
-
-        // testing values outside the boundary should result in a null-pointer
-
-    protected:
-        void SetUp() override {
-            x = 0.0;
-            y = 0.0;
-            box_size = 1.0;
-            test_leaf = Leaf<Data_H>(x, y, box_size, split_decision);
-
-            test_leaf.attach_leaves();
-            leaf_nw = &(test_leaf.children[nw]);
-            leaf_nw->attach_leaves();
-            leaf_ne = &(test_leaf.children[ne]);
-            leaf_ne->attach_leaves();
-            leaf_sw = &(test_leaf.children[sw]);
-            leaf_sw->attach_leaves();
-            leaf_se = &(test_leaf.children[se]);
-            leaf_se->attach_leaves();
-
-            leaf_nw_nw = &(leaf_nw->children[nw]);
-            leaf_nw_ne = &(leaf_nw->children[ne]);
-            leaf_nw_sw = &(leaf_nw->children[sw]);
-            leaf_nw_se = &(leaf_nw->children[se]);
-
-            leaf_ne_nw = &(leaf_ne->children[nw]);
-            leaf_ne_ne = &(leaf_ne->children[ne]);
-            leaf_ne_sw = &(leaf_ne->children[sw]);
-            leaf_ne_se = &(leaf_ne->children[se]);
-
-            leaf_sw_nw = &(leaf_sw->children[nw]);
-            leaf_sw_ne = &(leaf_sw->children[ne]);
-            leaf_sw_sw = &(leaf_sw->children[sw]);
-            leaf_sw_se = &(leaf_sw->children[se]);
-
-            leaf_se_nw = &(leaf_se->children[nw]);
-            leaf_se_ne = &(leaf_se->children[ne]);
-            leaf_se_sw = &(leaf_se->children[sw]);
-            leaf_se_se = &(leaf_se->children[se]);
-
-            leaf_nw_se->attach_leaves();
-        }
-
-        Leaf<Data_H> test_leaf;
-        Leaf<Data_H> *test_child;
-        double x{}, y{}, box_size{};
-        Leaf<Data_H> *leaf_nw_nw, *leaf_nw_ne, *leaf_nw_sw, *leaf_nw_se, *leaf_ne_nw, *leaf_ne_ne, *leaf_ne_sw, *leaf_ne_se, *leaf_sw_nw, *leaf_sw_ne, *leaf_sw_sw, *leaf_sw_se, *leaf_se_nw, *leaf_se_ne, *leaf_se_sw, *leaf_se_se;
-        Leaf<Data_H> *leaf_nw, *leaf_ne, *leaf_sw, *leaf_se;
-    };
+    using std::shared_ptr, std::make_shared;
 
     class NeighbourLeafTestFixture : public ::testing::Test {
         // I'm going to test the neighbours of the following points
@@ -82,60 +27,65 @@ namespace dp {
             x = 0.0;
             y = 0.0;
             box_size = 1.0;
-            test_leaf = Leaf<Data>(x, y, box_size, split_decision);
+            config = make_shared<Empty_Config>(Empty_Config());
+            test_leaf = make_shared<CurrLeaf>(CurrLeaf(x, y, box_size, split_decision, config));
 
-            test_leaf.attach_leaves();
-            leaf_nw = &(test_leaf.children[nw]);
+            test_leaf->attach_leaves();
+            leaf_nw = test_leaf->children[nw];
             leaf_nw->attach_leaves();
-            leaf_ne = &(test_leaf.children[ne]);
+            leaf_ne = test_leaf->children[ne];
             leaf_ne->attach_leaves();
-            leaf_sw = &(test_leaf.children[sw]);
+            leaf_sw = test_leaf->children[sw];
             leaf_sw->attach_leaves();
-            leaf_se = &(test_leaf.children[se]);
+            leaf_se = test_leaf->children[se];
             leaf_se->attach_leaves();
 
-            leaf_nw_nw = &(leaf_nw->children[nw]);
-            leaf_nw_ne = &(leaf_nw->children[ne]);
-            leaf_nw_sw = &(leaf_nw->children[sw]);
-            leaf_nw_se = &(leaf_nw->children[se]);
+            leaf_nw_nw = leaf_nw->children[nw];
+            leaf_nw_ne = leaf_nw->children[ne];
+            leaf_nw_sw = leaf_nw->children[sw];
+            leaf_nw_se = leaf_nw->children[se];
 
-            leaf_ne_nw = &(leaf_ne->children[nw]);
-            leaf_ne_ne = &(leaf_ne->children[ne]);
-            leaf_ne_sw = &(leaf_ne->children[sw]);
-            leaf_ne_se = &(leaf_ne->children[se]);
+            leaf_ne_nw = leaf_ne->children[nw];
+            leaf_ne_ne = leaf_ne->children[ne];
+            leaf_ne_sw = leaf_ne->children[sw];
+            leaf_ne_se = leaf_ne->children[se];
 
-            leaf_sw_nw = &(leaf_sw->children[nw]);
-            leaf_sw_ne = &(leaf_sw->children[ne]);
-            leaf_sw_sw = &(leaf_sw->children[sw]);
-            leaf_sw_se = &(leaf_sw->children[se]);
+            leaf_sw_nw = leaf_sw->children[nw];
+            leaf_sw_ne = leaf_sw->children[ne];
+            leaf_sw_sw = leaf_sw->children[sw];
+            leaf_sw_se = leaf_sw->children[se];
 
-            leaf_se_nw = &(leaf_se->children[nw]);
-            leaf_se_ne = &(leaf_se->children[ne]);
-            leaf_se_sw = &(leaf_se->children[sw]);
-            leaf_se_se = &(leaf_se->children[se]);
+            leaf_se_nw = leaf_se->children[nw];
+            leaf_se_ne = leaf_se->children[ne];
+            leaf_se_sw = leaf_se->children[sw];
+            leaf_se_se = leaf_se->children[se];
 
             leaf_nw_se->attach_leaves();
         }
 
-        Leaf<Data> test_leaf;
-        Leaf<Data> *test_child;
+        shared_ptr<CurrLeaf> test_leaf;
+        shared_ptr<Empty_Config> config;
+        shared_ptr<CurrLeaf> test_child;
         double x{}, y{}, box_size{};
-        Leaf<Data> *leaf_nw_nw, *leaf_nw_ne, *leaf_nw_sw, *leaf_nw_se, *leaf_ne_nw, *leaf_ne_ne, *leaf_ne_sw, *leaf_ne_se, *leaf_sw_nw, *leaf_sw_ne, *leaf_sw_sw, *leaf_sw_se, *leaf_se_nw, *leaf_se_ne, *leaf_se_sw, *leaf_se_se;
-        Leaf<Data> *leaf_nw, *leaf_ne, *leaf_sw, *leaf_se;
+        shared_ptr<CurrLeaf> leaf_nw_nw, leaf_nw_ne, leaf_nw_sw, leaf_nw_se, leaf_ne_nw, leaf_ne_ne, leaf_ne_sw, leaf_ne_se, leaf_sw_nw, leaf_sw_ne, leaf_sw_sw, leaf_sw_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se;
+        shared_ptr<CurrLeaf> leaf_nw, leaf_ne, leaf_sw, leaf_se;
     };
 
 
     // test get_all_leafs
     TEST_F(NeighbourLeafTestFixture, getAllLeafes) {
-        std::vector<Leaf<Data> *> all_leafs = test_leaf.get_all_leafs();
-        std::set<Leaf<Data> *> all_leafs_set(all_leafs.begin(), all_leafs.end());
+        std::vector<shared_ptr<CurrLeaf>> all_leafs = test_leaf->get_all_leafs();
+        std::set < shared_ptr<CurrLeaf> > all_leafs_set(all_leafs.begin(), all_leafs.end());
         // reference set
-        std::set<Leaf<Data> *> reference_set({&test_leaf, leaf_nw_nw, leaf_nw_ne, leaf_nw_sw, leaf_nw_se, leaf_ne_nw,
-                                              leaf_ne_ne, leaf_ne_sw, leaf_ne_se, leaf_sw_nw, leaf_sw_ne, leaf_sw_sw,
-                                              leaf_sw_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se, leaf_nw,
-                                              leaf_ne, leaf_sw, leaf_se, &(leaf_nw_se->children[nw]),
-                                              &(leaf_nw_se->children[ne]), &(leaf_nw_se->children[sw]),
-                                              &(leaf_nw_se->children[se])});
+        std::set < shared_ptr<CurrLeaf> >
+        reference_set(
+                {test_leaf, leaf_nw_nw, leaf_nw_ne, leaf_nw_sw, leaf_nw_se,
+                 leaf_ne_nw,
+                 leaf_ne_ne, leaf_ne_sw, leaf_ne_se, leaf_sw_nw, leaf_sw_ne, leaf_sw_sw,
+                 leaf_sw_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se, leaf_nw,
+                 leaf_ne, leaf_sw, leaf_se, leaf_nw_se->children[nw], leaf_nw_se->children[ne],
+                 leaf_nw_se->children[sw], leaf_nw_se->children[se]
+                });
 
         // no doubled elements
         ASSERT_EQ(all_leafs_set.size(), all_leafs.size());
@@ -143,9 +93,9 @@ namespace dp {
         ASSERT_EQ(all_leafs_set, reference_set);
 
         // check, that it also work on a sub_tree and, that it does include only the leafs in the subtree
-        std::vector<Leaf<Data> *> sub_leafs = leaf_se->get_all_leafs();
-        std::set<Leaf<Data> *> sub_leafs_set(sub_leafs.begin(), sub_leafs.end());
-        std::set<Leaf<Data> *> sub_reference_set({leaf_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se});
+        std::vector<shared_ptr<CurrLeaf>> sub_leafs = leaf_se->get_all_leafs();
+        std::set<shared_ptr<CurrLeaf>> sub_leafs_set(sub_leafs.begin(), sub_leafs.end());
+        std::set<shared_ptr<CurrLeaf>> sub_reference_set({leaf_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se});
 
         // no doubled elements
         ASSERT_EQ(sub_leafs.size(), sub_leafs_set.size());
@@ -154,7 +104,7 @@ namespace dp {
     }
 
     TEST_F(NeighbourLeafTestFixture, GetDepthFunction) {
-        ASSERT_EQ(test_leaf.get_depth(), 0);
+        ASSERT_EQ(test_leaf->get_depth(), 0);
         ASSERT_EQ(leaf_nw->get_depth(), 1);
         ASSERT_EQ(leaf_ne->get_depth(), 1);
         ASSERT_EQ(leaf_sw->get_depth(), 1);
@@ -178,10 +128,10 @@ namespace dp {
         ASSERT_EQ(leaf_se_se->get_depth(), 2);
 
         // leaf_nw_se
-        ASSERT_EQ(leaf_nw_se->children[nw].get_depth(), 3);
-        ASSERT_EQ(leaf_nw_se->children[ne].get_depth(), 3);
-        ASSERT_EQ(leaf_nw_se->children[sw].get_depth(), 3);
-        ASSERT_EQ(leaf_nw_se->children[se].get_depth(), 3);
+        ASSERT_EQ(leaf_nw_se->children[nw]->get_depth(), 3);
+        ASSERT_EQ(leaf_nw_se->children[ne]->get_depth(), 3);
+        ASSERT_EQ(leaf_nw_se->children[sw]->get_depth(), 3);
+        ASSERT_EQ(leaf_nw_se->children[se]->get_depth(), 3);
     }
 
     TEST_F(NeighbourLeafTestFixture, testNorthNeighbourFunction) {
@@ -216,7 +166,7 @@ namespace dp {
         ASSERT_EQ(leaf_se->get_neighbour(north), leaf_ne);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[nw].get_neighbour(north), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[nw]->get_neighbour(north), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testEastNeighbourFunction) {
@@ -251,7 +201,7 @@ namespace dp {
         ASSERT_EQ(leaf_se->get_neighbour(east), nullptr);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[ne].get_neighbour(east), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[ne]->get_neighbour(east), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testSouthNeighbourFunction) {
@@ -286,7 +236,7 @@ namespace dp {
         ASSERT_EQ(leaf_se->get_neighbour(south), nullptr);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[se].get_neighbour(south), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[se]->get_neighbour(south), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testWestNeighbourFunction) {
@@ -322,7 +272,7 @@ namespace dp {
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[sw].get_neighbour(west), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[sw]->get_neighbour(west), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testNorthWestNeighbour) {
@@ -358,7 +308,7 @@ namespace dp {
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[sw].get_diagonal_neighbour(nw), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[sw]->get_diagonal_neighbour(nw), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testNorthEastNeighbour) {
@@ -394,7 +344,7 @@ namespace dp {
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[ne].get_diagonal_neighbour(ne), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[ne]->get_diagonal_neighbour(ne), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testSouthEastNeighbour) {
@@ -430,7 +380,7 @@ namespace dp {
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[sw].get_diagonal_neighbour(se), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[sw]->get_diagonal_neighbour(se), nullptr);
     }
 
     TEST_F(NeighbourLeafTestFixture, testSouthWestNeighbour) {
@@ -466,10 +416,11 @@ namespace dp {
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[sw].get_diagonal_neighbour(sw), nullptr);
+        ASSERT_EQ(leaf_nw_se->children[sw]->get_diagonal_neighbour(sw), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture_H, TestNorthComparison) {
+    TEST_F(NeighbourLeafTestFixture, TestNorthComparison) {
+        config->mode = 1;
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
         ASSERT_FALSE(test_child->comparison(north));
@@ -533,7 +484,8 @@ namespace dp {
         ASSERT_FALSE(leaf_se->comparison(east));
     }
 
-    TEST_F(NeighbourLeafTestFixture_H, TestSouthComparison) {
+    TEST_F(NeighbourLeafTestFixture, TestSouthComparison) {
+        config->mode = 1;
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
         ASSERT_FALSE(test_child->comparison(south));
@@ -758,9 +710,9 @@ namespace dp {
     }
 
     TEST_F(NeighbourLeafTestFixture, testBalanceTree) {
-        test_leaf.balance_tree();
+        test_leaf->balance_tree();
         // test that the root leaf and its children are not further split
-        ASSERT_EQ(test_leaf.children.size(), 4);
+        ASSERT_EQ(test_leaf->children.size(), 4);
         ASSERT_EQ(leaf_nw->children.size(), 4);
         ASSERT_EQ(leaf_ne->children.size(), 4);
         ASSERT_EQ(leaf_sw->children.size(), 4);
@@ -778,9 +730,9 @@ namespace dp {
     }
 
     TEST_F(NeighbourLeafTestFixture, testBalanceTreeWithForceOption) {
-        test_leaf.balance_tree(true);
+        test_leaf->balance_tree(true);
         // test that the root leaf and its children are not further split
-        ASSERT_EQ(test_leaf.children.size(), 4);
+        ASSERT_EQ(test_leaf->children.size(), 4);
         ASSERT_EQ(leaf_nw->children.size(), 4);
         ASSERT_EQ(leaf_ne->children.size(), 4);
         ASSERT_EQ(leaf_sw->children.size(), 4);
