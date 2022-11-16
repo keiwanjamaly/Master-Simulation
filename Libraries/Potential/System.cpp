@@ -52,10 +52,16 @@ namespace phy {
         Derivative ux(std::make_shared<std::function<double(double, double)>>(lbc),
                       std::make_shared<std::function<double(double, double)>>(rbc), points, dx);
         // handle diffusion
-        dpointsdt[0] = (P_j_plus_1_2(t, ux, 0) - P_j_plus_1_2(t, ux, -1)) / (dx);
-        for (int i = 1; i < points.size() - 1; i++)
-            dpointsdt[i] = (P_j_plus_1_2(t, ux, i) - P_j_plus_1_2(t, ux, i - 1)) / (dx);
-        dpointsdt[N - 1] = (P_j_plus_1_2(t, ux, N - 1) - P_j_plus_1_2(t, ux, N - 2)) / (dx);
+        dbl_vec P_j_plus_1_2_vec;
+        P_j_plus_1_2_vec.reserve(ux.div.size());
+        for (int i = -1; i <= N - 1; i++)
+            P_j_plus_1_2_vec.push_back(P_j_plus_1_2(t, ux, i));
+        for (int i = 0; i < N; i++)
+            dpointsdt[i] = (P_j_plus_1_2_vec[i + 1] - P_j_plus_1_2_vec[i]) / (dx);
+//        dpointsdt[0] = (P_j_plus_1_2(t, ux, 0) - P_j_plus_1_2(t, ux, -1)) / (dx);
+//        for (int i = 1; i < points.size() - 1; i++)
+//            dpointsdt[i] = (P_j_plus_1_2(t, ux, i) - P_j_plus_1_2(t, ux, i - 1)) / (dx);
+//        dpointsdt[N - 1] = (P_j_plus_1_2(t, ux, N - 1) - P_j_plus_1_2(t, ux, N - 2)) / (dx);
 
         // handle source
         for (int i = 0; i < points.size(); i++)

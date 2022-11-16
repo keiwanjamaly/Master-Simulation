@@ -21,7 +21,7 @@ namespace dp {
         double box_size{};
         std::vector<shared_ptr<Leaf<T, Config>>> children;
         shared_ptr<Leaf<T, Config>> parent{nullptr};
-        T data;
+        shared_ptr<T> data;
         shared_ptr<Config> config;
 
         double x{}, y{};
@@ -44,7 +44,7 @@ namespace dp {
                   box_size{initial_box_size_},
                   split_condition{split_condition_},
                   config{config_} {
-            data = T(x, y, config);
+            data = std::make_shared<T>(x, y, config);
         }
 
         explicit Leaf(DiagonalDirection dir, shared_ptr<Leaf<T, Config>> parent_, shared_ptr<Config> config_) : parent{
@@ -70,7 +70,7 @@ namespace dp {
                     y = parent->y - position_offset;
                     break;
             }
-            data = T(x, y, config);
+            data = std::make_shared<T>(x, y, config);
 
             split_condition = parent->split_condition;
         }
@@ -194,7 +194,7 @@ namespace dp {
             if (neighbour == nullptr)
                 return false;
             else
-                return split_condition(this->data.splitDecisionData(), neighbour->data.splitDecisionData());
+                return split_condition(this->data->splitDecisionData(), neighbour->data->splitDecisionData());
         }
 
         bool comparison(DiagonalDirection dir) {
@@ -202,7 +202,7 @@ namespace dp {
             if (neighbour == nullptr)
                 return false;
             else
-                return split_condition(this->data.splitDecisionData(), neighbour->data.splitDecisionData());
+                return split_condition(this->data->splitDecisionData(), neighbour->data->splitDecisionData());
         }
 
         bool should_be_split() {

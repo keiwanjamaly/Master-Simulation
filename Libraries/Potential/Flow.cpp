@@ -9,12 +9,11 @@ using namespace boost::numeric::odeint;
 
 namespace phy {
 
-    Flow::Flow(double mu_, double T_, double Lambda_, double t_max_, double N_flavor_, int N_grid, double sigma_max_) :
-            x{mu_}, y{T_}, Lambda(Lambda_), t_max{t_max_}, t{0.0}, N_flavor{N_flavor_}, N_grid{N_grid},
-            sigma_max{sigma_max_} {
-        sigma_points.reserve(N_grid);
-        for (int i = 0; i < N_grid; i++)
-            sigma_points.push_back(i * sigma_max / (N_grid - 1));
+    Flow::Flow(double mu_, double T_, std::shared_ptr<Configuration> c_) :
+            x{mu_}, y{T_}, c{c_} {
+        sigma_points.reserve(c->N_grid);
+        for (int i = 0; i < c->N_grid; i++)
+            sigma_points.push_back(i * c->sigma_max / (c->N_grid - 1));
         heat_solver = std::make_shared<System>(sigma_points, diffusion(), source(), left_boundary_condition(),
                                                right_boundary_condition());
         set_initial_condition();
@@ -36,14 +35,14 @@ namespace phy {
 
     std::function<double(double, double)> Flow::diffusion() {
         return [this](double t_val, double u_x) -> double {
-            if (std::isinf(N_flavor))
+            auto test = c;
+            if (std::isinf(c->N_flavor))
                 return 0;
             double E = E_b(k(t_val), u_x);
-            double b = 1 / T; // betta
-            double return_value = -pow(k(t_val), 3) * (1 + 2 * n_b(E * b)) /
-                                  (M_PI * N_flavor * 2 * E);
-//            if (std::isnan(return_value))
-//                throw std::runtime_error("The change of a point evaluated to nan.");
+            if (std::isnan(E))
+                throw std::runtime_error("There is a shock wave in the system!");
+            double return_value = -pow(k(t_val), 3) * (1 + 2 * n_b(E / T)) /
+                                  (M_PI * c->N_flavor * 2 * E);
 
             return return_value;
         };
@@ -62,13 +61,22 @@ namespace phy {
 
     void Flow::compute() {
         integrate_adaptive(make_controlled<error_stepper_type>(1.0e-10, 1.0e-10),
-                           *heat_solver, u, t, t_max, 0.01);
+                           *heat_solver, u, t, c->t_max, 0.01, observer(std::cout));
+    }
+
+    std::function<void(const dbl_vec &, const double)> Flow::observer(std::ostream &m_out) {
+        return [this](const dbl_vec &u_points, const double t_val) -> void {
+            i++;
+            if (i % 300 == 0)
+                std::cout << std::setprecision(4) << "Currently at t = " << t_val << " (k=" << k(t_val) << ")"
+                          << std::endl;
+        };
     }
 
     void Flow::set_initial_condition() {
         u.clear();
         u.reserve(sigma_points.size());
-        double value = sqrt(1.0 + 1 / (Lambda * Lambda));
+        double value = sqrt(1.0 + 1 / pow(c->Lambda, 2));
         double multiplier = (atanh(1 / value) - 1 / value) / M_PI;
         for (double &sigma: sigma_points) {
             u.push_back(sigma * multiplier);
@@ -92,7 +100,7 @@ namespace phy {
     }
 
     double Flow::k(double t_val) {
-        return Lambda * exp(-t_val);
+        return c->Lambda * exp(-t_val);
     }
 
     double Flow::sech(double x) {

@@ -12,43 +12,46 @@
 
 namespace phy {
 
-    class Flow {
+    class Configuration {
     public:
         double Lambda, t_max;
         double sigma_max;
         int N_grid;
         double N_flavor;
-        double one_over_N;
+    };
+
+    class Flow {
+    public:
         double y, x;
         double T, mu;
         double t = 0;
+        int i = 0;
         dbl_vec sigma_points, u;
+        std::shared_ptr<Configuration> c;
 
         std::shared_ptr<System> heat_solver;
 
         Flow() = default;
 
-        Flow(double mu_, double T_, double Lambda_, double t_max_, double N_flavor_, int N_grid, double sigma_max_);
+        Flow(double mu_, double T_, std::shared_ptr<Configuration> c_);
 
         void compute();
 
         dbl_vec splitDecisionData();
 
-
         std::function<double(double, double)> diffusion();
 
         std::function<double(double, double)> source();
 
-        std::function<double(double, double)> left_boundary_condition();
+        static std::function<double(double, double)> left_boundary_condition();
 
-        std::function<double(double, double)> right_boundary_condition();
+        static std::function<double(double, double)> right_boundary_condition();
 
         dbl_vec get_minimum();
 
         dbl_vec get_pressure();
 
         void set_initial_condition();
-
 
         static double n_b(double val);
 
@@ -61,6 +64,8 @@ namespace phy {
         double k(double t_val);
 
         static double sech(double x);
+
+        std::function<void(const dbl_vec &, const double)> observer(std::ostream &m_out);
     };
 
 }

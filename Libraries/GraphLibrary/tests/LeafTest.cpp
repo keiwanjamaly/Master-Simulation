@@ -70,8 +70,8 @@ namespace dp {
         test_child = test_leaf->children[nw];
         ASSERT_DOUBLE_EQ(test_child->x, x_child_pos);
         ASSERT_DOUBLE_EQ(test_child->y, y_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data.x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child->data->x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child->data->y, y_child_pos);
         ASSERT_EQ(test_child->parent, test_leaf);
 
         // testing north-east coordinates
@@ -80,8 +80,8 @@ namespace dp {
         test_child = test_leaf->children[ne];
         ASSERT_DOUBLE_EQ(test_child->x, x_child_pos);
         ASSERT_DOUBLE_EQ(test_child->y, y_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data.x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child->data->x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child->data->y, y_child_pos);
         ASSERT_EQ(test_child->parent, test_leaf);
 
         // testing south-west coordinates
@@ -90,8 +90,8 @@ namespace dp {
         test_child = test_leaf->children[sw];
         ASSERT_DOUBLE_EQ(test_child->x, x_child_pos);
         ASSERT_DOUBLE_EQ(test_child->y, y_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data.x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child->data->x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child->data->y, y_child_pos);
         ASSERT_EQ(test_child->parent, test_leaf);
 
         // testing south-east coordinates
@@ -100,8 +100,8 @@ namespace dp {
         test_child = test_leaf->children[se];
         ASSERT_DOUBLE_EQ(test_child->x, x_child_pos);
         ASSERT_DOUBLE_EQ(test_child->y, y_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data.x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data.y, y_child_pos);
+        ASSERT_DOUBLE_EQ(test_child->data->x, x_child_pos);
+        ASSERT_DOUBLE_EQ(test_child->data->y, y_child_pos);
         ASSERT_EQ(test_child->parent, test_leaf);
     }
 
