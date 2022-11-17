@@ -6,7 +6,7 @@
 #define SIMULATION_LEAF_H
 
 #include "Types_Leaf.h"
-#include <array>
+#include <vector>
 #include <map>
 #include <thread>
 #include <memory>
