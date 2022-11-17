@@ -7,6 +7,7 @@
 
 #include "Types_Leaf.h"
 #include <vector>
+#include <array>
 #include <map>
 #include <thread>
 #include <memory>
