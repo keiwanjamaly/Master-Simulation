@@ -15,7 +15,7 @@ namespace phy {
         for (int i = 0; i < c->N_grid; i++)
             sigma_points.push_back(i * c->sigma_max / (c->N_grid - 1));
         heat_solver = std::make_shared<System>(sigma_points, diffusion(), source(), left_boundary_condition(),
-                                               right_boundary_condition());
+                                               right_boundary_condition(), true);
         set_initial_condition();
         T = y;
         mu = x;
@@ -34,10 +34,11 @@ namespace phy {
     }
 
     std::function<double(double, double)> Flow::diffusion() {
-        return [this](double t_val, double u_x) -> double {
-            auto test = c;
-            if (std::isinf(c->N_flavor))
+        if (std::isinf(c->N_flavor))
+            return [](double t_val, double u_x) -> double {
                 return 0;
+            };
+        return [this](double t_val, double u_x) -> double {
             double E = E_b(k(t_val), u_x);
             if (std::isnan(E))
                 throw std::runtime_error("There is a shock wave in the system!");
@@ -52,10 +53,11 @@ namespace phy {
         return [this](double t_val, double sigma) -> double {
             double E = E_f(k(t_val), sigma);
             double b = 1 / T; // betta
-            double plus_term = b * E * (pow(sech(b * (E - mu) / 2), 2) + pow(sech(b * (E + mu) / 2), 2));
-            double minus_term = 2 * (tanh(b * (E - mu) / 2) + tanh(b * (E + mu) / 2));
-            double return_value = pow(k(t_val), 3) / (4 * M_PI * pow(E, 3)) * sigma * (plus_term - minus_term);
-            return return_value;
+//            double plus_term = b * E * (pow(sech(b * (E - mu) / 2), 2) + pow(sech(b * (E + mu) / 2), 2));
+//            double minus_term = 2 * (tanh(b * (E - mu) / 2) + tanh(b * (E + mu) / 2));
+//            double return_value = pow(k(t_val), 3) / (4 * M_PI * pow(E, 3)) * sigma * (plus_term - minus_term);
+//            return return_value;
+            return pow(k(t_val), 3) / (2 * M_PI * E) * (tanh(b * (E - mu) * 0.5) + tanh(b * (E + mu) * 0.5));
         };
     }
 

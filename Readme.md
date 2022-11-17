@@ -4,8 +4,7 @@
 * [boost](https://www.boost.org)
 * [sidmjson](https://github.com/simdjson/simdjson)
 
-The project is structured in a way, that you don't need to install anything except c++20. Everything else is organized
-in submodules, so you just need to do
+additionally you need to do
 
 ```shell
 $ git submodule init

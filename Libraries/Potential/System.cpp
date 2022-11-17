@@ -32,11 +32,13 @@ namespace phy {
                    std::function<double(double, double)> diffusion_flux,
                    std::function<double(double, double)> source,
                    std::function<double(double, double)> left_boundary,
-                   std::function<double(double, double)> right_boundary) : x_points{x_points_},
-                                                                           Q{std::move(diffusion_flux)},
-                                                                           S{std::move(source)},
-                                                                           lbc{std::move(left_boundary)},
-                                                                           rbc{std::move(right_boundary)} {
+                   std::function<double(double, double)> right_boundary,
+                   bool di) : x_points{x_points_},
+                              Q{std::move(diffusion_flux)},
+                              S{std::move(source)},
+                              lbc{std::move(left_boundary)},
+                              rbc{std::move(right_boundary)},
+                              difference_implementation{di} {
         N = int(x_points.size());
         if (N == 0 || N == 1) {
             throw std::invalid_argument("The sigma_points vector has one (no) element(s)!");
@@ -58,14 +60,22 @@ namespace phy {
             P_j_plus_1_2_vec.push_back(P_j_plus_1_2(t, ux, i));
         for (int i = 0; i < N; i++)
             dpointsdt[i] = (P_j_plus_1_2_vec[i + 1] - P_j_plus_1_2_vec[i]) / (dx);
-//        dpointsdt[0] = (P_j_plus_1_2(t, ux, 0) - P_j_plus_1_2(t, ux, -1)) / (dx);
-//        for (int i = 1; i < points.size() - 1; i++)
-//            dpointsdt[i] = (P_j_plus_1_2(t, ux, i) - P_j_plus_1_2(t, ux, i - 1)) / (dx);
-//        dpointsdt[N - 1] = (P_j_plus_1_2(t, ux, N - 1) - P_j_plus_1_2(t, ux, N - 2)) / (dx);
 
         // handle source
-        for (int i = 0; i < points.size(); i++)
-            dpointsdt[i] += S(t, x_points[i]);
+        if (difference_implementation) {
+            dbl_vec S_vec;
+            S_vec.reserve(ux.div.size());
+            S_vec.push_back(S(t, x_points[0] - dx * 0.5));
+            for (int i = 0; i <= N - 1; i++)
+                S_vec.push_back(S(t, x_points[i] + dx * 0.5));
+            for (int i = 0; i < N; i++) {
+                double test = (S_vec[i + 1] - S_vec[i]) / (dx);
+                dpointsdt[i] += test;
+            }
+        } else {
+            for (int i = 0; i < points.size(); i++)
+                dpointsdt[i] += S(t, x_points[i]);
+        }
     }
 
 

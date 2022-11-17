@@ -58,10 +58,14 @@ namespace phy {
     TEST_F(OnePlusOneTestDetailedFixture, TestSourceTerm) {
         config->t_max = t_vector[0];
         f = std::make_shared<Flow>(mu, T, config);
-        EXPECT_NEAR(f->source()(1.87674, 3.88856), -1.237767929469203, 1e-5);
-        EXPECT_NEAR(f->source()(11.7463, 4.59578), -0.00716250554559492, 1e-5);
-        EXPECT_NEAR(f->source()(5.75602, 0.812431), -0.2586023231985309, 1e-5);
-        EXPECT_NEAR(f->source()(3.09129, 3.36587), -1.071389841937635, 1e-5);
+        EXPECT_NEAR(f->source()(1.87674, 3.88856), 1.491985000487865e8, 1e-5);
+        EXPECT_NEAR(f->source()(11.7463, 4.59578), 0.06778105648726529, 1e-5);
+        EXPECT_NEAR(f->source()(5.75602, 0.812431), 63718.16255440156, 1e-5);
+        EXPECT_NEAR(f->source()(3.09129, 3.36587), 1.314678697658328e7, 1e-5);
+//        EXPECT_NEAR(f->source()(1.87674, 3.88856), -1.237767929469203, 1e-5);
+//        EXPECT_NEAR(f->source()(11.7463, 4.59578), -0.00716250554559492, 1e-5);
+//        EXPECT_NEAR(f->source()(5.75602, 0.812431), -0.2586023231985309, 1e-5);
+//        EXPECT_NEAR(f->source()(3.09129, 3.36587), -1.071389841937635, 1e-5);
     }
 
     TEST_F(OnePlusOneTestDetailedFixture, TestDiffusionTerm) {
