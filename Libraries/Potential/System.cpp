@@ -53,24 +53,22 @@ namespace phy {
     void System::operator()(const dbl_vec &points, dbl_vec &dpointsdt, const double t) {
         Derivative ux(std::make_shared<std::function<double(double, double)>>(lbc),
                       std::make_shared<std::function<double(double, double)>>(rbc), points, dx);
-        // handle diffusion
-        dbl_vec P_j_plus_1_2_vec;
-        P_j_plus_1_2_vec.reserve(ux.div.size());
-        for (int i = -1; i <= N - 1; i++)
-            P_j_plus_1_2_vec.push_back(P_j_plus_1_2(t, ux, i));
-        for (int i = 0; i < N; i++)
-            dpointsdt[i] = (P_j_plus_1_2_vec[i + 1] - P_j_plus_1_2_vec[i]) / (dx);
 
+        // handle diffusion
+        double low, high;
+        low = P_j_plus_1_2(t, ux, -1);
+        for (int i = 0; i < N; i++) {
+            high = P_j_plus_1_2(t, ux, i);
+            dpointsdt[i] = (high - low) / (dx);
+            low = high;
+        }
         // handle source
         if (difference_implementation) {
-            dbl_vec S_vec;
-            S_vec.reserve(ux.div.size());
-            S_vec.push_back(S(t, x_points[0] - dx * 0.5));
-            for (int i = 0; i <= N - 1; i++)
-                S_vec.push_back(S(t, x_points[i] + dx * 0.5));
+            low = S(t, x_points[0] - dx * 0.5);
             for (int i = 0; i < N; i++) {
-                double test = (S_vec[i + 1] - S_vec[i]) / (dx);
-                dpointsdt[i] += test;
+                high = S(t, x_points[i] + dx * 0.5);
+                dpointsdt[i] += (high - low) / dx;
+                low = high;
             }
         } else {
             for (int i = 0; i < points.size(); i++)

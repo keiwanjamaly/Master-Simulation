@@ -112,7 +112,7 @@ namespace phy {
         f = std::make_shared<Flow>(mu, T, config);
         f->compute();
         for (int n = 0; n < config->N_grid; n++) {
-            EXPECT_NEAR(f->u[n], u_vector[t_vector.size() - 1][n], 1e-6)
+            EXPECT_NEAR(f->u[n], u_vector[t_vector.size() - 1][n], 1e-5)
                                 << "Vectors differ at index " << n << " for integration time ";
         }
     }
