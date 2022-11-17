@@ -1,4 +1,6 @@
-#include "gtest/gtest.h"
+#define BOOST_TEST_MAIN
+
+#include <boost/test/unit_test.hpp>
 #include "Leaf.h"
 #include "Types_Leaf.h"
 #include "TestData.h"
@@ -8,10 +10,9 @@ namespace dp {
 
     using std::shared_ptr, std::make_shared;
 
-    class LeafTestFixture : public ::testing::Test {
-
-    protected:
-        void SetUp() override {
+    class LeafTestFixture {
+    public:
+        LeafTestFixture() {
             x = 0.5;
             y = 0.5;
             box_size = 2.0;
@@ -27,14 +28,14 @@ namespace dp {
 
 
 // test constructors
-    TEST_F(LeafTestFixture, PositionsAreCorrect) {
-        ASSERT_EQ(test_leaf->x, 0.5);
-        ASSERT_EQ(test_leaf->y, 0.5);
-        ASSERT_EQ(test_leaf->box_size, 2.0);
-        ASSERT_EQ(test_leaf->split_condition, split_decision);
+    BOOST_FIXTURE_TEST_CASE(PositionsAreCorrect, LeafTestFixture) {
+        BOOST_CHECK_EQUAL(test_leaf->x, 0.5);
+        BOOST_CHECK_EQUAL(test_leaf->y, 0.5);
+        BOOST_CHECK_EQUAL(test_leaf->box_size, 2.0);
+        BOOST_CHECK_EQUAL(test_leaf->split_condition, split_decision);
     }
 
-    TEST(LeafParentTestSiute, LeafParentTestConstructor) {
+    BOOST_FIXTURE_TEST_CASE(LeafParentTestConstructor, LeafTestFixture) {
         double x = 0.5;
         double y = 0.5;
         double box_size = 2.0;
@@ -46,17 +47,16 @@ namespace dp {
                          std::make_shared<Empty_Config>(config)));
         shared_ptr<CurrLeaf> test_leaf = std::make_shared<CurrLeaf>(CurrLeaf(nw, parent_leaf,
                                                                              std::make_shared<Empty_Config>(config)));
-        ASSERT_EQ(parent_leaf, test_leaf->parent);
+        BOOST_CHECK_EQUAL(parent_leaf, test_leaf->parent);
 
-        ASSERT_DOUBLE_EQ(test_leaf->x, child_x);
-        ASSERT_DOUBLE_EQ(test_leaf->y, child_y);
-        ASSERT_DOUBLE_EQ(parent_leaf->box_size / 2.0, test_leaf->box_size);
+        BOOST_TEST(test_leaf->x == child_x, boost::test_tools::tolerance(0.0));
+        BOOST_TEST(test_leaf->y == child_y, boost::test_tools::tolerance(0.0));
+        BOOST_TEST(parent_leaf->box_size * 0.5 == test_leaf->box_size);
 
-        ASSERT_EQ(test_leaf->children.size(), 0);
+        BOOST_CHECK_EQUAL(test_leaf->children.size(), 0);
     }
 
-// test attach_leaves
-    TEST_F(LeafTestFixture, attatchLeavesIsWorking) {
+    BOOST_FIXTURE_TEST_CASE(attatchLeavesIsWorking, LeafTestFixture) {
         double x_child_pos, y_child_pos;
         double child_box_size = test_leaf->box_size / 2;
 
@@ -68,70 +68,69 @@ namespace dp {
         x_child_pos = x - child_box_size / 2.0;
         y_child_pos = y + child_box_size / 2.0;
         test_child = test_leaf->children[nw];
-        ASSERT_DOUBLE_EQ(test_child->x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->y, y_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data->x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data->y, y_child_pos);
-        ASSERT_EQ(test_child->parent, test_leaf);
+        BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing north-east coordinates
         x_child_pos = x + child_box_size / 2.0;
         y_child_pos = y + child_box_size / 2.0;
         test_child = test_leaf->children[ne];
-        ASSERT_DOUBLE_EQ(test_child->x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->y, y_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data->x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data->y, y_child_pos);
-        ASSERT_EQ(test_child->parent, test_leaf);
+        BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing south-west coordinates
         x_child_pos = x - child_box_size / 2.0;
         y_child_pos = y - child_box_size / 2.0;
         test_child = test_leaf->children[sw];
-        ASSERT_DOUBLE_EQ(test_child->x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->y, y_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data->x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data->y, y_child_pos);
-        ASSERT_EQ(test_child->parent, test_leaf);
+        BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing south-east coordinates
         x_child_pos = x + child_box_size / 2.0;
         y_child_pos = y - child_box_size / 2.0;
         test_child = test_leaf->children[se];
-        ASSERT_DOUBLE_EQ(test_child->x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->y, y_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data->x, x_child_pos);
-        ASSERT_DOUBLE_EQ(test_child->data->y, y_child_pos);
-        ASSERT_EQ(test_child->parent, test_leaf);
+        BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
     }
 
-    TEST_F(LeafTestFixture, testTwiceAttatchLeaves) {
+    BOOST_FIXTURE_TEST_CASE(testTwiceAttatchLeaves, LeafTestFixture) {
         test_leaf->attach_leaves();
         test_leaf->attach_leaves();
 
         // test, that leaf has only 4 children
-        ASSERT_EQ(test_leaf->children.size(), 4);
+        BOOST_CHECK_EQUAL(test_leaf->children.size(), 4);
 
         // test, that children have no other children
-        ASSERT_EQ(test_leaf->children[nw]->children.size(), 0);
-        ASSERT_EQ(test_leaf->children[ne]->children.size(), 0);
-        ASSERT_EQ(test_leaf->children[sw]->children.size(), 0);
-        ASSERT_EQ(test_leaf->children[se]->children.size(), 0);
+        BOOST_CHECK_EQUAL(test_leaf->children[nw]->children.size(), 0);
+        BOOST_CHECK_EQUAL(test_leaf->children[ne]->children.size(), 0);
+        BOOST_CHECK_EQUAL(test_leaf->children[sw]->children.size(), 0);
+        BOOST_CHECK_EQUAL(test_leaf->children[se]->children.size(), 0);
     }
 
-    // test isRoot()
-    TEST_F(LeafTestFixture, testIsRoot) {
+    BOOST_FIXTURE_TEST_CASE(testIsRoot, LeafTestFixture) {
         test_leaf->attach_leaves();
-        ASSERT_TRUE(test_leaf->isRoot());
+        BOOST_TEST(test_leaf->isRoot() == true);
 
-        ASSERT_FALSE(test_leaf->children[nw]->isRoot());
-        ASSERT_FALSE(test_leaf->children[ne]->isRoot());
-        ASSERT_FALSE(test_leaf->children[sw]->isRoot());
-        ASSERT_FALSE(test_leaf->children[se]->isRoot());
+        BOOST_TEST(test_leaf->children[nw]->isRoot() == false);
+        BOOST_TEST(test_leaf->children[ne]->isRoot() == false);
+        BOOST_TEST(test_leaf->children[sw]->isRoot() == false);
+        BOOST_TEST(test_leaf->children[se]->isRoot() == false);
     }
 
     // test get_children_of_parent()
-    TEST_F(LeafTestFixture, testGetChildrenOfParent) {
+    BOOST_FIXTURE_TEST_CASE(testGetChildrenOfParent, LeafTestFixture) {
         test_leaf->attach_leaves();
 
         shared_ptr<CurrLeaf> test_child;
@@ -142,37 +141,37 @@ namespace dp {
 
         // test from nw child direction
         test_child = test_child_nw;
-        ASSERT_EQ(test_child->get_child_of_parent(nw), test_child_nw);
-        ASSERT_EQ(test_child->get_child_of_parent(ne), test_child_ne);
-        ASSERT_EQ(test_child->get_child_of_parent(sw), test_child_sw);
-        ASSERT_EQ(test_child->get_child_of_parent(se), test_child_se);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(nw), test_child_nw);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(ne), test_child_ne);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(sw), test_child_sw);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(se), test_child_se);
 
         // test from ne child direction
         test_child = test_child_ne;
-        ASSERT_EQ(test_child->get_child_of_parent(nw), test_child_nw);
-        ASSERT_EQ(test_child->get_child_of_parent(ne), test_child_ne);
-        ASSERT_EQ(test_child->get_child_of_parent(sw), test_child_sw);
-        ASSERT_EQ(test_child->get_child_of_parent(se), test_child_se);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(nw), test_child_nw);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(ne), test_child_ne);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(sw), test_child_sw);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(se), test_child_se);
 
         // test from sw child direction
         test_child = test_child_sw;
-        ASSERT_EQ(test_child->get_child_of_parent(nw), test_child_nw);
-        ASSERT_EQ(test_child->get_child_of_parent(ne), test_child_ne);
-        ASSERT_EQ(test_child->get_child_of_parent(sw), test_child_sw);
-        ASSERT_EQ(test_child->get_child_of_parent(se), test_child_se);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(nw), test_child_nw);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(ne), test_child_ne);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(sw), test_child_sw);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(se), test_child_se);
 
         // test from se child direction
         test_child = test_child_se;
-        ASSERT_EQ(test_child->get_child_of_parent(nw), test_child_nw);
-        ASSERT_EQ(test_child->get_child_of_parent(ne), test_child_ne);
-        ASSERT_EQ(test_child->get_child_of_parent(sw), test_child_sw);
-        ASSERT_EQ(test_child->get_child_of_parent(se), test_child_se);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(nw), test_child_nw);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(ne), test_child_ne);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(sw), test_child_sw);
+        BOOST_CHECK_EQUAL(test_child->get_child_of_parent(se), test_child_se);
 
         // getting the children of a root, a null-pointer should be returned
-        ASSERT_EQ(test_leaf->get_child_of_parent(nw), nullptr);
-        ASSERT_EQ(test_leaf->get_child_of_parent(ne), nullptr);
-        ASSERT_EQ(test_leaf->get_child_of_parent(sw), nullptr);
-        ASSERT_EQ(test_leaf->get_child_of_parent(se), nullptr);
+        BOOST_CHECK_EQUAL(test_leaf->get_child_of_parent(nw), nullptr);
+        BOOST_CHECK_EQUAL(test_leaf->get_child_of_parent(ne), nullptr);
+        BOOST_CHECK_EQUAL(test_leaf->get_child_of_parent(sw), nullptr);
+        BOOST_CHECK_EQUAL(test_leaf->get_child_of_parent(se), nullptr);
     }
 
 } // dp

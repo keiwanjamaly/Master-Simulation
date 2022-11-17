@@ -4,17 +4,16 @@
 
 #include "System.h"
 #include "Types_Potential.h"
-#include "gtest/gtest.h"
+#include <boost/test/unit_test.hpp>
 #include <cmath>
 
 namespace phy {
 
     using namespace boost::numeric::odeint;
 
-    class HeatEquationTestFixture : public ::testing::Test {
-
-    protected:
-        virtual void SetUp() {
+    class HeatEquationTestFixture {
+    public:
+        HeatEquationTestFixture() {
             double x;
             L = x_max - x_min;
             dx = L / N;
@@ -26,7 +25,6 @@ namespace phy {
 
         }
 
-    public:
         double initial_potential(double x) {
             return sin(M_PI / L * x);
         }
@@ -62,30 +60,33 @@ namespace phy {
         phy::System heat_solver;
     };
 
-    TEST_F(HeatEquationTestFixture, testConstructor) {
+    BOOST_FIXTURE_TEST_CASE(testConstructor, HeatEquationTestFixture) {
         heat_solver = System(x_points, diffusion, source, left_boundary_condition,
                              right_boundary_condition);
-        ASSERT_EQ(heat_solver.x_points, x_points);
-        ASSERT_FLOAT_EQ(heat_solver.dx, dx);
+        BOOST_CHECK_EQUAL_COLLECTIONS(heat_solver.x_points.begin(), heat_solver.x_points.end(),
+                                      x_points.begin(), x_points.end());
+        BOOST_CHECK_EQUAL(heat_solver.dx, dx);
     }
 
-    TEST_F(HeatEquationTestFixture, RHStest) {
+    BOOST_FIXTURE_TEST_CASE(RHStest, HeatEquationTestFixture) {
+        namespace tt = boost::test_tools;
         heat_solver = System(x_points, diffusion, source, left_boundary_condition,
                              right_boundary_condition);
         unsigned long N_tmp = temperature.size();
         std::vector<double> result(N_tmp, 0.0);
         heat_solver(temperature, result, 0);
-        EXPECT_DOUBLE_EQ(result[0], 0);
+        BOOST_TEST(result[0] == 0, tt::tolerance(1e-12));
         for (int i = 1; i < N_tmp - 1; i++) {
-            EXPECT_FLOAT_EQ(result[i],
-                            (-2 * temperature[i] + temperature[i - 1] + temperature[i + 1]) /
-                            (dx * dx)) << "Vectors differ at index " << i;
+            BOOST_TEST(result[i] ==
+                       (-2 * temperature[i] + temperature[i - 1] + temperature[i + 1]) /
+                       (dx * dx), tt::tolerance(1e-12));
         }
-        EXPECT_NEAR(result[N_tmp - 1], 0,
-                    1e-14); // expect double eq fails, so I reduce to this, since it is close enough
+        BOOST_TEST(result[N_tmp - 1] ==
+                   0, tt::tolerance(1e-12)); // expect double eq fails, so I reduce to this, since it is close enough
     }
 
-    TEST_F(HeatEquationTestFixture, RHStestRandom) {
+    BOOST_FIXTURE_TEST_CASE(RHStestRandom, HeatEquationTestFixture) {
+        namespace tt = boost::test_tools;
         heat_solver = System(x_points, diffusion, source, left_boundary_condition,
                              right_boundary_condition);
         unsigned long N_tmp = temperature.size();
@@ -101,23 +102,25 @@ namespace phy {
 
         std::vector<double> result(N_tmp, 0.0);
         heat_solver(temperature_random, result, 0);
-        EXPECT_DOUBLE_EQ(result[0], 0);
+        BOOST_TEST(result[0] == 0, tt::tolerance(1e-12));
         for (int i = 1; i < N_tmp - 1; i++) {
-            EXPECT_FLOAT_EQ(result[i],
-                            (-2 * temperature_random[i] + temperature_random[i - 1] + temperature_random[i + 1]) /
-                            (dx * dx)) << "Vectors differ at index " << i;
+            BOOST_TEST(result[i] ==
+                       (-2 * temperature_random[i] + temperature_random[i - 1] + temperature_random[i + 1]) /
+                       (dx * dx), tt::tolerance(1e-12));
         }
-        EXPECT_DOUBLE_EQ(result[N_tmp - 1], 0); // expect double eq fails, so I reduce to this, since it is close enough
+        BOOST_TEST(result[N_tmp - 1] == 0,
+                   tt::tolerance(1e-12)); // expect double eq fails, so I reduce to this, since it is close enough
     }
 
-    TEST_F(HeatEquationTestFixture, testComputation) {
+    BOOST_FIXTURE_TEST_CASE(testComputation, HeatEquationTestFixture) {
+        namespace tt = boost::test_tools;
         heat_solver = System(x_points, diffusion, source, left_boundary_condition,
                              right_boundary_condition);
         integrate_adaptive(make_controlled<error_stepper_type>(abs_error, rel_error),
                            heat_solver, temperature, t_min, t_max, 0.01);
         for (int i = 0; i < N; i++) {
-            EXPECT_NEAR(temperature.at(i), analytic_solution(x_points[i], t_max), 1e-5)
-                                << "Vectors differ at index " << i;
+            BOOST_TEST(temperature.at(i) == analytic_solution(x_points[i], t_max),
+                       tt::tolerance(1e-4));
         }
     }
 

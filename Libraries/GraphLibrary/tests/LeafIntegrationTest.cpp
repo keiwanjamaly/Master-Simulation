@@ -1,7 +1,7 @@
 //
 // Created by Keiwan Jamaly on 17.10.22.
 //
-#include "gtest/gtest.h"
+#include <boost/test/unit_test.hpp>
 #include "Leaf.h"
 #include "Types_Leaf.h"
 #include "TestData.h"
@@ -12,7 +12,7 @@ namespace dp {
 
     using std::shared_ptr, std::make_shared;
 
-    class NeighbourLeafTestFixture : public ::testing::Test {
+    class NeighbourLeafTestFixture {
         // I'm going to test the neighbours of the following points
         // test points      test labels
         // x, 0, 0, x       nw_nw, nw_ne, ne_nw, ne_ne
@@ -22,8 +22,8 @@ namespace dp {
 
         // testing values outside the boundary should result in a null-pointer
 
-    protected:
-        void SetUp() override {
+    public:
+        NeighbourLeafTestFixture() {
             x = 0.0;
             y = 0.0;
             box_size = 1.0;
@@ -73,7 +73,7 @@ namespace dp {
 
 
     // test get_all_leafs
-    TEST_F(NeighbourLeafTestFixture, getAllLeafes) {
+    BOOST_FIXTURE_TEST_CASE(getAllLeafes, NeighbourLeafTestFixture) {
         std::vector<shared_ptr<CurrLeaf>> all_leafs = test_leaf->get_all_leafs();
         std::set < shared_ptr<CurrLeaf> > all_leafs_set(all_leafs.begin(), all_leafs.end());
         // reference set
@@ -88,9 +88,9 @@ namespace dp {
                 });
 
         // no doubled elements
-        ASSERT_EQ(all_leafs_set.size(), all_leafs.size());
+        BOOST_CHECK_EQUAL(all_leafs_set.size(), all_leafs.size());
         // all elements are included
-        ASSERT_EQ(all_leafs_set, reference_set);
+        BOOST_TEST(all_leafs_set == reference_set);
 
         // check, that it also work on a sub_tree and, that it does include only the leafs in the subtree
         std::vector<shared_ptr<CurrLeaf>> sub_leafs = leaf_se->get_all_leafs();
@@ -98,653 +98,653 @@ namespace dp {
         std::set<shared_ptr<CurrLeaf>> sub_reference_set({leaf_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se});
 
         // no doubled elements
-        ASSERT_EQ(sub_leafs.size(), sub_leafs_set.size());
+        BOOST_CHECK_EQUAL(sub_leafs.size(), sub_leafs_set.size());
         // all elements are included
-        ASSERT_EQ(sub_leafs_set, sub_reference_set);
+        BOOST_TEST(sub_leafs_set == sub_reference_set);
     }
 
-    TEST_F(NeighbourLeafTestFixture, GetDepthFunction) {
-        ASSERT_EQ(test_leaf->get_depth(), 0);
-        ASSERT_EQ(leaf_nw->get_depth(), 1);
-        ASSERT_EQ(leaf_ne->get_depth(), 1);
-        ASSERT_EQ(leaf_sw->get_depth(), 1);
-        ASSERT_EQ(leaf_se->get_depth(), 1);
+    BOOST_FIXTURE_TEST_CASE(GetDepthFunction, NeighbourLeafTestFixture) {
+        BOOST_CHECK_EQUAL(test_leaf->get_depth(), 0);
+        BOOST_CHECK_EQUAL(leaf_nw->get_depth(), 1);
+        BOOST_CHECK_EQUAL(leaf_ne->get_depth(), 1);
+        BOOST_CHECK_EQUAL(leaf_sw->get_depth(), 1);
+        BOOST_CHECK_EQUAL(leaf_se->get_depth(), 1);
 
-        ASSERT_EQ(leaf_nw_nw->get_depth(), 2);
-        ASSERT_EQ(leaf_nw_ne->get_depth(), 2);
-        ASSERT_EQ(leaf_nw_sw->get_depth(), 2);
-        ASSERT_EQ(leaf_nw_se->get_depth(), 2);
-        ASSERT_EQ(leaf_ne_nw->get_depth(), 2);
-        ASSERT_EQ(leaf_ne_ne->get_depth(), 2);
-        ASSERT_EQ(leaf_ne_sw->get_depth(), 2);
-        ASSERT_EQ(leaf_ne_se->get_depth(), 2);
-        ASSERT_EQ(leaf_sw_nw->get_depth(), 2);
-        ASSERT_EQ(leaf_sw_ne->get_depth(), 2);
-        ASSERT_EQ(leaf_sw_sw->get_depth(), 2);
-        ASSERT_EQ(leaf_sw_se->get_depth(), 2);
-        ASSERT_EQ(leaf_se_nw->get_depth(), 2);
-        ASSERT_EQ(leaf_se_ne->get_depth(), 2);
-        ASSERT_EQ(leaf_se_sw->get_depth(), 2);
-        ASSERT_EQ(leaf_se_se->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_nw_nw->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_nw_ne->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_nw_sw->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_nw_se->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_ne_nw->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_ne_ne->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_ne_sw->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_ne_se->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_sw_nw->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_sw_ne->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_sw_sw->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_sw_se->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_se_nw->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_se_ne->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_se_sw->get_depth(), 2);
+        BOOST_CHECK_EQUAL(leaf_se_se->get_depth(), 2);
 
         // leaf_nw_se
-        ASSERT_EQ(leaf_nw_se->children[nw]->get_depth(), 3);
-        ASSERT_EQ(leaf_nw_se->children[ne]->get_depth(), 3);
-        ASSERT_EQ(leaf_nw_se->children[sw]->get_depth(), 3);
-        ASSERT_EQ(leaf_nw_se->children[se]->get_depth(), 3);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[nw]->get_depth(), 3);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[ne]->get_depth(), 3);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[sw]->get_depth(), 3);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[se]->get_depth(), 3);
     }
 
-    TEST_F(NeighbourLeafTestFixture, testNorthNeighbourFunction) {
+    BOOST_FIXTURE_TEST_CASE(testNorthNeighbourFunction, NeighbourLeafTestFixture) {
         // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
-        ASSERT_EQ(test_child->get_neighbour(north), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(north), nullptr);
 
         // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
-        ASSERT_EQ(test_child->get_neighbour(north), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(north), nullptr);
 
         // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_EQ(test_child->get_neighbour(north), leaf_nw_ne);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(north), leaf_nw_ne);
 
         // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_EQ(test_child->get_neighbour(north), leaf_ne_sw);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(north), leaf_ne_sw);
 
         // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_EQ(test_child->get_neighbour(north), leaf_sw_nw);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(north), leaf_sw_nw);
 
         // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_EQ(test_child->get_neighbour(north), leaf_se_ne);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(north), leaf_se_ne);
 
         // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_EQ(leaf_nw->get_neighbour(north), nullptr);
-        ASSERT_EQ(leaf_ne->get_neighbour(north), nullptr);
-        ASSERT_EQ(leaf_sw->get_neighbour(north), leaf_nw);
-        ASSERT_EQ(leaf_se->get_neighbour(north), leaf_ne);
+        BOOST_CHECK_EQUAL(leaf_nw->get_neighbour(north), nullptr);
+        BOOST_CHECK_EQUAL(leaf_ne->get_neighbour(north), nullptr);
+        BOOST_CHECK_EQUAL(leaf_sw->get_neighbour(north), leaf_nw);
+        BOOST_CHECK_EQUAL(leaf_se->get_neighbour(north), leaf_ne);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[nw]->get_neighbour(north), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[nw]->get_neighbour(north), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, testEastNeighbourFunction) {
+    BOOST_FIXTURE_TEST_CASE(testEastNeighbourFunction, NeighbourLeafTestFixture) {
 // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
-        ASSERT_EQ(test_child->get_neighbour(east), leaf_nw_ne);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(east), leaf_nw_ne);
 
 // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
-        ASSERT_EQ(test_child->get_neighbour(east), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(east), nullptr);
 
 // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_EQ(test_child->get_neighbour(east), leaf_ne_sw);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(east), leaf_ne_sw);
 
 // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_EQ(test_child->get_neighbour(east), leaf_se_ne);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(east), leaf_se_ne);
 
 // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_EQ(test_child->get_neighbour(east), leaf_sw_se);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(east), leaf_sw_se);
 
 // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_EQ(test_child->get_neighbour(east), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(east), nullptr);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_EQ(leaf_nw->get_neighbour(east), leaf_ne);
-        ASSERT_EQ(leaf_ne->get_neighbour(east), nullptr);
-        ASSERT_EQ(leaf_sw->get_neighbour(east), leaf_se);
-        ASSERT_EQ(leaf_se->get_neighbour(east), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw->get_neighbour(east), leaf_ne);
+        BOOST_CHECK_EQUAL(leaf_ne->get_neighbour(east), nullptr);
+        BOOST_CHECK_EQUAL(leaf_sw->get_neighbour(east), leaf_se);
+        BOOST_CHECK_EQUAL(leaf_se->get_neighbour(east), nullptr);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[ne]->get_neighbour(east), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[ne]->get_neighbour(east), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, testSouthNeighbourFunction) {
+    BOOST_FIXTURE_TEST_CASE(testSouthNeighbourFunction, NeighbourLeafTestFixture) {
 // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
-        ASSERT_EQ(test_child->get_neighbour(south), leaf_nw_sw);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(south), leaf_nw_sw);
 
 // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
-        ASSERT_EQ(test_child->get_neighbour(south), leaf_ne_se);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(south), leaf_ne_se);
 
 // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_EQ(test_child->get_neighbour(south), leaf_sw_ne);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(south), leaf_sw_ne);
 
 // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_EQ(test_child->get_neighbour(south), leaf_se_sw);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(south), leaf_se_sw);
 
 // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_EQ(test_child->get_neighbour(south), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(south), nullptr);
 
 // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_EQ(test_child->get_neighbour(south), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(south), nullptr);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_EQ(leaf_nw->get_neighbour(south), leaf_sw);
-        ASSERT_EQ(leaf_ne->get_neighbour(south), leaf_se);
-        ASSERT_EQ(leaf_sw->get_neighbour(south), nullptr);
-        ASSERT_EQ(leaf_se->get_neighbour(south), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw->get_neighbour(south), leaf_sw);
+        BOOST_CHECK_EQUAL(leaf_ne->get_neighbour(south), leaf_se);
+        BOOST_CHECK_EQUAL(leaf_sw->get_neighbour(south), nullptr);
+        BOOST_CHECK_EQUAL(leaf_se->get_neighbour(south), nullptr);
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[se]->get_neighbour(south), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[se]->get_neighbour(south), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, testWestNeighbourFunction) {
+    BOOST_FIXTURE_TEST_CASE(testWestNeighbourFunction, NeighbourLeafTestFixture) {
 // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
-        ASSERT_EQ(test_child->get_neighbour(west), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(west), nullptr);
 
 // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
-        ASSERT_EQ(test_child->get_neighbour(west), leaf_ne_nw);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(west), leaf_ne_nw);
 
 // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_EQ(test_child->get_neighbour(west), leaf_nw_sw);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(west), leaf_nw_sw);
 
 // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_EQ(test_child->get_neighbour(west), leaf_sw_ne);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(west), leaf_sw_ne);
 
 // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_EQ(test_child->get_neighbour(west), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(west), nullptr);
 
 // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_EQ(test_child->get_neighbour(west), leaf_se_sw);
+        BOOST_CHECK_EQUAL(test_child->get_neighbour(west), leaf_se_sw);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_EQ(leaf_nw->get_neighbour(west), nullptr);
-        ASSERT_EQ(leaf_ne->get_neighbour(west), leaf_nw);
-        ASSERT_EQ(leaf_sw->get_neighbour(west), nullptr);
-        ASSERT_EQ(leaf_se->get_neighbour(west), leaf_sw);
+        BOOST_CHECK_EQUAL(leaf_nw->get_neighbour(west), nullptr);
+        BOOST_CHECK_EQUAL(leaf_ne->get_neighbour(west), leaf_nw);
+        BOOST_CHECK_EQUAL(leaf_sw->get_neighbour(west), nullptr);
+        BOOST_CHECK_EQUAL(leaf_se->get_neighbour(west), leaf_sw);
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[sw]->get_neighbour(west), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[sw]->get_neighbour(west), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, testNorthWestNeighbour) {
+    BOOST_FIXTURE_TEST_CASE(testNorthWestNeighbour, NeighbourLeafTestFixture) {
         // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), nullptr);
 
 // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), nullptr);
 
 // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), leaf_nw_nw);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), leaf_nw_nw);
 
 // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), leaf_nw_se);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), leaf_nw_se);
 
 // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), nullptr);
 
 // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(nw), leaf_se_nw);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), leaf_se_nw);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_EQ(leaf_nw->get_diagonal_neighbour(nw), nullptr);
-        ASSERT_EQ(leaf_ne->get_diagonal_neighbour(nw), nullptr);
-        ASSERT_EQ(leaf_sw->get_diagonal_neighbour(nw), nullptr);
-        ASSERT_EQ(leaf_se->get_diagonal_neighbour(nw), leaf_nw);
+        BOOST_CHECK_EQUAL(leaf_nw->get_diagonal_neighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_ne->get_diagonal_neighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_sw->get_diagonal_neighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_se->get_diagonal_neighbour(nw), leaf_nw);
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[sw]->get_diagonal_neighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[sw]->get_diagonal_neighbour(nw), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, testNorthEastNeighbour) {
+    BOOST_FIXTURE_TEST_CASE(testNorthEastNeighbour, NeighbourLeafTestFixture) {
         // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), nullptr);
 
 // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), nullptr);
 
 // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), leaf_ne_nw);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), leaf_ne_nw);
 
 // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), leaf_ne_se);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), leaf_ne_se);
 
 // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), leaf_sw_ne);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), leaf_sw_ne);
 
 // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), nullptr);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_EQ(leaf_nw->get_diagonal_neighbour(ne), nullptr);
-        ASSERT_EQ(leaf_ne->get_diagonal_neighbour(ne), nullptr);
-        ASSERT_EQ(leaf_sw->get_diagonal_neighbour(ne), leaf_ne);
-        ASSERT_EQ(leaf_se->get_diagonal_neighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw->get_diagonal_neighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(leaf_ne->get_diagonal_neighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(leaf_sw->get_diagonal_neighbour(ne), leaf_ne);
+        BOOST_CHECK_EQUAL(leaf_se->get_diagonal_neighbour(ne), nullptr);
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[ne]->get_diagonal_neighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[ne]->get_diagonal_neighbour(ne), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, testSouthEastNeighbour) {
+    BOOST_FIXTURE_TEST_CASE(testSouthEastNeighbour, NeighbourLeafTestFixture) {
         // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(se), leaf_nw_se);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), leaf_nw_se);
 
 // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), nullptr);
 
 // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(se), leaf_se_nw);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), leaf_se_nw);
 
 // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(se), leaf_se_se);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), leaf_se_se);
 
 // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), nullptr);
 
 // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), nullptr);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_EQ(leaf_nw->get_diagonal_neighbour(se), leaf_se);
-        ASSERT_EQ(leaf_ne->get_diagonal_neighbour(se), nullptr);
-        ASSERT_EQ(leaf_sw->get_diagonal_neighbour(se), nullptr);
-        ASSERT_EQ(leaf_se->get_diagonal_neighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw->get_diagonal_neighbour(se), leaf_se);
+        BOOST_CHECK_EQUAL(leaf_ne->get_diagonal_neighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(leaf_sw->get_diagonal_neighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(leaf_se->get_diagonal_neighbour(se), nullptr);
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[sw]->get_diagonal_neighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[sw]->get_diagonal_neighbour(se), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, testSouthWestNeighbour) {
+    BOOST_FIXTURE_TEST_CASE(testSouthWestNeighbour, NeighbourLeafTestFixture) {
         // testing nw_nw get_diagonal_neighbour function
         test_child = leaf_nw_nw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(sw), nullptr);
 
 // testing ne_ne get_diagonal_neighbour function
         test_child = leaf_ne_ne;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), leaf_ne_sw);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(sw), leaf_ne_sw);
 
 // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), leaf_sw_nw);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(sw), leaf_sw_nw);
 
 // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), leaf_sw_se);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(sw), leaf_sw_se);
 
 // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(sw), nullptr);
 
 // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_EQ(test_child->get_diagonal_neighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(sw), nullptr);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_EQ(leaf_nw->get_diagonal_neighbour(sw), nullptr);
-        ASSERT_EQ(leaf_ne->get_diagonal_neighbour(sw), leaf_sw);
-        ASSERT_EQ(leaf_sw->get_diagonal_neighbour(sw), nullptr);
-        ASSERT_EQ(leaf_se->get_diagonal_neighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw->get_diagonal_neighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_ne->get_diagonal_neighbour(sw), leaf_sw);
+        BOOST_CHECK_EQUAL(leaf_sw->get_diagonal_neighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_se->get_diagonal_neighbour(sw), nullptr);
 
 
         // test, that it returns a nullptr, when there is no leaf on the same level
-        ASSERT_EQ(leaf_nw_se->children[sw]->get_diagonal_neighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children[sw]->get_diagonal_neighbour(sw), nullptr);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestNorthComparison) {
+    BOOST_FIXTURE_TEST_CASE(TestNorthComparison, NeighbourLeafTestFixture) {
         config->mode = 1;
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->comparison(north));
+        BOOST_TEST(test_child->comparison(north) == false);
 
 // testing ne_ne comparison function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->comparison(north));
+        BOOST_TEST(test_child->comparison(north) == false);
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_FALSE(test_child->comparison(north));
+        BOOST_TEST(test_child->comparison(north) == false);
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_TRUE(test_child->comparison(north));
+        BOOST_TEST(test_child->comparison(north) == true);
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->comparison(north));
+        BOOST_TEST(test_child->comparison(north) == false);
 
 // testing se_se comparison function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->comparison(north));
+        BOOST_TEST(test_child->comparison(north) == false);
 
 // test, on top level leaves
-        ASSERT_FALSE(leaf_nw->comparison(north));
-        ASSERT_FALSE(leaf_ne->comparison(north));
-        ASSERT_TRUE(leaf_sw->comparison(north));
-        ASSERT_TRUE(leaf_se->comparison(north));
+        BOOST_TEST(leaf_nw->comparison(north) == false);
+        BOOST_TEST(leaf_ne->comparison(north) == false);
+        BOOST_TEST(leaf_sw->comparison(north) == true);
+        BOOST_TEST(leaf_se->comparison(north) == true);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestEastComparison) {
+    BOOST_FIXTURE_TEST_CASE(TestEastComparison, NeighbourLeafTestFixture) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->comparison(east));
+        BOOST_TEST(test_child->comparison(east) == false);
 
 // testing ne_ne comparison function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->comparison(east));
+        BOOST_TEST(test_child->comparison(east) == false);
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_TRUE(test_child->comparison(east));
+        BOOST_TEST(test_child->comparison(east) == true);
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_FALSE(test_child->comparison(east));
+        BOOST_TEST(test_child->comparison(east) == false);
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->comparison(east));
+        BOOST_TEST(test_child->comparison(east) == false);
 
 // testing se_se comparison function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->comparison(east));
+        BOOST_TEST(test_child->comparison(east) == false);
 
 // test, on top level leaves
-        ASSERT_TRUE(leaf_nw->comparison(east));
-        ASSERT_FALSE(leaf_ne->comparison(east));
-        ASSERT_TRUE(leaf_sw->comparison(east));
-        ASSERT_FALSE(leaf_se->comparison(east));
+        BOOST_TEST(leaf_nw->comparison(east) == true);
+        BOOST_TEST(leaf_ne->comparison(east) == false);
+        BOOST_TEST(leaf_sw->comparison(east) == true);
+        BOOST_TEST(leaf_se->comparison(east) == false);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestSouthComparison) {
+    BOOST_FIXTURE_TEST_CASE(TestSouthComparison, NeighbourLeafTestFixture) {
         config->mode = 1;
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->comparison(south));
+        BOOST_TEST(test_child->comparison(south) == false);
 
 // testing ne_ne comparison function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->comparison(south));
+        BOOST_TEST(test_child->comparison(south) == false);
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_TRUE(test_child->comparison(south));
+        BOOST_TEST(test_child->comparison(south) == true);
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_FALSE(test_child->comparison(south));
+        BOOST_TEST(test_child->comparison(south) == false);
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->comparison(south));
+        BOOST_TEST(test_child->comparison(south) == false);
 
 // testing se_se comparison function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->comparison(south));
+        BOOST_TEST(test_child->comparison(south) == false);
 
 // test, on top level leafs
-        ASSERT_TRUE(leaf_nw->comparison(south));
-        ASSERT_TRUE(leaf_ne->comparison(south));
-        ASSERT_FALSE(leaf_sw->comparison(south));
-        ASSERT_FALSE(leaf_se->comparison(south));
+        BOOST_TEST(leaf_nw->comparison(south) == true);
+        BOOST_TEST(leaf_ne->comparison(south) == true);
+        BOOST_TEST(leaf_sw->comparison(south) == false);
+        BOOST_TEST(leaf_se->comparison(south) == false);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestWestComparison) {
+    BOOST_FIXTURE_TEST_CASE(TestWestComparison, NeighbourLeafTestFixture) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->comparison(west));
+        BOOST_TEST(test_child->comparison(west) == false);
 
 // testing ne_ne comparison function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->comparison(west));
+        BOOST_TEST(test_child->comparison(west) == false);
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_FALSE(test_child->comparison(west));
+        BOOST_TEST(test_child->comparison(west) == false);
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_TRUE(test_child->comparison(west));
+        BOOST_TEST(test_child->comparison(west) == true);
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->comparison(west));
+        BOOST_TEST(test_child->comparison(west) == false);
 
 // testing se_se comparison function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->comparison(west));
+        BOOST_TEST(test_child->comparison(west) == false);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_FALSE(leaf_nw->comparison(west));
-        ASSERT_TRUE(leaf_ne->comparison(west));
-        ASSERT_FALSE(leaf_sw->comparison(west));
-        ASSERT_TRUE(leaf_se->comparison(west));
+        BOOST_TEST(leaf_nw->comparison(west) == false);
+        BOOST_TEST(leaf_ne->comparison(west) == true);
+        BOOST_TEST(leaf_sw->comparison(west) == false);
+        BOOST_TEST(leaf_se->comparison(west) == true);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestNorthWestComparison) {
+    BOOST_FIXTURE_TEST_CASE(TestNorthWestComparison, NeighbourLeafTestFixture) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->comparison(nw));
+        BOOST_TEST(test_child->comparison(nw) == false);
 
 // testing ne_ne comparison function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->comparison(nw));
+        BOOST_TEST(test_child->comparison(nw) == false);
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_FALSE(test_child->comparison(nw));
+        BOOST_TEST(test_child->comparison(nw) == false);
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_TRUE(test_child->comparison(nw));
+        BOOST_TEST(test_child->comparison(nw) == true);
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->comparison(nw));
+        BOOST_TEST(test_child->comparison(nw) == false);
 
 // testing se_se comparison function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->comparison(nw));
+        BOOST_TEST(test_child->comparison(nw) == false);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_FALSE(leaf_nw->comparison(nw));
-        ASSERT_FALSE(leaf_ne->comparison(nw));
-        ASSERT_FALSE(leaf_sw->comparison(nw));
-        ASSERT_TRUE(leaf_se->comparison(nw));
+        BOOST_TEST(leaf_nw->comparison(nw) == false);
+        BOOST_TEST(leaf_ne->comparison(nw) == false);
+        BOOST_TEST(leaf_sw->comparison(nw) == false);
+        BOOST_TEST(leaf_se->comparison(nw) == true);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestNorthEastComparison) {
+    BOOST_FIXTURE_TEST_CASE(TestNorthEastComparison, NeighbourLeafTestFixture) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->comparison(ne));
+        BOOST_TEST(test_child->comparison(ne) == false);
 
 // testing ne_ne comparison function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->comparison(ne));
+        BOOST_TEST(test_child->comparison(ne) == false);
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_TRUE(test_child->comparison(ne));
+        BOOST_TEST(test_child->comparison(ne) == true);
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_FALSE(test_child->comparison(ne));
+        BOOST_TEST(test_child->comparison(ne) == false);
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->comparison(ne));
+        BOOST_TEST(test_child->comparison(ne) == false);
 
 // testing se_se comparison function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->comparison(ne));
+        BOOST_TEST(test_child->comparison(ne) == false);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_FALSE(leaf_nw->comparison(ne));
-        ASSERT_FALSE(leaf_ne->comparison(ne));
-        ASSERT_TRUE(leaf_sw->comparison(ne));
-        ASSERT_FALSE(leaf_se->comparison(ne));
+        BOOST_TEST(leaf_nw->comparison(ne) == false);
+        BOOST_TEST(leaf_ne->comparison(ne) == false);
+        BOOST_TEST(leaf_sw->comparison(ne) == true);
+        BOOST_TEST(leaf_se->comparison(ne) == false);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestSouthEastComparison) {
+    BOOST_FIXTURE_TEST_CASE(TestSouthEastComparison, NeighbourLeafTestFixture) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->comparison(se));
+        BOOST_TEST(test_child->comparison(se) == false);
 
 // testing ne_ne comparison function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->comparison(se));
+        BOOST_TEST(test_child->comparison(se) == false);
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_TRUE(test_child->comparison(se));
+        BOOST_TEST(test_child->comparison(se) == true);
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_FALSE(test_child->comparison(se));
+        BOOST_TEST(test_child->comparison(se) == false);
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->comparison(se));
+        BOOST_TEST(test_child->comparison(se) == false);
 
 // testing se_se comparison function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->comparison(se));
+        BOOST_TEST(test_child->comparison(se) == false);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_TRUE(leaf_nw->comparison(se));
-        ASSERT_FALSE(leaf_ne->comparison(se));
-        ASSERT_FALSE(leaf_sw->comparison(se));
-        ASSERT_FALSE(leaf_se->comparison(se));
+        BOOST_TEST(leaf_nw->comparison(se) == true);
+        BOOST_TEST(leaf_ne->comparison(se) == false);
+        BOOST_TEST(leaf_sw->comparison(se) == false);
+        BOOST_TEST(leaf_se->comparison(se) == false);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestSouthWestComparison) {
+    BOOST_FIXTURE_TEST_CASE(TestSouthWestComparison, NeighbourLeafTestFixture) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->comparison(sw));
+        BOOST_TEST(test_child->comparison(sw) == false);
 
 // testing ne_ne comparison function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->comparison(sw));
+        BOOST_TEST(test_child->comparison(sw) == false);
 
 // testing nw_se comparison function
         test_child = leaf_nw_se;
-        ASSERT_FALSE(test_child->comparison(sw));
+        BOOST_TEST(test_child->comparison(sw) == false);
 
 // testing se_nw comparison function
         test_child = leaf_se_nw;
-        ASSERT_TRUE(test_child->comparison(sw));
+        BOOST_TEST(test_child->comparison(sw) == true);
 
 // testing sw_sw comparison function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->comparison(sw));
+        BOOST_TEST(test_child->comparison(sw) == false);
 
 // testing se_se comparison function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->comparison(sw));
+        BOOST_TEST(test_child->comparison(sw) == false);
 
 // test, that only it gives the get_diagonal_neighbour only on one level
-        ASSERT_FALSE(leaf_nw->comparison(sw));
-        ASSERT_TRUE(leaf_ne->comparison(sw));
-        ASSERT_FALSE(leaf_sw->comparison(sw));
-        ASSERT_FALSE(leaf_se->comparison(sw));
+        BOOST_TEST(leaf_nw->comparison(sw) == false);
+        BOOST_TEST(leaf_ne->comparison(sw) == true);
+        BOOST_TEST(leaf_sw->comparison(sw) == false);
+        BOOST_TEST(leaf_se->comparison(sw) == false);
     }
 
-    TEST_F(NeighbourLeafTestFixture, TestSplitLeafDecision) {
+    BOOST_FIXTURE_TEST_CASE(TestSplitLeafDecision, NeighbourLeafTestFixture) {
 // testing nw_nw split function
         test_child = leaf_nw_nw;
-        ASSERT_FALSE(test_child->should_be_split());
+        BOOST_TEST(test_child->should_be_split() == false);
 
 // testing ne_ne split function
         test_child = leaf_ne_ne;
-        ASSERT_FALSE(test_child->should_be_split());
+        BOOST_TEST(test_child->should_be_split() == false);
 
 // testing nw_se get_diagonal_neighbour function
         test_child = leaf_nw_se;
-        ASSERT_TRUE(test_child->should_be_split());
+        BOOST_TEST(test_child->should_be_split() == true);
 
 // testing se_nw get_diagonal_neighbour function
         test_child = leaf_se_nw;
-        ASSERT_TRUE(test_child->should_be_split());
+        BOOST_TEST(test_child->should_be_split() == true);
 
 // testing sw_sw get_diagonal_neighbour function
         test_child = leaf_sw_sw;
-        ASSERT_FALSE(test_child->should_be_split());
+        BOOST_TEST(test_child->should_be_split() == false);
 
 // testing se_se get_diagonal_neighbour function
         test_child = leaf_se_se;
-        ASSERT_FALSE(test_child->should_be_split());
+        BOOST_TEST(test_child->should_be_split() == false);
 
 // test, on top level leafs
-        ASSERT_TRUE(leaf_nw->should_be_split());
-        ASSERT_TRUE(leaf_ne->should_be_split());
-        ASSERT_TRUE(leaf_sw->should_be_split());
-        ASSERT_TRUE(leaf_se->should_be_split());
+        BOOST_TEST(leaf_nw->should_be_split() == true);
+        BOOST_TEST(leaf_ne->should_be_split() == true);
+        BOOST_TEST(leaf_sw->should_be_split() == true);
+        BOOST_TEST(leaf_se->should_be_split() == true);
     }
-
-    TEST_F(NeighbourLeafTestFixture, testBalanceTree) {
-        test_leaf->balance_tree();
-        // test that the root leaf and its children are not further split
-        ASSERT_EQ(test_leaf->children.size(), 4);
-        ASSERT_EQ(leaf_nw->children.size(), 4);
-        ASSERT_EQ(leaf_ne->children.size(), 4);
-        ASSERT_EQ(leaf_sw->children.size(), 4);
-        ASSERT_EQ(leaf_se->children.size(), 4);
-
-        // test, that the sub leafs which should not be split are not split
-        ASSERT_EQ(leaf_nw_nw->children.size(), 0);
-        ASSERT_EQ(leaf_ne_ne->children.size(), 0);
-        ASSERT_EQ(leaf_sw_sw->children.size(), 0);
-        ASSERT_EQ(leaf_se_se->children.size(), 0);
-
-        // test, that leafs are correctly split
-        ASSERT_EQ(leaf_nw_se->children.size(), 4);
-        ASSERT_EQ(leaf_se_nw->children.size(), 4);
-    }
-
-    TEST_F(NeighbourLeafTestFixture, testBalanceTreeWithForceOption) {
-        test_leaf->balance_tree(true);
-        // test that the root leaf and its children are not further split
-        ASSERT_EQ(test_leaf->children.size(), 4);
-        ASSERT_EQ(leaf_nw->children.size(), 4);
-        ASSERT_EQ(leaf_ne->children.size(), 4);
-        ASSERT_EQ(leaf_sw->children.size(), 4);
-        ASSERT_EQ(leaf_se->children.size(), 4);
-
-        // test, that sub leafs are split
-        ASSERT_EQ(leaf_nw_nw->children.size(), 4);
-        ASSERT_EQ(leaf_ne_ne->children.size(), 4);
-        ASSERT_EQ(leaf_sw_sw->children.size(), 4);
-        ASSERT_EQ(leaf_se_se->children.size(), 4);
-        ASSERT_EQ(leaf_nw_se->children.size(), 4);
-        ASSERT_EQ(leaf_se_nw->children.size(), 4);
-    }
+//
+//    TEST_F(NeighbourLeafTestFixture, testBalanceTree) {
+//        test_leaf->balance_tree();
+//        // test that the root leaf and its children are not further split
+//        ASSERT_EQ(test_leaf->children.size(), 4);
+//        ASSERT_EQ(leaf_nw->children.size(), 4);
+//        ASSERT_EQ(leaf_ne->children.size(), 4);
+//        ASSERT_EQ(leaf_sw->children.size(), 4);
+//        ASSERT_EQ(leaf_se->children.size(), 4);
+//
+//        // test, that the sub leafs which should not be split are not split
+//        ASSERT_EQ(leaf_nw_nw->children.size(), 0);
+//        ASSERT_EQ(leaf_ne_ne->children.size(), 0);
+//        ASSERT_EQ(leaf_sw_sw->children.size(), 0);
+//        ASSERT_EQ(leaf_se_se->children.size(), 0);
+//
+//        // test, that leafs are correctly split
+//        ASSERT_EQ(leaf_nw_se->children.size(), 4);
+//        ASSERT_EQ(leaf_se_nw->children.size(), 4);
+//    }
+//
+//    TEST_F(NeighbourLeafTestFixture, testBalanceTreeWithForceOption) {
+//        test_leaf->balance_tree(true);
+//        // test that the root leaf and its children are not further split
+//        ASSERT_EQ(test_leaf->children.size(), 4);
+//        ASSERT_EQ(leaf_nw->children.size(), 4);
+//        ASSERT_EQ(leaf_ne->children.size(), 4);
+//        ASSERT_EQ(leaf_sw->children.size(), 4);
+//        ASSERT_EQ(leaf_se->children.size(), 4);
+//
+//        // test, that sub leafs are split
+//        ASSERT_EQ(leaf_nw_nw->children.size(), 4);
+//        ASSERT_EQ(leaf_ne_ne->children.size(), 4);
+//        ASSERT_EQ(leaf_sw_sw->children.size(), 4);
+//        ASSERT_EQ(leaf_se_se->children.size(), 4);
+//        ASSERT_EQ(leaf_nw_se->children.size(), 4);
+//        ASSERT_EQ(leaf_se_nw->children.size(), 4);
+//    }
 
 } // dp

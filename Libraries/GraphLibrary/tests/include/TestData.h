@@ -5,6 +5,8 @@
 #ifndef SIMULATION_TESTDATA_H
 #define SIMULATION_TESTDATA_H
 
+#include <vector>
+
 #include "Leaf.h"
 
 namespace dp {

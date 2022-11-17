@@ -1,7 +1,5 @@
-//
-// Created by Keiwan Jamaly on 18.10.22.
-//
-#include "gtest/gtest.h"
+#include <boost/test/unit_test.hpp>
+
 #include "Leaf.h"
 #include "Types_Leaf.h"
 #include "TestData.h"
@@ -10,7 +8,7 @@ namespace dp {
 
     using std::shared_ptr, std::make_shared;
 
-    TEST(TestOnData, TestOnLine) {
+    BOOST_AUTO_TEST_CASE(TestOnLine) {
         shared_ptr<Empty_Config> config = make_shared<Empty_Config>(Empty_Config());
         config->mode = 2;
         shared_ptr<CurrLeaf> root = make_shared<CurrLeaf>(CurrLeaf(0.0, 0.0, 2.0, split_decision, config));
@@ -31,9 +29,9 @@ namespace dp {
         //             , (se_sw, se_se)
 
         shared_ptr<CurrLeaf> nw_block = root->children[nw];
-        ASSERT_EQ(nw_block->children[nw]->children.size(), 0);
-        ASSERT_EQ(nw_block->children[ne]->children.size(), 0);
-        ASSERT_EQ(nw_block->children[sw]->children.size(), 0);
+        BOOST_CHECK_EQUAL(nw_block->children[nw]->children.size(), 0);
+        BOOST_CHECK_EQUAL(nw_block->children[ne]->children.size(), 0);
+        BOOST_CHECK_EQUAL(nw_block->children[sw]->children.size(), 0);
         // the se part can or cannot be 0. This is based on the precision
         // of the floating point operation.
 
@@ -43,10 +41,10 @@ namespace dp {
         // sw_nw, sw_ne, se_nw, se_ne
         // sw_sw, sw_se, se_sw, se_se
         shared_ptr<CurrLeaf> ne_block = root->children[ne];
-        ASSERT_EQ(ne_block->children[nw]->children.size(), 4);
-        ASSERT_EQ(ne_block->children[ne]->children.size(), 4);
-        ASSERT_EQ(ne_block->children[sw]->children.size(), 4);
-        ASSERT_EQ(ne_block->children[se]->children.size(), 4);
+        BOOST_CHECK_EQUAL(ne_block->children[nw]->children.size(), 4);
+        BOOST_CHECK_EQUAL(ne_block->children[ne]->children.size(), 4);
+        BOOST_CHECK_EQUAL(ne_block->children[sw]->children.size(), 4);
+        BOOST_CHECK_EQUAL(ne_block->children[se]->children.size(), 4);
 
         // sw block
         // nw          , ne_nw, ne_ne
@@ -54,10 +52,10 @@ namespace dp {
         // sw_nw, sw_ne, se_nw, se_ne
         // sw_sw, sw_se, se_sw, se_se
         shared_ptr<CurrLeaf> sw_block = root->children[sw];
-        ASSERT_EQ(sw_block->children[nw]->children.size(), 4);
-        ASSERT_EQ(sw_block->children[ne]->children.size(), 4);
-        ASSERT_EQ(sw_block->children[sw]->children.size(), 4);
-        ASSERT_EQ(sw_block->children[se]->children.size(), 4);
+        BOOST_CHECK_EQUAL(sw_block->children[nw]->children.size(), 4);
+        BOOST_CHECK_EQUAL(sw_block->children[ne]->children.size(), 4);
+        BOOST_CHECK_EQUAL(sw_block->children[sw]->children.size(), 4);
+        BOOST_CHECK_EQUAL(sw_block->children[se]->children.size(), 4);
 
         // se block
         // (nw_nw, nw_ne), ne
@@ -66,8 +64,8 @@ namespace dp {
         //             ,
         shared_ptr<CurrLeaf> se_block = root->children[se];
         // for nw same as for nw_block
-        ASSERT_EQ(se_block->children[se]->children.size(), 0);
-        ASSERT_EQ(se_block->children[sw]->children.size(), 4);
-        ASSERT_EQ(se_block->children[ne]->children.size(), 4);
+        BOOST_CHECK_EQUAL(se_block->children[se]->children.size(), 0);
+        BOOST_CHECK_EQUAL(se_block->children[sw]->children.size(), 4);
+        BOOST_CHECK_EQUAL(se_block->children[ne]->children.size(), 4);
     }
 }

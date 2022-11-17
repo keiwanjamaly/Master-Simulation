@@ -18,7 +18,7 @@ int main() {
     double N_flavor = 2;
     int N_grid = 1000;
     double sigma_max = 6.0;
-    dp::Leaf<phy::Flow> root(mu, T, initial_box_size, split_condition, Lambda, t_max, N_flavor, N_grid, sigma_max);
+//    dp::Leaf<phy::Flow> root(mu, T, initial_box_size, split_condition, Lambda, t_max, N_flavor, N_grid, sigma_max);
     std::cout << "Hello, World!" << std::endl;
     return 0;
 }
