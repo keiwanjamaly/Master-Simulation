@@ -708,43 +708,43 @@ namespace dp {
         BOOST_TEST(leaf_sw->should_be_split() == true);
         BOOST_TEST(leaf_se->should_be_split() == true);
     }
-//
-//    TEST_F(NeighbourLeafTestFixture, testBalanceTree) {
-//        test_leaf->balance_tree();
-//        // test that the root leaf and its children are not further split
-//        ASSERT_EQ(test_leaf->children.size(), 4);
-//        ASSERT_EQ(leaf_nw->children.size(), 4);
-//        ASSERT_EQ(leaf_ne->children.size(), 4);
-//        ASSERT_EQ(leaf_sw->children.size(), 4);
-//        ASSERT_EQ(leaf_se->children.size(), 4);
-//
-//        // test, that the sub leafs which should not be split are not split
-//        ASSERT_EQ(leaf_nw_nw->children.size(), 0);
-//        ASSERT_EQ(leaf_ne_ne->children.size(), 0);
-//        ASSERT_EQ(leaf_sw_sw->children.size(), 0);
-//        ASSERT_EQ(leaf_se_se->children.size(), 0);
-//
-//        // test, that leafs are correctly split
-//        ASSERT_EQ(leaf_nw_se->children.size(), 4);
-//        ASSERT_EQ(leaf_se_nw->children.size(), 4);
-//    }
-//
-//    TEST_F(NeighbourLeafTestFixture, testBalanceTreeWithForceOption) {
-//        test_leaf->balance_tree(true);
-//        // test that the root leaf and its children are not further split
-//        ASSERT_EQ(test_leaf->children.size(), 4);
-//        ASSERT_EQ(leaf_nw->children.size(), 4);
-//        ASSERT_EQ(leaf_ne->children.size(), 4);
-//        ASSERT_EQ(leaf_sw->children.size(), 4);
-//        ASSERT_EQ(leaf_se->children.size(), 4);
-//
-//        // test, that sub leafs are split
-//        ASSERT_EQ(leaf_nw_nw->children.size(), 4);
-//        ASSERT_EQ(leaf_ne_ne->children.size(), 4);
-//        ASSERT_EQ(leaf_sw_sw->children.size(), 4);
-//        ASSERT_EQ(leaf_se_se->children.size(), 4);
-//        ASSERT_EQ(leaf_nw_se->children.size(), 4);
-//        ASSERT_EQ(leaf_se_nw->children.size(), 4);
-//    }
+
+    BOOST_FIXTURE_TEST_CASE(testBalanceTree, NeighbourLeafTestFixture) {
+        test_leaf->balance_tree();
+        // test that the root leaf and its children are not further split
+        BOOST_CHECK_EQUAL(test_leaf->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_nw->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_ne->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_sw->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_se->children.size(), 4);
+
+        // test, that the sub leafs which should not be split are not split
+        BOOST_CHECK_EQUAL(leaf_nw_nw->children.size(), 0);
+        BOOST_CHECK_EQUAL(leaf_ne_ne->children.size(), 0);
+        BOOST_CHECK_EQUAL(leaf_sw_sw->children.size(), 0);
+        BOOST_CHECK_EQUAL(leaf_se_se->children.size(), 0);
+
+        // test, that leafs are correctly split
+        BOOST_CHECK_EQUAL(leaf_nw_se->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_se_nw->children.size(), 4);
+    }
+
+    BOOST_FIXTURE_TEST_CASE(testBalanceTreeWithForceOption, NeighbourLeafTestFixture) {
+        test_leaf->balance_tree(true);
+        // test that the root leaf and its children are not further split
+        BOOST_CHECK_EQUAL(test_leaf->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_nw->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_ne->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_sw->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_se->children.size(), 4);
+
+        // test, that sub leafs are split
+        BOOST_CHECK_EQUAL(leaf_nw_nw->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_ne_ne->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_sw_sw->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_se_se->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_nw_se->children.size(), 4);
+        BOOST_CHECK_EQUAL(leaf_se_nw->children.size(), 4);
+    }
 
 } // dp

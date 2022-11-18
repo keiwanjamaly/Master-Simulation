@@ -1,5 +1,3 @@
-#define BOOST_TEST_MAIN
-
 #include <boost/test/unit_test.hpp>
 #include "Leaf.h"
 #include "Types_Leaf.h"

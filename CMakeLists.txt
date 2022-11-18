@@ -13,14 +13,13 @@ set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 set(LIBRARIES Graph_lib Potential ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
-#set(LIBRARIES Graph_lib Potential)
 
 
 add_executable(Simulation main.cpp)
 target_link_libraries(Simulation ${LIBRARIES})
 
 
-add_executable(Test ${TEST_SOURCE})
+add_executable(Test test.cpp ${TEST_SOURCE})
 target_include_directories(Test PUBLIC ${TEST_INCLUDES})
 target_link_libraries(Test ${LIBRARIES})
 target_link_libraries(Test simdjson)
