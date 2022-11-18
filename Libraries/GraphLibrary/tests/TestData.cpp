@@ -55,4 +55,17 @@ namespace dp {
             return true;
         }
     }
+
+    TestDensity::TestDensity(double x_, double y_, std::shared_ptr<Empty_Config> config) : x(x_), y(y_),
+                                                                                           configuration(config) {}
+
+    void TestDensity::compute() {
+        value = {1 / (1 + exp(10 * (sqrt(x * x + y * y) - 3)))};
+    }
+
+    std::vector<double> TestDensity::splitDecisionData() {
+        return value;
+    }
+
+
 } // dp

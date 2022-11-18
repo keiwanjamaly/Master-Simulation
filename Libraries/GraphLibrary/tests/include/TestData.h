@@ -38,5 +38,18 @@ namespace dp {
 
     typedef Leaf<Data, Empty_Config> CurrLeaf;
 
+    class TestDensity {
+    public:
+        double x, y;
+        std::shared_ptr<Empty_Config> configuration;
+        std::vector<double> value;
+
+        TestDensity(double x_, double y_, std::shared_ptr<Empty_Config> config);
+
+        void compute();
+
+        std::vector<double> splitDecisionData();
+    };
+
 } //dp
 #endif //SIMULATION_TESTDATA_H

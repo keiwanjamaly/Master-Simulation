@@ -25,6 +25,8 @@ namespace dp {
         shared_ptr<T> data;
         shared_ptr<Config> config;
 
+        bool block = false;
+
         double x{}, y{};
 
         bool (*split_condition)(std::vector<double>, std::vector<double>){};
@@ -76,6 +78,40 @@ namespace dp {
             split_condition = parent->split_condition;
         }
 
+        static shared_ptr<Leaf<T, Config>> generate_root(double x_, double y_, double initial_box_size_,
+                                                         bool (*split_condition_)(std::vector<double>,
+                                                                                  std::vector<double>),
+                                                         shared_ptr<Config> config_) {
+            shared_ptr<Leaf<T, Config>> root = std::make_shared<Leaf<T, Config>>(x_, y_, initial_box_size_ * 2,
+                                                                                 split_condition_, config_);
+
+            root->attach_leaves();
+            for (shared_ptr<Leaf<T, Config>> &child: root->children)
+                child->attach_leaves();
+
+            // block nw children
+            root->children[nw]->children[nw]->block = true;
+            root->children[nw]->children[ne]->block = true;
+            root->children[nw]->children[sw]->block = true;
+
+            // block ne children
+            root->children[ne]->children[nw]->block = true;
+            root->children[ne]->children[ne]->block = true;
+            root->children[ne]->children[se]->block = true;
+
+            // block sw children
+            root->children[sw]->children[nw]->block = true;
+            root->children[sw]->children[sw]->block = true;
+            root->children[sw]->children[se]->block = true;
+
+            // block se children
+            root->children[se]->children[ne]->block = true;
+            root->children[se]->children[sw]->block = true;
+            root->children[se]->children[se]->block = true;
+
+            return root;
+        }
+
         void attach_leaves() {
             if (children.size() == 0) {
                 children.reserve(4);
@@ -102,7 +138,8 @@ namespace dp {
                 v.insert(v.end(), leaf_sw.begin(), leaf_sw.end());
                 v.insert(v.end(), leaf_se.begin(), leaf_se.end());
             }
-            v.push_back(this->shared_from_this());
+            if (!block)
+                v.push_back(this->shared_from_this());
             return v;
         }
 
@@ -129,30 +166,32 @@ namespace dp {
 
         shared_ptr<Leaf<T, Config>> get_neighbour(Direction dir, bool initial = true) {
 
+            shared_ptr<Leaf<T, Config>> result;
             // if leaf is a root itself
             if (this->isRoot()) {
                 return nullptr;
             }
             // if leaf is sw (or se) child of parend, just return nw (or ne) child of parent
             if (this->get_child_of_parent(nm[dir][0]) == this->shared_from_this()) {
-                return this->get_child_of_parent(nm[dir][1]);
+                result = this->get_child_of_parent(nm[dir][1]);
             } else if (this->get_child_of_parent(nm[dir][2]) == this->shared_from_this()) {
-                return this->get_child_of_parent(nm[dir][3]);
-            }
-            // find recursively the north get_diagonal_neighbour
-            shared_ptr<Leaf<T, Config>> mu = parent->get_neighbour(dir, false);
-            shared_ptr<Leaf<T, Config>> result;
-            if (mu == nullptr or mu->children.size() == 0) {
-                result = mu;
-            } else if (this->get_child_of_parent(nm[dir][4]) == this->shared_from_this()) {
-                result = mu->children[nm[dir][5]];
+                result = this->get_child_of_parent(nm[dir][3]);
             } else {
-                result = mu->children[nm[dir][6]];
+                // find recursively the north get_diagonal_neighbour
+                shared_ptr<Leaf<T, Config>> mu = parent->get_neighbour(dir, false);
+                if (mu == nullptr or mu->children.size() == 0) {
+                    result = mu;
+                } else if (this->get_child_of_parent(nm[dir][4]) == this->shared_from_this()) {
+                    result = mu->children[nm[dir][5]];
+                } else {
+                    result = mu->children[nm[dir][6]];
+                }
             }
 
             if (!initial)
                 return result;
-            else if (result != nullptr and this->get_depth() == result->get_depth())
+            else if (result != nullptr and this->get_depth() == result->get_depth() and !(result->block) and
+                     !(this->block))
                 return result;
             else
                 return nullptr;
@@ -221,7 +260,7 @@ namespace dp {
 
         void balance_tree(bool force = false) {
             if (this->children.size() == 0) {
-                if (force || this->should_be_split()) {
+                if ((force and !block) || this->should_be_split()) {
                     this->attach_leaves();
                 }
             } else {
