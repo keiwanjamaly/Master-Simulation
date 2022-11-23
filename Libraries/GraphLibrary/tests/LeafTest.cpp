@@ -14,9 +14,9 @@ namespace dp {
             x = 0.5;
             y = 0.5;
             box_size = 2.0;
-            test_leaf = make_shared<CurrLeaf>(CurrLeaf(x, y, box_size, split_decision,
-                                                       std::make_shared<Empty_Config>(
-                                                               config)));
+            test_leaf = make_shared<CurrLeaf>(x, y, box_size, box_size, split_decision,
+                                              std::make_shared<Empty_Config>(
+                                                      config));
         }
 
         shared_ptr<CurrLeaf> test_leaf;
@@ -29,7 +29,8 @@ namespace dp {
     BOOST_FIXTURE_TEST_CASE(PositionsAreCorrect, LeafTestFixture) {
         BOOST_CHECK_EQUAL(test_leaf->x, 0.5);
         BOOST_CHECK_EQUAL(test_leaf->y, 0.5);
-        BOOST_CHECK_EQUAL(test_leaf->box_size, 2.0);
+        BOOST_CHECK_EQUAL(test_leaf->box_size_x, 2.0);
+        BOOST_CHECK_EQUAL(test_leaf->box_size_y, 2.0);
         BOOST_CHECK_EQUAL(test_leaf->split_condition, split_decision);
     }
 
@@ -41,7 +42,7 @@ namespace dp {
         double child_y = y + box_size / 4.0;
         Empty_Config config{};
         shared_ptr<CurrLeaf> parent_leaf = std::make_shared<CurrLeaf>(
-                CurrLeaf(x, y, box_size, split_decision,
+                CurrLeaf(x, y, box_size, box_size, split_decision,
                          std::make_shared<Empty_Config>(config)));
         shared_ptr<CurrLeaf> test_leaf = std::make_shared<CurrLeaf>(CurrLeaf(nw, parent_leaf,
                                                                              std::make_shared<Empty_Config>(config)));
@@ -49,22 +50,24 @@ namespace dp {
 
         BOOST_TEST(test_leaf->x == child_x, boost::test_tools::tolerance(0.0));
         BOOST_TEST(test_leaf->y == child_y, boost::test_tools::tolerance(0.0));
-        BOOST_TEST(parent_leaf->box_size * 0.5 == test_leaf->box_size);
+        BOOST_TEST(parent_leaf->box_size_x * 0.5 == test_leaf->box_size_x);
+        BOOST_TEST(parent_leaf->box_size_y * 0.5 == test_leaf->box_size_y);
 
         BOOST_CHECK_EQUAL(test_leaf->children.size(), 0);
     }
 
     BOOST_FIXTURE_TEST_CASE(attatchLeavesIsWorking, LeafTestFixture) {
         double x_child_pos, y_child_pos;
-        double child_box_size = test_leaf->box_size / 2;
+        double child_box_size_x = test_leaf->box_size_x / 2;
+        double child_box_size_y = test_leaf->box_size_y / 2;
 
 
         test_leaf->attach_leaves();
         shared_ptr<CurrLeaf> test_child;
 
         // testing north-west coordinates
-        x_child_pos = x - child_box_size / 2.0;
-        y_child_pos = y + child_box_size / 2.0;
+        x_child_pos = x - child_box_size_x / 2.0;
+        y_child_pos = y + child_box_size_y / 2.0;
         test_child = test_leaf->children[nw];
         BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
         BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
@@ -73,8 +76,8 @@ namespace dp {
         BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing north-east coordinates
-        x_child_pos = x + child_box_size / 2.0;
-        y_child_pos = y + child_box_size / 2.0;
+        x_child_pos = x + child_box_size_x / 2.0;
+        y_child_pos = y + child_box_size_y / 2.0;
         test_child = test_leaf->children[ne];
         BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
         BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
@@ -83,8 +86,8 @@ namespace dp {
         BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing south-west coordinates
-        x_child_pos = x - child_box_size / 2.0;
-        y_child_pos = y - child_box_size / 2.0;
+        x_child_pos = x - child_box_size_x / 2.0;
+        y_child_pos = y - child_box_size_y / 2.0;
         test_child = test_leaf->children[sw];
         BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
         BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
@@ -93,8 +96,8 @@ namespace dp {
         BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing south-east coordinates
-        x_child_pos = x + child_box_size / 2.0;
-        y_child_pos = y - child_box_size / 2.0;
+        x_child_pos = x + child_box_size_x / 2.0;
+        y_child_pos = y - child_box_size_y / 2.0;
         test_child = test_leaf->children[se];
         BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
         BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
@@ -170,6 +173,27 @@ namespace dp {
         BOOST_CHECK_EQUAL(test_leaf->get_child_of_parent(ne), nullptr);
         BOOST_CHECK_EQUAL(test_leaf->get_child_of_parent(sw), nullptr);
         BOOST_CHECK_EQUAL(test_leaf->get_child_of_parent(se), nullptr);
+    }
+
+    BOOST_AUTO_TEST_CASE(testNonRectangleFunctionality) {
+        shared_ptr<CurrLeaf> test_leaf;
+        double x = 0.5;
+        double y = 0.5;
+        double box_size_x = 2.0;
+        double box_size_y = 3.0;
+        double child_x = x - box_size_x / 4.0;
+        double child_y = y + box_size_y / 4.0;
+        shared_ptr<Empty_Config> config = make_shared<Empty_Config>();
+        shared_ptr<CurrLeaf> parent_leaf = make_shared<CurrLeaf>(x, y, box_size_x, box_size_y, split_decision, config);
+        test_leaf = make_shared<CurrLeaf>(nw, parent_leaf, config);
+        BOOST_CHECK_EQUAL(parent_leaf, test_leaf->parent);
+
+        BOOST_TEST(test_leaf->x == child_x, boost::test_tools::tolerance(0.0));
+        BOOST_TEST(test_leaf->y == child_y, boost::test_tools::tolerance(0.0));
+        BOOST_TEST(parent_leaf->box_size_x * 0.5 == test_leaf->box_size_x);
+        BOOST_TEST(parent_leaf->box_size_y * 0.5 == test_leaf->box_size_y);
+
+        BOOST_CHECK_EQUAL(test_leaf->children.size(), 0);
     }
 
 } // dp

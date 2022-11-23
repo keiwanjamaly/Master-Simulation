@@ -28,7 +28,7 @@ namespace dp {
             y = 0.0;
             box_size = 1.0;
             config = make_shared<Empty_Config>(Empty_Config());
-            test_leaf = make_shared<CurrLeaf>(CurrLeaf(x, y, box_size, split_decision, config));
+            test_leaf = make_shared<CurrLeaf>(x, y, box_size, box_size, split_decision, config);
 
             test_leaf->attach_leaves();
             leaf_nw = test_leaf->children[nw];

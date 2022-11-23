@@ -11,7 +11,7 @@ namespace dp {
     BOOST_AUTO_TEST_CASE(TestOnLine) {
         shared_ptr<Empty_Config> config = make_shared<Empty_Config>(Empty_Config());
         config->mode = 2;
-        shared_ptr<CurrLeaf> root = make_shared<CurrLeaf>(CurrLeaf(0.0, 0.0, 2.0, split_decision, config));
+        shared_ptr<CurrLeaf> root = make_shared<CurrLeaf>(0.0, 0.0, 2.0, 2.0, split_decision, config);
         root->balance_tree(true);
         // nw   ne
         // sw   se

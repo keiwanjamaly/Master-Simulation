@@ -19,7 +19,7 @@ namespace dp {
     template<Graph_Data T, class Config>
     class Leaf : public std::enable_shared_from_this<Leaf<T, Config>> {
     public:
-        double box_size{};
+        double box_size_x, box_size_y;
         std::vector<shared_ptr<Leaf<T, Config>>> children;
         shared_ptr<Leaf<T, Config>> parent{nullptr};
         shared_ptr<T> data;
@@ -41,10 +41,11 @@ namespace dp {
         // Default constructor
         explicit Leaf() = default;
 
-        explicit Leaf(double x_, double y_, double initial_box_size_,
+        explicit Leaf(double x_, double y_, double initial_box_size_x_, double initial_box_size_y_,
                       bool (*split_condition_)(std::vector<double>, std::vector<double>), shared_ptr<Config> config_)
                 : x{x_}, y{y_},
-                  box_size{initial_box_size_},
+                  box_size_x{initial_box_size_x_},
+                  box_size_y{initial_box_size_y_},
                   split_condition{split_condition_},
                   config{config_} {
             data = std::make_shared<T>(x, y, config);
@@ -53,24 +54,26 @@ namespace dp {
         explicit Leaf(DiagonalDirection dir, shared_ptr<Leaf<T, Config>> parent_, shared_ptr<Config> config_) : parent{
                 parent_}, config{
                 config_} {
-            box_size = parent->box_size / 2.0;
-            double position_offset = box_size / 2.0;
+            box_size_x = parent->box_size_x / 2.0;
+            box_size_y = parent->box_size_y / 2.0;
+            double position_offset_x = box_size_x / 2.0;
+            double position_offset_y = box_size_y / 2.0;
             switch (dir) {
                 case nw:
-                    x = parent->x - position_offset;
-                    y = parent->y + position_offset;
+                    x = parent->x - position_offset_x;
+                    y = parent->y + position_offset_y;
                     break;
                 case ne:
-                    x = parent->x + position_offset;
-                    y = parent->y + position_offset;
+                    x = parent->x + position_offset_x;
+                    y = parent->y + position_offset_y;
                     break;
                 case sw:
-                    x = parent->x - position_offset;
-                    y = parent->y - position_offset;
+                    x = parent->x - position_offset_x;
+                    y = parent->y - position_offset_y;
                     break;
                 case se:
-                    x = parent->x + position_offset;
-                    y = parent->y - position_offset;
+                    x = parent->x + position_offset_x;
+                    y = parent->y - position_offset_y;
                     break;
             }
             data = std::make_shared<T>(x, y, config);
@@ -78,11 +81,14 @@ namespace dp {
             split_condition = parent->split_condition;
         }
 
-        static shared_ptr<Leaf<T, Config>> generate_root(double x_, double y_, double initial_box_size_,
+        static shared_ptr<Leaf<T, Config>> generate_root(double x_, double y_,
+                                                         double initial_box_size_x_,
+                                                         double initial_box_size_y_,
                                                          bool (*split_condition_)(std::vector<double>,
                                                                                   std::vector<double>),
                                                          shared_ptr<Config> config_) {
-            shared_ptr<Leaf<T, Config>> root = std::make_shared<Leaf<T, Config>>(x_, y_, initial_box_size_ * 2,
+            shared_ptr<Leaf<T, Config>> root = std::make_shared<Leaf<T, Config>>(x_, y_, initial_box_size_x_ * 2,
+                                                                                 initial_box_size_y_ * 2,
                                                                                  split_condition_, config_);
 
             root->attach_leaves();

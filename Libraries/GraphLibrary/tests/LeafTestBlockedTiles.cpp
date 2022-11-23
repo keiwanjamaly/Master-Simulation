@@ -19,6 +19,7 @@ namespace dp {
             box_size = 5.0;
             config = std::make_shared<Empty_Config>();
             root = Leaf<Data, Empty_Config>::generate_root(x, y, box_size,
+                                                           box_size,
                                                            split_decision,
                                                            config);
         }
@@ -194,12 +195,14 @@ namespace dp {
     }
 
     BOOST_AUTO_TEST_CASE(TestOnDataWithBlocking) {
-        double x = 2.5;
+        double x = 2.0;
         double y = 2.5;
-        double box_size = 5.0;
+        double box_size_x = 4.0;
+        double box_size_y = 5.0;
         std::shared_ptr<Empty_Config> config = std::make_shared<Empty_Config>();
         std::shared_ptr<Leaf<TestDensity, Empty_Config>> root = Leaf<TestDensity, Empty_Config>::generate_root(x, y,
-                                                                                                               box_size,
+                                                                                                               box_size_x,
+                                                                                                               box_size_y,
                                                                                                                split_decision,
                                                                                                                config);
 
@@ -208,6 +211,7 @@ namespace dp {
         std::string content((std::istreambuf_iterator<char>(test_stream)),
                             (std::istreambuf_iterator<char>()));
         output_test_stream output;
+        
         for (int k = 0; k < 5; k++) {
             for (const auto &i: root->get_all_leafs()) {
                 i->data->compute();
@@ -221,6 +225,7 @@ namespace dp {
         for (const auto &i: root->get_all_leafs()) {
             output << i->data->x << "," << i->data->y << "," << i->data->value[0] << "\n";
         }
+
         BOOST_TEST(output.is_equal(content));
     }
 

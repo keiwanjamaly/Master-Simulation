@@ -21,6 +21,7 @@ namespace dp {
         std::shared_ptr<Leaf<TestDensity, Empty_Config>> root = std::make_shared<Leaf<TestDensity, Empty_Config>>(2.5,
                                                                                                                   2.5,
                                                                                                                   5,
+                                                                                                                  5,
                                                                                                                   split_decision,
                                                                                                                   config);
 

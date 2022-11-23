@@ -9,7 +9,6 @@ bool split_condition(std::vector<double> x_1, std::vector<double> x_2) {
 }
 
 int main() {
-//    dp::Leafc parent_leaf(505.3, x, y);
     double mu = 0.4;
     double T = 0.4;
     double initial_box_size = 0.8;
