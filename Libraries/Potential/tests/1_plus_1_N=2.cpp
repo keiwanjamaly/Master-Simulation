@@ -117,7 +117,7 @@ namespace phy {
         f = std::make_shared<Flow>(mu, T, config);
         f->compute();
         for (int n = 0; n < config->N_grid; n++) {
-            BOOST_TEST(f->u[n] == u_vector[t_vector.size() - 1][n], tt::tolerance(1e-5));
+            BOOST_TEST(f->u[n] == u_vector[t_vector.size() - 1][n], tt::tolerance(1e-4));
         }
     }
 

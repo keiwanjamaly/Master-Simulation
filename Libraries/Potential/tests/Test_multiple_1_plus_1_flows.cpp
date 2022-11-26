@@ -40,7 +40,7 @@ namespace phy {
         f = std::make_shared<Flow>(mu, T, config);
         f->compute();
         for (int n = 0; n < config->N_grid; n++) {
-            BOOST_TEST(f->u[n] == u_vector[i][n], tt::tolerance(1e-2));
+            BOOST_TEST(f->u[n] == u_vector[i][n], tt::tolerance(1e-1));
         }
     }
 

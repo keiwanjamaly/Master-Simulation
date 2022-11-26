@@ -9,16 +9,6 @@
 
 
 namespace phy {
-    class Derivative {
-    public:
-        dbl_vec div;
-
-        Derivative(const std::shared_ptr<std::function<double(double, double)>> &left_boundary,
-                   const std::shared_ptr<std::function<double(double, double)>> &right_boundary, const dbl_vec &points,
-                   double dx);
-
-        double &operator[](int index);
-    };
 
     class System {
     public:
@@ -35,7 +25,7 @@ namespace phy {
 
         std::function<double(double, double)> rbc;
 
-        System() = default;
+        System() = delete;
 
         System(dbl_vec &x_points_,
                std::function<double(double, double)> diffusion_flux,
@@ -45,9 +35,6 @@ namespace phy {
 
         void operator()(const dbl_vec &points, dbl_vec &dpointsdt,
                         const double t); // NOLINT(readability-avoid-const-params-in-decls)
-
-    private:
-        double P_j_plus_1_2(double t, Derivative &ux, const int &j) const;
     };
 
 } // phy
