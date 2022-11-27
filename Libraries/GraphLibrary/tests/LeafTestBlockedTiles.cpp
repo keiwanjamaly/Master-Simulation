@@ -8,6 +8,7 @@ using boost::test_tools::output_test_stream;
 
 #include <fstream>
 #include <string>
+#include <set>
 
 namespace dp {
 
@@ -211,7 +212,7 @@ namespace dp {
         std::string content((std::istreambuf_iterator<char>(test_stream)),
                             (std::istreambuf_iterator<char>()));
         output_test_stream output;
-        
+
         for (int k = 0; k < 5; k++) {
             for (const auto &i: root->get_all_leafs()) {
                 i->data->compute();
