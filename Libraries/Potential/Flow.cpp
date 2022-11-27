@@ -14,8 +14,8 @@ namespace phy {
         sigma_points.reserve(c->N_grid);
         for (int i = 0; i < c->N_grid; i++)
             sigma_points.push_back(i * c->sigma_max / (c->N_grid - 1));
-        heat_solver = std::make_shared<System>(sigma_points, diffusion(), source(), left_boundary_condition(),
-                                               right_boundary_condition(), true);
+//        heat_solver = std::make_shared<System>(sigma_points, diffusion(), source(), left_boundary_condition(),
+//                                               right_boundary_condition(), true);
         set_initial_condition();
         T = y;
         mu = x;
@@ -62,8 +62,8 @@ namespace phy {
     }
 
     void Flow::compute() {
-        integrate_adaptive(make_controlled<error_stepper_type>(1.0e-10, 1.0e-10),
-                           *heat_solver, u, t, c->t_max, 0.01, observer(std::cout));
+//        integrate_adaptive(make_controlled<error_stepper_type>(1.0e-10, 1.0e-10),
+//                           *heat_solver, u, t, c->t_max, 0.01, observer(std::cout));
     }
 
     std::function<void(const dbl_vec &, const double)> Flow::observer(std::ostream &m_out) {
