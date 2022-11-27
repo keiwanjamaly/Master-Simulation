@@ -17,10 +17,11 @@ namespace phy {
             double x;
             L = x_max - x_min;
             dx = L / N;
+            temperature = dbl_vec(N + 1);
             for (int i = 0; i <= N; i++) {
                 x = i * dx;
                 x_points.push_back(x);
-                temperature.push_back(initial_potential(x));
+                temperature[i] = initial_potential(x);
             }
 
         }
@@ -60,16 +61,16 @@ namespace phy {
         double L;
         double abs_error = 1.0e-11, rel_error = 1.0e-7;
         int N = 200;
-        phy::System heat_solver;
+        std::shared_ptr<System> heat_solver;
     };
 
     BOOST_FIXTURE_TEST_CASE(RHStestHeatWithSource, HeatEquationWithSourceTestFixture) {
         namespace tt = boost::test_tools;
-        heat_solver = System(x_points, diffusion, source, left_boundary_condition,
-                             right_boundary_condition);
+        heat_solver = std::make_shared<System>(x_points, diffusion, source, left_boundary_condition,
+                                               right_boundary_condition);
         unsigned long N_tmp = temperature.size();
-        std::vector<double> result(N_tmp, 0.0);
-        heat_solver(temperature, result, 0);
+        dbl_vec result(N_tmp, 0.0);
+        (*heat_solver)(temperature, result, 0);
         BOOST_TEST(result[0] == 0, tt::tolerance(1e-4));
         for (int i = 1; i < N_tmp - 1; i++) {
             BOOST_TEST(result[i] ==
@@ -82,12 +83,13 @@ namespace phy {
 
     BOOST_FIXTURE_TEST_CASE(testComputationHeatWithSource, HeatEquationWithSourceTestFixture) {
         namespace tt = boost::test_tools;
-        heat_solver = System(x_points, diffusion, source, left_boundary_condition,
-                             right_boundary_condition);
+        heat_solver = std::make_shared<System>(x_points, diffusion, source, left_boundary_condition,
+                                               right_boundary_condition);
         integrate_adaptive(make_controlled<error_stepper_type>(abs_error, rel_error),
-                           heat_solver, temperature, t_min, t_max, 0.01);
+                           *heat_solver, temperature, t_min, t_max, 0.01);
+
         for (int i = 0; i < N; i++) {
-            BOOST_TEST(temperature.at(i) == analytic_solution(x_points[i], t_max),
+            BOOST_TEST(temperature[i] == analytic_solution(x_points[i], t_max),
                        tt::tolerance(1e-4));
         }
     }

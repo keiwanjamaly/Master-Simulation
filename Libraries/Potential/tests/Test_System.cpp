@@ -57,24 +57,24 @@ namespace phy {
         double L;
         double abs_error = 1.0e-11, rel_error = 1.0e-7;
         int N = 200;
-        phy::System heat_solver;
+        std::shared_ptr<System> heat_solver;
     };
 
     BOOST_FIXTURE_TEST_CASE(testConstructor, HeatEquationTestFixture) {
-        heat_solver = System(x_points, diffusion, source, left_boundary_condition,
-                             right_boundary_condition);
-        BOOST_CHECK_EQUAL_COLLECTIONS(heat_solver.x_points.begin(), heat_solver.x_points.end(),
+        heat_solver = std::make_shared<System>(x_points, diffusion, source, left_boundary_condition,
+                                               right_boundary_condition);
+        BOOST_CHECK_EQUAL_COLLECTIONS(heat_solver->x_points.begin(), heat_solver->x_points.end(),
                                       x_points.begin(), x_points.end());
-        BOOST_CHECK_EQUAL(heat_solver.dx, dx);
+        BOOST_CHECK_EQUAL(heat_solver->dx, dx);
     }
 
     BOOST_FIXTURE_TEST_CASE(RHStest, HeatEquationTestFixture) {
         namespace tt = boost::test_tools;
-        heat_solver = System(x_points, diffusion, source, left_boundary_condition,
-                             right_boundary_condition);
+        heat_solver = std::make_shared<System>(x_points, diffusion, source, left_boundary_condition,
+                                               right_boundary_condition);
         unsigned long N_tmp = temperature.size();
         std::vector<double> result(N_tmp, 0.0);
-        heat_solver(temperature, result, 0);
+        (*heat_solver)(temperature, result, 0);
         BOOST_TEST(result[0] == 0, tt::tolerance(1e-12));
         for (int i = 1; i < N_tmp - 1; i++) {
             BOOST_TEST(result[i] ==
@@ -87,8 +87,8 @@ namespace phy {
 
     BOOST_FIXTURE_TEST_CASE(RHStestRandom, HeatEquationTestFixture) {
         namespace tt = boost::test_tools;
-        heat_solver = System(x_points, diffusion, source, left_boundary_condition,
-                             right_boundary_condition);
+        heat_solver = std::make_shared<System>(x_points, diffusion, source, left_boundary_condition,
+                                               right_boundary_condition);
         unsigned long N_tmp = temperature.size();
 
         // initial vector with random numbers
@@ -101,7 +101,7 @@ namespace phy {
             elem = MIN + (double) (rand()) / ((double) (RAND_MAX / (MAX - MIN)));
 
         std::vector<double> result(N_tmp, 0.0);
-        heat_solver(temperature_random, result, 0);
+        (*heat_solver)(temperature_random, result, 0);
         BOOST_TEST(result[0] == 0, tt::tolerance(1e-12));
         for (int i = 1; i < N_tmp - 1; i++) {
             BOOST_TEST(result[i] ==
@@ -114,10 +114,10 @@ namespace phy {
 
     BOOST_FIXTURE_TEST_CASE(testComputation, HeatEquationTestFixture) {
         namespace tt = boost::test_tools;
-        heat_solver = System(x_points, diffusion, source, left_boundary_condition,
-                             right_boundary_condition);
+        heat_solver = std::make_shared<System>(x_points, diffusion, source, left_boundary_condition,
+                                               right_boundary_condition);
         integrate_adaptive(make_controlled<error_stepper_type>(abs_error, rel_error),
-                           heat_solver, temperature, t_min, t_max, 0.01);
+                           *heat_solver, temperature, t_min, t_max, 0.01);
         for (int i = 0; i < N; i++) {
             BOOST_TEST(temperature.at(i) == analytic_solution(x_points[i], t_max),
                        tt::tolerance(1e-4));
