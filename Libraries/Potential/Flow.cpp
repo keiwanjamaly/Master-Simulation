@@ -62,7 +62,7 @@ namespace phy {
     }
 
     void Flow::compute() {
-        integrate_adaptive(make_controlled<error_stepper_type>(1.0e-12, 1.0e-12),
+        integrate_adaptive(make_controlled<error_stepper_type>(1.0e-13, 1.0e-13),
                            *heat_solver, u, t, c->t_max, 0.01, observer(std::cout));
     }
 
