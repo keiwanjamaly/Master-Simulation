@@ -156,7 +156,6 @@ int f(realtype t, N_Vector y, N_Vector ydot, void *user_data) {
     for (int i = 1; i < udata->N - 1; i++)
         fdata[i] = (ydata[i + 1] - 2 * ydata[i] + ydata[i - 1]) / (udata->dx * udata->dx);
     fdata[udata->N - 1] = 0.0;
-    N_VPrint_Serial(ydot);
     return 0;
 }
 
@@ -180,8 +179,6 @@ int J(realtype t, N_Vector y, N_Vector fy, SUNMatrix J, void *user_data,
     for (sunindextype i = 0; i < udata->N - 1; i++) {
         J_cols[i][1 + smu] = 1 / (udata->dx * udata->dx);
     }
-
-    SUNBandMatrix_Print(J, stdout);
 
     return 0;
 }

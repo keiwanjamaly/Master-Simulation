@@ -27,28 +27,28 @@ namespace phy {
 
         explicit System(const shared_ptr<Config_Base> &config) : m_config{config} {
             // declare and fill u with initial conditions
-            m_u = N_VNew_Serial(config->get_N(), m_sunctx);
+            m_u = N_VNew_Serial(m_config->get_N(), m_sunctx);
             realtype *m_u_data = get_u_pointer();
-            auto x_points = config->get_x_points();
-            for (int i = 0; i < config->get_N(); i++)
-                m_u_data[i] = config->initial_condition(x_points[i]);
+            auto x_points = m_config->get_x_points();
+            for (int i = 0; i < m_config->get_N(); i++)
+                m_u_data[i] = m_config->initial_condition(x_points[i]);
 
             // declare band matrix
-            m_band_matrix = SUNDenseMatrix(config->get_N(), config->get_N(), m_sunctx);
-//            m_band_matrix = SUNBandMatrix(config->get_N(), 1, 1, m_sunctx);
+//            m_band_matrix = SUNDenseMatrix(m_config->get_N(), m_config->get_N(), m_sunctx);
+            m_band_matrix = SUNBandMatrix(m_config->get_N(), 1, 1, m_sunctx);
 
             // Create Linear solver
-            m_LS = SUNLinSol_Dense(m_u, m_band_matrix, m_sunctx);
-//            m_LS = SUNLinSol_Band(m_u, m_band_matrix, m_sunctx);
+//            m_LS = SUNLinSol_Dense(m_u, m_band_matrix, m_sunctx);
+            m_LS = SUNLinSol_Band(m_u, m_band_matrix, m_sunctx);
 
             // Create CVODE memory structure
             m_cvode_mem = CVodeCreate(CV_BDF, m_sunctx);
 
             // Attach RHS function and set initial condition
-            m_flag_init = CVodeInit(m_cvode_mem, f, config->get_t(), m_u);
+            m_flag_init = CVodeInit(m_cvode_mem, f, m_config->get_t(), m_u);
 
             // Set integration tolerances
-            m_set_flag_SStolerances = CVodeSStolerances(m_cvode_mem, config->get_rel_tol(), config->get_abs_tol());
+            m_set_flag_SStolerances = CVodeSStolerances(m_cvode_mem, m_config->get_rel_tol(), m_config->get_abs_tol());
 
             // Attach matrix and linear solver
             m_flag_SetLinearSolver = CVodeSetLinearSolver(m_cvode_mem, m_LS, m_band_matrix);
@@ -57,7 +57,7 @@ namespace phy {
             m_flag_SetJacFn = CVodeSetJacFn(m_cvode_mem, Jacobian);
 
             // Attach user data pointer
-            m_flag_SetUserData = CVodeSetUserData(m_cvode_mem, (void *) config.get());
+            m_flag_SetUserData = CVodeSetUserData(m_cvode_mem, (void *) m_config.get());
 
             // test all flags
             if (m_flag_init != CV_SUCCESS)
@@ -125,7 +125,8 @@ namespace phy {
                     }
                     break;
             }
-            N_VPrint_Serial(ydot);
+
+            return 0;
         }
 
         static int
@@ -166,7 +167,6 @@ namespace phy {
                     J_cols[i][1 + smu] = low / (dx * dx);
                 low = high;
             }
-            SUNBandMatrix_Print(Jac, stdout);
 
             return 0;
         }

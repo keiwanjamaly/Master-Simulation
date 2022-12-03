@@ -31,7 +31,7 @@ namespace phy {
         }
 
         sunrealtype t_start = RCONST(0.0);
-        sunrealtype t_final = RCONST(10.0);
+        sunrealtype t_final = RCONST(2.0);
         sunrealtype x_min = RCONST(0.0);
         sunrealtype x_max = RCONST(5.0);
         int N = 11;
@@ -157,8 +157,8 @@ namespace phy {
         realtype *u = heat_solver->get_u_pointer();
 
         for (int i = 0; i < N; i++) {
-            BOOST_TEST(u[i] == config->analytic_solution(x_points[i], config->get_t_final()),
-                       tt::tolerance(1e-4));
+            BOOST_TEST(u[i] == config->analytic_solution(config->get_t_final(), x_points[i]),
+                       tt::tolerance(1e-2));
         }
     }
 
