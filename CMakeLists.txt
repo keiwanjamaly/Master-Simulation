@@ -27,6 +27,3 @@ add_executable(Test test.cpp ${TEST_SOURCE})
 target_include_directories(Test PUBLIC ${TEST_INCLUDES} ${GLOBAL_INCLUDES})
 target_link_libraries(Test ${LIBRARIES})
 target_link_libraries(Test simdjson)
-
-add_executable(SUNDIALS sundials_test.cpp)
-target_link_libraries(SUNDIALS PUBLIC SUNDIALS::cvode ${LIBRARIES})
