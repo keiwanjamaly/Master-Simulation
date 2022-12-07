@@ -11,10 +11,9 @@
 #include <memory>
 #include <cvode/cvode.h>
 #include <nvector/nvector_serial.h>
-#include <sunmatrix/sunmatrix_dense.h>
 #include <sunmatrix/sunmatrix_band.h>
-#include <sunlinsol/sunlinsol_dense.h>
 #include <sunlinsol/sunlinsol_band.h>
+#include <string>
 
 
 namespace phy {
@@ -34,11 +33,9 @@ namespace phy {
                 m_u_data[i] = m_config->initial_condition(x_points[i]);
 
             // declare band matrix
-//            m_band_matrix = SUNDenseMatrix(m_config->get_N(), m_config->get_N(), m_sunctx);
             m_band_matrix = SUNBandMatrix(m_config->get_N(), 1, 1, m_sunctx);
 
             // Create Linear solver
-//            m_LS = SUNLinSol_Dense(m_u, m_band_matrix, m_sunctx);
             m_LS = SUNLinSol_Band(m_u, m_band_matrix, m_sunctx);
 
             // Create CVODE memory structure
@@ -83,7 +80,7 @@ namespace phy {
         void solve() {
             auto flag = CVode(m_cvode_mem, m_config->get_t_final(), m_u, m_config->get_t_pointer(), CV_NORMAL);
             if (flag != CV_SUCCESS)
-                throw std::runtime_error("failed to integrate");
+                throw std::runtime_error("failed to integrate with error " + std::to_string(flag));
         }
 
         static int f(realtype t, N_Vector y, N_Vector ydot, void *user_data) {

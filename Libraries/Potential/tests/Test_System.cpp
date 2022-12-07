@@ -3,7 +3,6 @@
 //
 
 #include "System.h"
-#include "Types_Potential.h"
 #include "Heat_Equation_Config_Base.h"
 #include <boost/test/unit_test.hpp>
 #include <cmath>
@@ -156,10 +155,11 @@ namespace phy {
 
         realtype *u = heat_solver->get_u_pointer();
 
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < config->get_N() - 1; i++) {
             BOOST_TEST(u[i] == config->analytic_solution(config->get_t_final(), x_points[i]),
                        tt::tolerance(1e-2));
         }
+        BOOST_CHECK_SMALL(u[config->get_N() - 1], 1e-5);
     }
 
 } // phy

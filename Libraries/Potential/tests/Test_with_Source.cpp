@@ -4,93 +4,70 @@
 
 #include <memory>
 #include "System.h"
-#include "Types_Potential.h"
+#include "Heat_Equation_Config_Base.h"
 #include <boost/test/unit_test.hpp>
 
 namespace phy {
-    using namespace boost::numeric::odeint;
+    using std::shared_ptr, std::make_shared;
 
     class HeatEquationWithSourceTestFixture {
 
     public:
         HeatEquationWithSourceTestFixture() {
-            double x;
-            L = x_max - x_min;
-            dx = L / N;
-            temperature = dbl_vec(N + 1);
-            for (int i = 0; i <= N; i++) {
-                x = i * dx;
-                x_points.push_back(x);
-                temperature[i] = initial_potential(x);
-            }
+            config = std::make_shared<Heat_Equation_With_Source_Config>(t_start, t_final, x_min, x_max, N);
+            heat_solver = make_shared<System>(config);
+            vec1 = N_VNew_Serial(config->get_N(), context_1);
+        }
 
+        ~HeatEquationWithSourceTestFixture() {
+            N_VDestroy(vec1);
         }
 
     public:
-        double initial_potential(double x) {
-            return sin(2 * M_PI / L * x);
-        }
-
-        double analytic_solution(double x, double t) {
-            double alpha = pow(M_PI / L, 2);
-            return exp(-4 * alpha * t) * initial_potential(x) + (1 - exp(-alpha * t)) * source(t, x) / alpha;
-        }
-
-        static double diffusion(double t, double u_x) {
-            return u_x;
-        }
-
-        static double left_boundary_condition(double u0, double u1) {
-            return 2 * u0 - u1;
-        }
-
-        static double right_boundary_condition(double uN_minus_2, double uN_minus_1) {
-            return 2 * uN_minus_1 - uN_minus_2;
-        }
-
-        static double source(double t, double x) {
-            // TODO: here should be a L instead of 5.0
-            return 2 * sin(M_PI / 5.0 * x);
-        }
-
-        dbl_vec temperature;
-        dbl_vec x_points;
-        double x_min = 0.0, x_max = 5.0;
-        double dx;
-        double t_min = 0.0, t_max = 5.0;
-        double L;
-        double abs_error = 1.0e-11, rel_error = 1.0e-7;
-        int N = 200;
+        sunrealtype t_start = RCONST(0.0);
+        sunrealtype t_final = RCONST(2.0);
+        sunrealtype x_min = RCONST(0.0);
+        sunrealtype x_max = RCONST(5.0);
+        int N = 11;
+        std::shared_ptr<Heat_Equation_With_Source_Config> config;
         std::shared_ptr<System> heat_solver;
+        N_Vector vec1;
+        sundials::Context context_1;
     };
 
     BOOST_FIXTURE_TEST_CASE(RHStestHeatWithSource, HeatEquationWithSourceTestFixture) {
+        // test setup
         namespace tt = boost::test_tools;
-        heat_solver = std::make_shared<System>(x_points, diffusion, source, left_boundary_condition,
-                                               right_boundary_condition);
-        unsigned long N_tmp = temperature.size();
-        dbl_vec result(N_tmp, 0.0);
-        (*heat_solver)(temperature, result, 0);
-        BOOST_TEST(result[0] == 0, tt::tolerance(1e-4));
-        for (int i = 1; i < N_tmp - 1; i++) {
-            BOOST_TEST(result[i] ==
-                       (-2 * temperature[i] + temperature[i - 1] + temperature[i + 1]) /
-                       (dx * dx) + source(0, x_points[i]), tt::tolerance(1e-4));
+        realtype *u_data = heat_solver->get_u_pointer();
+        sunrealtype dx = config->get_dx();
+
+        // run calculation
+        heat_solver->f(0.0, heat_solver->get_u(), vec1, (void *) config.get());
+
+        //test
+        realtype *result_data = N_VGetArrayPointer(vec1);
+        BOOST_TEST(result_data[0] == 0, tt::tolerance(1e-4));
+        for (int i = 1; i < config->get_N() - 1; i++) {
+            BOOST_TEST(result_data[i] ==
+                       (-2 * u_data[i] + u_data[i - 1] + u_data[i + 1]) /
+                       (dx * dx) + config->S(0, config->get_x_points()[i]), tt::tolerance(1e-4));
         }
-        BOOST_TEST(result[N_tmp - 1] == 0,
+        BOOST_TEST(result_data[config->get_N() - 1] == 0,
                    tt::tolerance(1e-4)); // expect double eq fails, so I reduce to this, since it is close enough
     }
 
     BOOST_FIXTURE_TEST_CASE(testComputationHeatWithSource, HeatEquationWithSourceTestFixture) {
         namespace tt = boost::test_tools;
-        heat_solver = std::make_shared<System>(x_points, diffusion, source, left_boundary_condition,
-                                               right_boundary_condition);
-        integrate_adaptive(make_controlled<error_stepper_type>(abs_error, rel_error),
-                           *heat_solver, temperature, t_min, t_max, 0.01);
+        auto x_points = config->get_x_points();
 
-        for (int i = 0; i < N; i++) {
-            BOOST_TEST(temperature[i] == analytic_solution(x_points[i], t_max),
-                       tt::tolerance(1e-4));
+        heat_solver->solve();
+
+        realtype *u = heat_solver->get_u_pointer();
+
+        for (int i = 0; i < config->get_N() - 1; i++) {
+            BOOST_TEST(u[i] == config->analytic_solution(config->get_t_final(), x_points[i]),
+                       tt::tolerance(1e-2));
         }
+        BOOST_CHECK_SMALL(u[config->get_N() - 1], 1e-4);
     }
 } // phy

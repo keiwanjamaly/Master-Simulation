@@ -27,7 +27,7 @@ namespace phy {
         Config_Base() = delete;
 
         Config_Base(sunrealtype t, sunrealtype t_final, sunrealtype x_min, sunrealtype x_max, int N,
-                    sunrealtype abs_tol = RCONST(1e-11), sunrealtype rel_tol = RCONST(1e-7)) : m_t{t},
+                    sunrealtype abs_tol = RCONST(1e-5), sunrealtype rel_tol = RCONST(1e-10)) : m_t{t},
                                                                                                m_t_final{t_final},
                                                                                                m_x_min{x_min},
                                                                                                m_x_max{x_max}, m_N{N},
@@ -60,11 +60,11 @@ namespace phy {
         sunrealtype get_t_final() const { return m_t_final; };
 
         // these need to be initialized by the derived class
-        virtual sunrealtype Q(sunrealtype, sunrealtype) = 0;
+        virtual sunrealtype Q(sunrealtype, sunrealtype) const = 0;
 
-        virtual sunrealtype Q_prime(sunrealtype, sunrealtype) = 0;
+        virtual sunrealtype Q_prime(sunrealtype, sunrealtype) const = 0;
 
-        virtual sunrealtype S(sunrealtype, sunrealtype) = 0;
+        virtual sunrealtype S(sunrealtype, sunrealtype) const = 0;
 
         virtual Implementation S_Implementation() const = 0;
 

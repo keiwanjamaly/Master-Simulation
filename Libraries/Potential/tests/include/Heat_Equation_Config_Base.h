@@ -22,11 +22,11 @@ namespace phy {
         auto get_L() { return m_L; };
 
         // implementing physics
-        sunrealtype Q(sunrealtype /* t */, sunrealtype ux) final { return ux; };
+        sunrealtype Q(sunrealtype /* t */, sunrealtype ux) const final { return ux; };
 
-        sunrealtype Q_prime(sunrealtype /* t */, sunrealtype /* ux */) final { return 1; };
+        sunrealtype Q_prime(sunrealtype /* t */, sunrealtype /* ux */) const final { return 1; };
 
-        sunrealtype S(sunrealtype /* t */, sunrealtype /* x */) final { return 0; };
+        sunrealtype S(sunrealtype /* t */, sunrealtype /* x */) const override { return 0; };
 
         Implementation S_Implementation() const final { return analytically; };
 
@@ -36,12 +36,24 @@ namespace phy {
 
         sunrealtype initial_condition(sunrealtype x) final { return analytic_solution(RCONST(0.0), x); };
 
-        sunrealtype analytic_solution(sunrealtype t, sunrealtype x) const {
+        virtual sunrealtype analytic_solution(sunrealtype t, sunrealtype x) const {
             return exp(-pow(M_PI / m_L, RCONST(2.0)) * t) * sin(M_PI / m_L * x);
         };
 
-    private:
+    protected:
         sunrealtype m_L;
+    };
+
+    class Heat_Equation_With_Source_Config : public Heat_Equation_Config {
+    public:
+        using Heat_Equation_Config::Heat_Equation_Config;
+
+        sunrealtype S(sunrealtype /* t */, sunrealtype x) const final { return 2 * sin(M_PI / m_L * x); };
+
+        sunrealtype analytic_solution(sunrealtype t, sunrealtype x) const override {
+            double alpha = pow(M_PI / m_L, 2);
+            return exp(-4 * alpha * t) * sin(2 * M_PI / m_L * x) + (1 - exp(-alpha * t)) * S(t, x) / alpha;
+        }
     };
 
 } // phy

@@ -26,8 +26,8 @@ namespace phy {
         BOOST_TEST(N == config->get_N());
         BOOST_TEST((x_max - x_min) / (N - 1) == config->get_dx());
         BOOST_TEST(x_max - x_min == config->get_L());
-        BOOST_TEST(1e-11 == config->get_abs_tol());
-        BOOST_TEST(1e-7 == config->get_rel_tol());
+        BOOST_TEST(1e-5 == config->get_abs_tol());
+        BOOST_TEST(1e-10 == config->get_rel_tol());
 
         auto x_points = config->get_x_points();
         BOOST_TEST(x_min == x_points.front());
