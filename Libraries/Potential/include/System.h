@@ -14,6 +14,7 @@
 #include <sunmatrix/sunmatrix_band.h>
 #include <sunlinsol/sunlinsol_band.h>
 #include <string>
+#include <climits>
 
 
 namespace phy {
@@ -56,6 +57,9 @@ namespace phy {
             // Attach user data pointer
             m_flag_SetUserData = CVodeSetUserData(m_cvode_mem, (void *) m_config.get());
 
+            // setting the maximum number of steps to the largest value possible
+            m_flag_SetMaxNumSteps = CVodeSetMaxNumSteps(m_cvode_mem, LONG_MAX);
+
             // test all flags
             if (m_flag_init != CV_SUCCESS)
                 throw std::runtime_error("RHS function could not be initialized");
@@ -79,6 +83,7 @@ namespace phy {
 
         void solve() {
             auto flag = CVode(m_cvode_mem, m_config->get_t_final(), m_u, m_config->get_t_pointer(), CV_NORMAL);
+            std::cout << m_config->get_t() << std::endl;
             if (flag != CV_SUCCESS)
                 throw std::runtime_error("failed to integrate with error " + std::to_string(flag));
         }
@@ -203,7 +208,8 @@ namespace phy {
                 m_set_flag_SStolerances = -100,
                 m_flag_SetLinearSolver = -100,
                 m_flag_SetJacFn = -100,
-                m_flag_SetUserData = -100;
+                m_flag_SetUserData = -100,
+                m_flag_SetMaxNumSteps = -100;
 
     };
 

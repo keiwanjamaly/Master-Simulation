@@ -8,23 +8,36 @@
 #include <limits>
 
 namespace phy {
+    using std::vector, std::shared_ptr, std::make_shared;
 
     class OnePlusOneMultipleFlowsFixture {
     public:
         OnePlusOneMultipleFlowsFixture() {
-            config = std::make_shared<Configuration>();
+            config = std::make_shared<Flow>();
 
             config->Lambda = 1e5;
             config->sigma_max = 6.0;
             config->N_grid = 1000;
         }
 
-        double T;
-        double mu;
-        dbl_vec sigma;
-        std::vector<dbl_vec> u_vector;
-        std::shared_ptr<Configuration> config;
-        dbl_vec t_vector;
+        const double T = 0.1;
+        const double mu = 0.1;
+        const double Lambda = 1e5;
+        double t_max;
+        const double t_start = 0.0;
+        const double sigma_min = 0.0;
+        const double sigma_max = 6.0;
+        const int N_grid = 1000;
+        const double N_flavor = 2.0;
+
+
+        shared_ptr<System> solver;
+        shared_ptr<Flow> config;
+        vector<double> sigma;
+        vector<vector<double>> u_vector;
+        vector<double> t_vector;
+
+        std::shared_ptr<Flow> config;
         std::shared_ptr<Flow> f;
     };
 

@@ -8,6 +8,7 @@
 #include <memory>
 #include <functional>
 #include <vector>
+#include <iostream>
 
 #include <cvode/cvode.h>
 
@@ -60,10 +61,13 @@ namespace phy {
         sunrealtype get_t_final() const { return m_t_final; };
 
         // these need to be initialized by the derived class
+        // Q(t, ux)
         virtual sunrealtype Q(sunrealtype, sunrealtype) const = 0;
 
+        // Q(t, ux)
         virtual sunrealtype Q_prime(sunrealtype, sunrealtype) const = 0;
 
+        // S(t, x)
         virtual sunrealtype S(sunrealtype, sunrealtype) const = 0;
 
         virtual Implementation S_Implementation() const = 0;
@@ -73,6 +77,10 @@ namespace phy {
         virtual sunrealtype rbc(sunrealtype, sunrealtype) = 0;
 
         virtual sunrealtype initial_condition(sunrealtype) = 0;
+
+        virtual void monitor(sunrealtype t) const {
+            std::cout << t << '\n';
+        }
 
     private:
         void m_calculate_x_points() {

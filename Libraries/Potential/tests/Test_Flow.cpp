@@ -3,6 +3,7 @@
 //
 
 #include <boost/test/unit_test.hpp>
+#include "System.h"
 #include "Flow.h"
 
 
@@ -10,43 +11,43 @@ namespace phy {
     class TestFlowFixture {
     public:
         TestFlowFixture() {
-            config = std::make_shared<Configuration>();
-            config->Lambda = 1e10;
-            config->t_max = 20;
-            config->sigma_max = 6.0;
-            config->N_grid = 200;
-            config->N_flavor = 2;
+            config = std::make_shared<Flow>(mu, T, Lambda, N_flavor, t_start, t_max, sigma_min, sigma_max, N_grid);
+            solver = make_shared<System>(config);
         }
 
         const double mu = 0.1;
         const double T = 0.2;
+        const double Lambda = 1e10;
+        const double t_max = 20;
+        const double t_start = 0.0;
+        const double sigma_min = 0.0;
+        const double sigma_max = 6.0;
+        const int N_grid = 200;
+        const double N_flavor = 2.0;
 
-        std::shared_ptr<Configuration> config;
+        std::shared_ptr<System> solver;
+        std::shared_ptr<Flow> config;
     };
 
     BOOST_FIXTURE_TEST_CASE(TestConstructor, TestFlowFixture) {
         namespace tt = boost::test_tools;
-        Flow f(mu, T, config);
-        BOOST_CHECK_EQUAL(f.x, mu);
-        BOOST_CHECK_EQUAL(f.y, T);
-        BOOST_CHECK_EQUAL(f.c, config);
-        BOOST_CHECK_EQUAL(f.t, 0.0);
-        for (int i = 0; i < config->N_grid; i++)
-            BOOST_TEST(f.sigma_points[i] == config->sigma_max / (config->N_grid - 1) * i,
-                       tt::tolerance(1e-15));
+        BOOST_CHECK_EQUAL(config->get_mu(), mu);
+        BOOST_CHECK_EQUAL(config->get_T(), T);
+        BOOST_CHECK_EQUAL(solver->get_Config(), config);
+        BOOST_CHECK_EQUAL(config->get_t(), 0.0);
+        BOOST_CHECK_EQUAL(config->get_rel_tol(), 1.0e-10);
+        BOOST_CHECK_EQUAL(config->get_abs_tol(), 1.0e-10);
     }
 
     BOOST_FIXTURE_TEST_CASE(TestLeftBoundayCondition, TestFlowFixture) {
-        Flow f(mu, T, config);
-        BOOST_CHECK_EQUAL(f.left_boundary_condition()(0.5, 1.0), -1.0);
-        BOOST_CHECK_EQUAL(f.left_boundary_condition()(3.2341, 10.3), -10.3);
+        BOOST_CHECK_EQUAL(config->lbc(0.5, 1.0), -1.0);
+        BOOST_CHECK_EQUAL(config->lbc(3.2341, 10.3), -10.3);
     }
 
     BOOST_FIXTURE_TEST_CASE(TestRightBoundayCondition, TestFlowFixture) {
-        Flow f(mu, T, config);
-        BOOST_TEST(f.right_boundary_condition()(4.0, 5.0) == 6.0);
-        BOOST_TEST(f.right_boundary_condition()(1001.0, 1002.0) == 1003.0);
-        BOOST_TEST(f.right_boundary_condition()(90.0, 85.0) == 80.0);
+        BOOST_TEST(config->rbc(4.0, 5.0) == 6.0);
+        BOOST_TEST(config->rbc(1001.0, 1002.0) == 1003.0);
+        BOOST_TEST(config->rbc(90.0, 85.0) == 80.0);
     }
 
     BOOST_AUTO_TEST_CASE(TestBosonDencity) {
@@ -55,12 +56,12 @@ namespace phy {
         BOOST_TEST(Flow::n_b(15.324892) == 2.210467147176071e-7, tt::tolerance(1e-15));
     }
 
-    BOOST_AUTO_TEST_CASE(TestFermionDencity) {
-        namespace tt = boost::test_tools;
-        BOOST_TEST(Flow::n_f(0) == 1.0 / 2.0, tt::tolerance(1e-15));
-        BOOST_TEST(Flow::n_f(15.324892) == 2.210466169943501e-7, tt::tolerance(1e-15));
-    }
-
+//    BOOST_AUTO_TEST_CASE(TestFermionDencity) {
+//        namespace tt = boost::test_tools;
+//        BOOST_TEST(Flow::n_f(0) == 1.0 / 2.0, tt::tolerance(1e-15));
+//        BOOST_TEST(Flow::n_f(15.324892) == 2.210466169943501e-7, tt::tolerance(1e-15));
+//    }
+//
     BOOST_AUTO_TEST_CASE(TestFermionEnergy) {
         BOOST_TEST(Flow::E_f(3, 0) == 3);
         BOOST_TEST(Flow::E_f(3, 4) == 5.0);
@@ -75,10 +76,9 @@ namespace phy {
 
     BOOST_FIXTURE_TEST_CASE(TestRGImpulseFunction, TestFlowFixture) {
         namespace tt = boost::test_tools;
-        Flow f(mu, T, config);
-        BOOST_TEST(f.k(1.1) == 3.328710836980795e9, tt::tolerance(1e-15));
-        BOOST_TEST(f.k(12.12) == 54494.27503696815, tt::tolerance(1e-15));
-        BOOST_TEST(f.k(123.123) == 3.375674045869994e-44, tt::tolerance(1e-15));
+        BOOST_TEST(config->t2k(1.1) == 3.328710836980795e9, tt::tolerance(1e-15));
+        BOOST_TEST(config->t2k(12.12) == 54494.27503696815, tt::tolerance(1e-15));
+        BOOST_TEST(config->t2k(123.123) == 3.375674045869994e-44, tt::tolerance(1e-15));
     }
 
 

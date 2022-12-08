@@ -1,4 +1,5 @@
 #include "Heat_Equation_Config_Base.h"
+#include "System.h"
 
 #include <boost/test/unit_test.hpp>
 

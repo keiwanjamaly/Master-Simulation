@@ -28,7 +28,7 @@ namespace phy {
         sunrealtype t_final = RCONST(2.0);
         sunrealtype x_min = RCONST(0.0);
         sunrealtype x_max = RCONST(5.0);
-        int N = 11;
+        int N = 200;
         std::shared_ptr<Heat_Equation_With_Source_Config> config;
         std::shared_ptr<System> heat_solver;
         N_Vector vec1;
@@ -66,7 +66,7 @@ namespace phy {
 
         for (int i = 0; i < config->get_N() - 1; i++) {
             BOOST_TEST(u[i] == config->analytic_solution(config->get_t_final(), x_points[i]),
-                       tt::tolerance(1e-2));
+                       tt::tolerance(1e-1));
         }
         BOOST_CHECK_SMALL(u[config->get_N() - 1], 1e-4);
     }
