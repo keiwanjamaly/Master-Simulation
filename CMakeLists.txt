@@ -15,7 +15,7 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 find_package(SUNDIALS REQUIRED)
 
-set(LIBRARIES Graph_lib Potential ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} SUNDIALS::cvode)
+set(LIBRARIES Graph_lib Potential ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} SUNDIALS::cvode SUNDIALS::arkode)
 
 
 add_executable(Simulation main.cpp)

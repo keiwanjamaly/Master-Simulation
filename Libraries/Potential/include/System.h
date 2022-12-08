@@ -10,6 +10,8 @@
 
 #include <memory>
 #include <cvode/cvode.h>
+#include <arkode/arkode.h>
+#include <arkode/arkode_erkstep.h>
 #include <nvector/nvector_serial.h>
 #include <sunmatrix/sunmatrix_band.h>
 #include <sunlinsol/sunlinsol_band.h>
@@ -33,56 +35,58 @@ namespace phy {
             for (int i = 0; i < m_config->get_N(); i++)
                 m_u_data[i] = m_config->initial_condition(x_points[i]);
 
-            // declare band matrix
-            m_band_matrix = SUNBandMatrix(m_config->get_N(), 1, 1, m_sunctx);
-
-            // Create Linear solver
-            m_LS = SUNLinSol_Band(m_u, m_band_matrix, m_sunctx);
+//            // declare band matrix
+//            m_band_matrix = SUNBandMatrix(m_config->get_N(), 1, 1, m_sunctx);
+//
+//            // Create Linear solver
+//            m_LS = SUNLinSol_Band(m_u, m_band_matrix, m_sunctx);
 
             // Create CVODE memory structure
-            m_cvode_mem = CVodeCreate(CV_BDF, m_sunctx);
+            m_cvode_mem = ERKStepCreate(f, m_config->get_t(), m_u, m_sunctx);
 
             // Attach RHS function and set initial condition
-            m_flag_init = CVodeInit(m_cvode_mem, f, m_config->get_t(), m_u);
+//            m_flag_init = CVodeInit(m_cvode_mem, f, m_config->get_t(), m_u);
 
             // Set integration tolerances
-            m_set_flag_SStolerances = CVodeSStolerances(m_cvode_mem, m_config->get_rel_tol(), m_config->get_abs_tol());
+            m_set_flag_SStolerances = ERKStepSStolerances(m_cvode_mem, m_config->get_rel_tol(),
+                                                          m_config->get_abs_tol());
 
             // Attach matrix and linear solver
-            m_flag_SetLinearSolver = CVodeSetLinearSolver(m_cvode_mem, m_LS, m_band_matrix);
+//            m_flag_SetLinearSolver = CVodeSetLinearSolver(m_cvode_mem, m_LS, m_band_matrix);
 
             // Set Jacobian function
-            m_flag_SetJacFn = CVodeSetJacFn(m_cvode_mem, Jacobian);
+//            m_flag_SetJacFn = CVodeSetJacFn(m_cvode_mem, Jacobian);
 
             // Attach user data pointer
-            m_flag_SetUserData = CVodeSetUserData(m_cvode_mem, (void *) m_config.get());
+            m_flag_SetUserData = ERKStepSetUserData(m_cvode_mem, (void *) m_config.get());
 
             // setting the maximum number of steps to the largest value possible
-            m_flag_SetMaxNumSteps = CVodeSetMaxNumSteps(m_cvode_mem, LONG_MAX);
+//            m_flag_SetMaxNumSteps = CVodeSetMaxNumSteps(m_cvode_mem, LONG_MAX);
+            m_flag_SetMaxNumSteps = ERKStepSetMaxNumSteps(m_cvode_mem, LONG_MAX);
 
             // test all flags
-            if (m_flag_init != CV_SUCCESS)
-                throw std::runtime_error("RHS function could not be initialized");
-            if (m_set_flag_SStolerances != CV_SUCCESS)
-                throw std::runtime_error("failed to set tolerances");
-            if (m_flag_SetLinearSolver != CVLS_SUCCESS)
-                throw std::runtime_error("failed to attach linear solver");
-            if (m_flag_SetJacFn != CVLS_SUCCESS)
-                throw std::runtime_error("failed to attach jacobian");
-            if (m_flag_SetUserData != CV_SUCCESS)
-                throw std::runtime_error("failed to set user data");
+//            if (m_flag_init != CV_SUCCESS)
+//                throw std::runtime_error("RHS function could not be initialized");
+//            if (m_set_flag_SStolerances != CV_SUCCESS)
+//                throw std::runtime_error("failed to set tolerances");
+//            if (m_flag_SetLinearSolver != CVLS_SUCCESS)
+//                throw std::runtime_error("failed to attach linear solver");
+//            if (m_flag_SetJacFn != CVLS_SUCCESS)
+//                throw std::runtime_error("failed to attach jacobian");
+//            if (m_flag_SetUserData != CV_SUCCESS)
+//                throw std::runtime_error("failed to set user data");
         }
 
         ~System() {
             // free memory of CVODE objects
             N_VDestroy(m_u);
-            SUNMatDestroy(m_band_matrix);
-            SUNLinSolFree(m_LS);
-            CVodeFree(&m_cvode_mem);
+//            SUNMatDestroy(m_band_matrix);
+//            SUNLinSolFree(m_LS);
+            ERKStepFree(&m_cvode_mem);
         }
 
         void solve() {
-            auto flag = CVode(m_cvode_mem, m_config->get_t_final(), m_u, m_config->get_t_pointer(), CV_NORMAL);
+            auto flag = ERKStepEvolve(m_cvode_mem, m_config->get_t_final(), m_u, m_config->get_t_pointer(), ARK_NORMAL);
             std::cout << m_config->get_t() << std::endl;
             if (flag != CV_SUCCESS)
                 throw std::runtime_error("failed to integrate with error " + std::to_string(flag));

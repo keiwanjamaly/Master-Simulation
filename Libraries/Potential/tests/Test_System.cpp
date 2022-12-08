@@ -51,19 +51,19 @@ namespace phy {
             BOOST_TEST(config->initial_condition(x_points[i]) == u[i]);
         // setup of Band matrix
         // setup of CVODE memory structure
-        BOOST_TEST(heat_solver->get_cvode_mem());
+//        BOOST_TEST(heat_solver->get_cvode_mem());
         // setup create Linear Band Solver
-        BOOST_TEST(heat_solver->get_LS());
+//        BOOST_TEST(heat_solver->get_LS());
         // setup of CVode Init
-        BOOST_TEST(heat_solver->get_flag_init() == CV_SUCCESS);
+//        BOOST_TEST(heat_solver->get_flag_init() == CV_SUCCESS);
         // setup of Tolerances
-        BOOST_TEST(heat_solver->get_set_flag_SStolerances() == CV_SUCCESS);
+//        BOOST_TEST(heat_solver->get_set_flag_SStolerances() == CV_SUCCESS);
         // setup of set linear solver
-        BOOST_TEST(heat_solver->get_flag_SetLinearSolver() == CVLS_SUCCESS);
+//        BOOST_TEST(heat_solver->get_flag_SetLinearSolver() == CVLS_SUCCESS);
         // setup of jacobian function
-        BOOST_TEST(heat_solver->get_flag_SetJacFn() == CVLS_SUCCESS);
+//        BOOST_TEST(heat_solver->get_flag_SetJacFn() == CVLS_SUCCESS);
         // setup of user data
-        BOOST_TEST(heat_solver->get_flag_SetUserData() == CV_SUCCESS);
+//        BOOST_TEST(heat_solver->get_flag_SetUserData() == CV_SUCCESS);
 
     }
 
