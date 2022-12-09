@@ -35,8 +35,8 @@ namespace phy {
         BOOST_CHECK_EQUAL(config->get_T(), T);
         BOOST_CHECK_EQUAL(solver->get_Config(), config);
         BOOST_CHECK_EQUAL(config->get_t(), 0.0);
-        BOOST_CHECK_EQUAL(config->get_rel_tol(), 1.0e-10);
-        BOOST_CHECK_EQUAL(config->get_abs_tol(), 1.0e-10);
+        BOOST_CHECK_EQUAL(config->get_rel_tol(), 1.0e-9);
+        BOOST_CHECK_EQUAL(config->get_abs_tol(), 1.0e-9);
     }
 
     BOOST_FIXTURE_TEST_CASE(TestLeftBoundayCondition, TestFlowFixture) {
