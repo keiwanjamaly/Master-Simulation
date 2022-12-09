@@ -48,9 +48,9 @@ namespace phy {
         // setup of ERK memory structure
         BOOST_TEST(heat_solver->get_erk_mem());
         // setup of Tolerances
-        BOOST_TEST(heat_solver->get_set_flag_SStolerances() == CV_SUCCESS);
+        BOOST_TEST(heat_solver->get_set_flag_SStolerances() == ARK_SUCCESS);
         // setup of user data
-        BOOST_TEST(heat_solver->get_flag_SetUserData() == CV_SUCCESS);
+        BOOST_TEST(heat_solver->get_flag_SetUserData() == ARK_SUCCESS);
 
     }
 
