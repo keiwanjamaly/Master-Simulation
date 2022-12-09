@@ -86,10 +86,13 @@ namespace phy {
         }
 
         void solve() {
-            auto flag = ERKStepEvolve(m_cvode_mem, m_config->get_t_final(), m_u, m_config->get_t_pointer(), ARK_NORMAL);
-            std::cout << m_config->get_t() << std::endl;
-            if (flag != CV_SUCCESS)
-                throw std::runtime_error("failed to integrate with error " + std::to_string(flag));
+            while (m_config->get_t_final() >= m_config->get_t()) {
+                auto flag = ERKStepEvolve(m_cvode_mem, m_config->get_t_final(), m_u, m_config->get_t_pointer(),
+                                          ARK_ONE_STEP);
+                std::cout << m_config->get_t() << std::endl;
+                if (flag != CV_SUCCESS)
+                    throw std::runtime_error("failed to integrate with error " + std::to_string(flag));
+            }
         }
 
         static int f(realtype t, N_Vector y, N_Vector ydot, void *user_data) {

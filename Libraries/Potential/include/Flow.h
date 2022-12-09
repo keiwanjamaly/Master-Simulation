@@ -21,7 +21,7 @@ namespace phy {
              int N) : m_mu{mu}, m_T{T}, m_Lambda{Lambda}, m_N_flavor{N_flavor}, Config_Base(t, t_final,
                                                                                             x_min,
                                                                                             x_max,
-                                                                                            N, 1.0e-3, 1.0e-3) {}
+                                                                                            N, 1.0e-7, 1.0e-7) {}
 
         sunrealtype initial_condition(sunrealtype sigma) final {
             double value = sqrt(1.0 + 1 / pow(m_Lambda, 2));
