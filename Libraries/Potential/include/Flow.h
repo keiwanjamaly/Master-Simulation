@@ -21,7 +21,7 @@ namespace phy {
              int N) : m_mu{mu}, m_T{T}, m_Lambda{Lambda}, m_N_flavor{N_flavor}, Config_Base(t, t_final,
                                                                                             x_min,
                                                                                             x_max,
-                                                                                            N, 1.0e-10, 1.0e-10) {}
+                                                                                            N, 1.0e-5, 1.0e-7) {}
 
         sunrealtype initial_condition(sunrealtype sigma) final {
             double value = sqrt(1.0 + 1 / pow(m_Lambda, 2));
@@ -53,8 +53,8 @@ namespace phy {
                 double k = t2k(t);
                 double E = E_b(k, ux);
                 double b = 1. / m_T; // beta
-                if (std::isnan(E))
-                    throw std::runtime_error("There is a shock wave in the system!");
+//                if (std::isnan(E))
+//                    throw std::runtime_error("There is a shock wave in the system!");
 //                double return_value = -pow(k, 3) * (1 + 2 * n_b(E / m_T)) /
 //                                      (M_PI * m_N_flavor * 2 * E);
                 double left = -Q(t, ux) / (2 * E * E);
