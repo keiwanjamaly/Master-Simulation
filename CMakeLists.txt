@@ -10,20 +10,22 @@ set(TEST_SOURCE ${GRAPH_TEST_SOURCE} ${POTENTIAL_TEST_SOURCE})
 set(TEST_INCLUDES ${GRAPH_TEST_INCLUDE} ${POTENTIAL_TEST_INCLUDE})
 set(GLOBAL_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
+set(THREAD_POOL_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/thread-pool)
+
 set(Boost_USE_STATIC_LIBS ON)
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 find_package(SUNDIALS REQUIRED)
 
-set(LIBRARIES Graph_lib Potential ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} SUNDIALS::cvode SUNDIALS::arkode)
+set(LIBRARIES Graph_lib Potential ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY} SUNDIALS::arkode)
 
 
 add_executable(Simulation main.cpp)
-target_include_directories(Simulation PUBLIC ${GLOBAL_INCLUDES})
+target_include_directories(Simulation PUBLIC ${GLOBAL_INCLUDES} ${THREAD_POOL_INCLUDES})
 target_link_libraries(Simulation ${LIBRARIES})
 
 
 add_executable(Test test.cpp ${TEST_SOURCE})
-target_include_directories(Test PUBLIC ${TEST_INCLUDES} ${GLOBAL_INCLUDES})
+target_include_directories(Test PUBLIC ${TEST_INCLUDES} ${GLOBAL_INCLUDES} ${THREAD_POOL_INCLUDES})
 target_link_libraries(Test ${LIBRARIES})
 target_link_libraries(Test simdjson)

@@ -1,0 +1,3 @@
+[submodule "Libraries/thread-pool"]
+	path = Libraries/thread-pool
+	url = git@github.com:bshoshany/thread-pool.git

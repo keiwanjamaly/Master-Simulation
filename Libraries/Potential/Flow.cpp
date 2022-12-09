@@ -5,8 +5,6 @@
 #include "Flow.h"
 #include <cmath>
 
-using namespace boost::numeric::odeint;
-
 namespace phy {
 
 //    Flow::Flow(double mu_, double T_, std::shared_ptr<Configuration> c_) :

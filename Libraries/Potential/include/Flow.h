@@ -10,7 +10,6 @@
 #include <cmath>
 #include <iostream>
 #include "Config.h"
-#include "Types_Potential.h"
 
 namespace phy {
 

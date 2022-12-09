@@ -5,7 +5,6 @@
 #ifndef SIMULATION_SYSTEM_H
 #define SIMULATION_SYSTEM_H
 
-#include "Types_Potential.h"
 #include "Config.h"
 
 #include <memory>
