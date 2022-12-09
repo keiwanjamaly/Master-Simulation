@@ -5,9 +5,7 @@
 #include <boost/test/unit_test.hpp>
 #include "Flow.h"
 #include "System.h"
-#include "Types_Potential.h"
 #include "Get_Test_Data.h"
-#include <string>
 #include <memory>
 
 

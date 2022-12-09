@@ -45,12 +45,15 @@ namespace phy {
             m_flag_SetUserData = ERKStepSetUserData(m_erk_mem, (void *) m_config.get());
 
             // setting the maximum number of steps to the largest value possible
+            m_flag_SetMaxNumSteps = ERKStepSetMaxNumSteps(m_erk_mem, LONG_MAX);
 
             // test all flags
-            if (m_set_flag_SStolerances != CV_SUCCESS)
+            if (m_set_flag_SStolerances != ARK_SUCCESS)
                 throw std::runtime_error("failed to set tolerances");
-            if (m_flag_SetUserData != CV_SUCCESS)
+            if (m_flag_SetUserData != ARK_SUCCESS)
                 throw std::runtime_error("failed to set user data");
+            if (m_flag_SetMaxNumSteps != ARK_SUCCESS)
+                throw std::runtime_error("failed to set maximum number of steps");
         }
 
         ~System() {
@@ -60,7 +63,7 @@ namespace phy {
 
         void solve() {
             auto flag = ERKStepEvolve(m_erk_mem, m_config->get_t_final(), m_u, m_config->get_t_pointer(),
-                                      ARK_ONE_STEP);
+                                      ARK_NORMAL);
             std::cout << m_config->get_t() << std::endl;
             if (flag != CV_SUCCESS)
                 throw std::runtime_error("failed to integrate with error " + std::to_string(flag));
@@ -115,6 +118,8 @@ namespace phy {
 
         int get_flag_SetUserData() { return m_flag_SetUserData; };
 
+        int get_flag_SetMaxSteps() { return m_flag_SetMaxNumSteps; };
+
         void *get_erk_mem() { return m_erk_mem; };
 
         N_Vector get_u() { return m_u; };
@@ -131,7 +136,8 @@ namespace phy {
 
         // some test flags
         int m_set_flag_SStolerances = -100,
-                m_flag_SetUserData = -100;
+                m_flag_SetUserData = -100,
+                m_flag_SetMaxNumSteps = -100;
 
     };
 

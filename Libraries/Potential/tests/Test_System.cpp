@@ -51,6 +51,8 @@ namespace phy {
         BOOST_TEST(heat_solver->get_set_flag_SStolerances() == ARK_SUCCESS);
         // setup of user data
         BOOST_TEST(heat_solver->get_flag_SetUserData() == ARK_SUCCESS);
+        // set max steps
+        BOOST_TEST(heat_solver->get_flag_SetMaxSteps() == ARK_SUCCESS);
 
     }
 

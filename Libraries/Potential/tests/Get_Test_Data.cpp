@@ -9,9 +9,11 @@ namespace phy {
 
     using namespace simdjson; // optional
 
-    void get_test_data(std::string filename, dbl_vec &sigma, std::vector<dbl_vec> &u_vector, dbl_vec &t_vector) {
+    void
+    get_test_data(const std::string &filename, std::vector<double> &sigma, std::vector<std::vector<double>> &u_vector,
+                  std::vector<double> &t_vector) {
         ondemand::parser parser;
-        dbl_vec u;
+        std::vector<double> u;
         double t;
 
         auto json = padded_string::load(filename);

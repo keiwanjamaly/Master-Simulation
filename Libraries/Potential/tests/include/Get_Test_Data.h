@@ -6,9 +6,11 @@
 #define SIMULATION_GET_TEST_DATA_H
 
 #include <string>
-#include "Types_Potential.h"
+#include <vector>
 
 namespace phy {
-    void get_test_data(std::string filename, dbl_vec &sigma, std::vector<dbl_vec> &u_vector, dbl_vec &t_vector);
+    void
+    get_test_data(const std::string &filename, std::vector<double> &sigma, std::vector<std::vector<double>> &u_vector,
+                  std::vector<double> &t_vector);
 } // phy
 #endif //SIMULATION_GET_TEST_DATA_H
