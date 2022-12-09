@@ -35,12 +35,8 @@ namespace phy {
                 double k = t2k(t);
                 double E = E_b(k, ux);
                 double b = 1 / m_T; // beta
-//                if (std::isnan(E))
-//                    throw std::runtime_error("There is a shock wave in the system!");
                 double return_value = -pow(k, 3) * coth(E * b / 2) /
                                       (M_PI * m_N_flavor * 2 * E);
-//                if (std::isnan(return_value))
-//                    throw std::runtime_error("non value here");
                 return return_value;
             }
         }
@@ -54,17 +50,10 @@ namespace phy {
                 double b = 1. / m_T; // beta
                 if (std::isnan(E))
                     throw std::runtime_error("There is a shock wave in the system!");
-//                double return_value = -pow(k, 3) * (1 + 2 * n_b(E / m_T)) /
-//                                      (M_PI * m_N_flavor * 2 * E);
                 double left = -Q(t, ux) / (2 * E * E);
-//                double one = pow(k, 3.0);
-//                double two = exp(b * E);
-//                double three = pow(n_b(E * b), 2.0);
                 double right =
                         -(pow(k, 3.0) * b * pow(csch(E * b / 2), 2.0)) / (8 * m_N_flavor * M_PI * pow(E, 3.0));
                 double return_value = left + right;
-//                if (std::isnan(return_value))
-//                    throw std::runtime_error("non value here");
                 return return_value;
             }
         }
@@ -73,14 +62,8 @@ namespace phy {
             double k = t2k(t);
             double E = E_f(k, sigma);
             double b = 1 / m_T; // beta
-//            double plus_term = b * E * (pow(sech(b * (E - mu) / 2), 2) + pow(sech(b * (E + mu) / 2), 2));
-//            double minus_term = 2 * (tanh(b * (E - mu) / 2) + tanh(b * (E + mu) / 2));
-//            double return_value = pow(k(t_val), 3) / (4 * M_PI * pow(E, 3)) * sigma * (plus_term - minus_term);
-//            return return_value;
             double return_value =
                     pow(k, 3) / (2 * M_PI * E) * (tanh(b * (E - m_mu) * 0.5) + tanh(b * (E + m_mu) * 0.5));
-//            if (std::isnan(return_value))
-//                throw std::runtime_error("non value here");
             return return_value;
         }
 
