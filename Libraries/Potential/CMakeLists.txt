@@ -1,7 +1,8 @@
 project(Potential)
 
-add_library(Potential STATIC System.cpp Flow.cpp)
-target_include_directories(Potential PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(POTENTIAL_INCLUDES
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        CACHE INTERNAL "")
 
 set(POTENTIAL_TEST_SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/Test_Config.cpp

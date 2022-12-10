@@ -6,6 +6,7 @@
 #define SIMULATION_LEAF_H
 
 #include "Types_Leaf.h"
+#include "BS_thread_pool.hpp"
 #include <vector>
 #include <array>
 #include <map>
@@ -16,7 +17,7 @@ namespace dp {
 
     using std::shared_ptr;
 
-    template<Graph_Data T, class Config>
+    template<Graph_Data T, Config_Data Config>
     class Leaf : public std::enable_shared_from_this<Leaf<T, Config>> {
     public:
         double box_size_x, box_size_y;
@@ -24,6 +25,7 @@ namespace dp {
         shared_ptr<Leaf<T, Config>> parent{nullptr};
         shared_ptr<T> data;
         shared_ptr<Config> config;
+        shared_ptr<BS::thread_pool> pool;
 
         bool block = false;
 
@@ -48,7 +50,10 @@ namespace dp {
                   box_size_y{initial_box_size_y_},
                   split_condition{split_condition_},
                   config{config_} {
-            data = std::make_shared<T>(x, y, config);
+
+            pool = std::make_shared<BS::thread_pool>();
+            data = std::make_shared<T>(config->copyAndSetXY(x, y));
+            compute();
         }
 
         explicit Leaf(DiagonalDirection dir, shared_ptr<Leaf<T, Config>> parent_, shared_ptr<Config> config_) : parent{
@@ -76,10 +81,13 @@ namespace dp {
                     y = parent->y - position_offset_y;
                     break;
             }
-            data = std::make_shared<T>(x, y, config);
 
+            data = std::make_shared<T>(config->copyAndSetXY(x, y));
+            pool = parent->pool;
             split_condition = parent->split_condition;
+            compute();
         }
+
 
         static shared_ptr<Leaf<T, Config>> generate_root(double x_, double y_,
                                                          double initial_box_size_x_,
@@ -147,6 +155,14 @@ namespace dp {
             if (!block)
                 v.push_back(this->shared_from_this());
             return v;
+        }
+
+        shared_ptr<Leaf<T, Config>> getRoot() {
+            if (this->isRoot()) {
+                return this->shared_from_this();
+            } else {
+                return parent->getRoot();
+            }
         }
 
         bool isRoot() {
@@ -275,6 +291,14 @@ namespace dp {
                 this->children[sw]->balance_tree(force);
                 this->children[se]->balance_tree(force);
             }
+        }
+
+    private:
+        void compute() {
+            std::future<void> is_computed = pool->submit([this]() { data->compute(); });
+            is_computed.wait();
+            computed = true;
+            this->getRoot()->balance_tree();
         }
     };
 

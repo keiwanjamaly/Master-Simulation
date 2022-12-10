@@ -27,8 +27,9 @@ namespace phy {
 
         Config_Base() = delete;
 
-        Config_Base(sunrealtype t, sunrealtype t_final, sunrealtype x_min, sunrealtype x_max, int N,
-                    sunrealtype abs_tol = RCONST(1e-5), sunrealtype rel_tol = RCONST(1e-10)) : m_t{t},
+        Config_Base(sunrealtype t_start, sunrealtype t_final, sunrealtype x_min, sunrealtype x_max, int N,
+                    sunrealtype abs_tol = RCONST(1e-5), sunrealtype rel_tol = RCONST(1e-10)) : m_t_start{t_start},
+                                                                                               m_t{t_start},
                                                                                                m_t_final{t_final},
                                                                                                m_x_min{x_min},
                                                                                                m_x_max{x_max}, m_N{N},
@@ -55,6 +56,8 @@ namespace phy {
         sunrealtype get_rel_tol() const { return m_rel_tol; };
 
         sunrealtype get_t() const { return m_t; };
+
+        sunrealtype get_t_start() const { return m_t_start; };
 
         sunrealtype *get_t_pointer() { return &m_t; };
 
@@ -93,7 +96,7 @@ namespace phy {
             m_dx = (m_x_max - m_x_min) / (m_N - 1);
         }
 
-        sunrealtype m_t, m_t_final;
+        sunrealtype m_t_start, m_t, m_t_final;
         sunrealtype m_abs_tol, m_rel_tol;
         sunrealtype m_x_min, m_x_max;
         int m_N;

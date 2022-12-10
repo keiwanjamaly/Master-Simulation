@@ -140,20 +140,20 @@ namespace dp {
 
     BOOST_FIXTURE_TEST_CASE(testGetAllLeafsWithBlocking, LeafTestFixtureWithBlocking) {
         std::vector<std::shared_ptr<Leaf<Data, Empty_Config>>> list_of_leafs = root->get_all_leafs();
-        std::set < shared_ptr<CurrLeaf> > all_leafs_set(list_of_leafs.begin(), list_of_leafs.end());
+        std::set<shared_ptr<CurrLeaf> > all_leafs_set(list_of_leafs.begin(), list_of_leafs.end());
         // reference set
-        std::set < shared_ptr<CurrLeaf> >
-        reference_set({
-                              root,
-                              root->children[nw],
-                              root->children[ne],
-                              root->children[sw],
-                              root->children[se],
-                              root->children[nw]->children[se],
-                              root->children[ne]->children[sw],
-                              root->children[sw]->children[ne],
-                              root->children[se]->children[nw]
-                      });
+        std::set<shared_ptr<CurrLeaf> >
+                reference_set({
+                                      root,
+                                      root->children[nw],
+                                      root->children[ne],
+                                      root->children[sw],
+                                      root->children[se],
+                                      root->children[nw]->children[se],
+                                      root->children[ne]->children[sw],
+                                      root->children[sw]->children[ne],
+                                      root->children[se]->children[nw]
+                              });
 
         // no doubled elements
         BOOST_CHECK_EQUAL(all_leafs_set.size(), list_of_leafs.size());
@@ -224,7 +224,7 @@ namespace dp {
         }
 
         for (const auto &i: root->get_all_leafs()) {
-            output << i->data->x << "," << i->data->y << "," << i->data->value[0] << "\n";
+            output << i->data->configuration->x << "," << i->data->configuration->y << "," << i->data->value[0] << "\n";
         }
 
         BOOST_TEST(output.is_equal(content));

@@ -23,11 +23,12 @@ namespace dp {
         // testing values outside the boundary should result in a null-pointer
 
     public:
-        NeighbourLeafTestFixture() {
+        NeighbourLeafTestFixture(int mode_ = 0) : mode{mode_} {
             x = 0.0;
             y = 0.0;
             box_size = 1.0;
-            config = make_shared<Empty_Config>(Empty_Config());
+            config = make_shared<Empty_Config>(x, y);
+            config->mode = mode;
             test_leaf = make_shared<CurrLeaf>(x, y, box_size, box_size, split_decision, config);
 
             test_leaf->attach_leaves();
@@ -63,6 +64,7 @@ namespace dp {
             leaf_nw_se->attach_leaves();
         }
 
+        int mode;
         shared_ptr<CurrLeaf> test_leaf;
         shared_ptr<Empty_Config> config;
         shared_ptr<CurrLeaf> test_child;
@@ -71,14 +73,20 @@ namespace dp {
         shared_ptr<CurrLeaf> leaf_nw, leaf_ne, leaf_sw, leaf_se;
     };
 
+    class H_NeighbourLeafTestFixture : public NeighbourLeafTestFixture {
+    public:
+        H_NeighbourLeafTestFixture() : NeighbourLeafTestFixture(1) {
+
+        }
+    };
 
     // test get_all_leafs
     BOOST_FIXTURE_TEST_CASE(getAllLeafes, NeighbourLeafTestFixture) {
         std::vector<shared_ptr<CurrLeaf>> all_leafs = test_leaf->get_all_leafs();
-        std::set < shared_ptr<CurrLeaf> > all_leafs_set(all_leafs.begin(), all_leafs.end());
+        std::set<shared_ptr<CurrLeaf> > all_leafs_set(all_leafs.begin(), all_leafs.end());
         // reference set
-        std::set < shared_ptr<CurrLeaf> >
-        reference_set(
+        std::set<shared_ptr<CurrLeaf> >
+                reference_set(
                 {test_leaf, leaf_nw_nw, leaf_nw_ne, leaf_nw_sw, leaf_nw_se,
                  leaf_ne_nw,
                  leaf_ne_ne, leaf_ne_sw, leaf_ne_se, leaf_sw_nw, leaf_sw_ne, leaf_sw_sw,
@@ -419,8 +427,7 @@ namespace dp {
         BOOST_CHECK_EQUAL(leaf_nw_se->children[sw]->get_diagonal_neighbour(sw), nullptr);
     }
 
-    BOOST_FIXTURE_TEST_CASE(TestNorthComparison, NeighbourLeafTestFixture) {
-        config->mode = 1;
+    BOOST_FIXTURE_TEST_CASE(TestNorthComparison, H_NeighbourLeafTestFixture) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
         BOOST_TEST(test_child->comparison(north) == false);
@@ -484,8 +491,7 @@ namespace dp {
         BOOST_TEST(leaf_se->comparison(east) == false);
     }
 
-    BOOST_FIXTURE_TEST_CASE(TestSouthComparison, NeighbourLeafTestFixture) {
-        config->mode = 1;
+    BOOST_FIXTURE_TEST_CASE(TestSouthComparison, H_NeighbourLeafTestFixture) {
 // testing nw_nw comparison function
         test_child = leaf_nw_nw;
         BOOST_TEST(test_child->comparison(south) == false);

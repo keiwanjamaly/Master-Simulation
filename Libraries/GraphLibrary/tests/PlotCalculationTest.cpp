@@ -37,7 +37,7 @@ namespace dp {
             i->data->compute();
         }
         for (const auto &i: root->get_all_leafs()) {
-            output << i->data->x << "," << i->data->y << "," << i->data->value[0] << "\n";
+            output << i->data->configuration->x << "," << i->data->configuration->y << "," << i->data->value[0] << "\n";
         }
         BOOST_TEST(output.is_equal(content));
     }

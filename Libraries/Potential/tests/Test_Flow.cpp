@@ -37,6 +37,8 @@ namespace phy {
         BOOST_CHECK_EQUAL(config->get_t(), 0.0);
         BOOST_CHECK_EQUAL(config->get_rel_tol(), 1.0e-9);
         BOOST_CHECK_EQUAL(config->get_abs_tol(), 1.0e-9);
+        BOOST_CHECK_EQUAL(config->get_Lambda(), 1e10);
+        BOOST_CHECK_EQUAL(config->get_N_flavor(), 2.0);
     }
 
     BOOST_FIXTURE_TEST_CASE(TestLeftBoundayCondition, TestFlowFixture) {
@@ -56,12 +58,6 @@ namespace phy {
         BOOST_TEST(Flow::n_b(15.324892) == 2.210467147176071e-7, tt::tolerance(1e-15));
     }
 
-//    BOOST_AUTO_TEST_CASE(TestFermionDencity) {
-//        namespace tt = boost::test_tools;
-//        BOOST_TEST(Flow::n_f(0) == 1.0 / 2.0, tt::tolerance(1e-15));
-//        BOOST_TEST(Flow::n_f(15.324892) == 2.210466169943501e-7, tt::tolerance(1e-15));
-//    }
-//
     BOOST_AUTO_TEST_CASE(TestFermionEnergy) {
         BOOST_TEST(Flow::E_f(3, 0) == 3);
         BOOST_TEST(Flow::E_f(3, 4) == 5.0);
@@ -79,6 +75,20 @@ namespace phy {
         BOOST_TEST(config->t2k(1.1) == 3.328710836980795e9, tt::tolerance(1e-15));
         BOOST_TEST(config->t2k(12.12) == 54494.27503696815, tt::tolerance(1e-15));
         BOOST_TEST(config->t2k(123.123) == 3.375674045869994e-44, tt::tolerance(1e-15));
+    }
+
+    BOOST_FIXTURE_TEST_CASE(TestFlowCopy, TestFlowFixture) {
+        std::shared_ptr<Flow> newFlow = config->copyAndSetXY(0.3, 0.5);
+        BOOST_TEST(newFlow.get() != config.get());
+        BOOST_TEST(newFlow->get_T() == 0.5);
+        BOOST_TEST(newFlow->get_mu() == 0.3);
+        BOOST_TEST(newFlow->get_Lambda() == Lambda);
+        BOOST_TEST(newFlow->get_N_flavor() == N_flavor);
+        BOOST_TEST(newFlow->get_N() == N_grid);
+        BOOST_TEST(newFlow->get_t_final() == t_max);
+        BOOST_TEST(newFlow->get_t_start() == t_start);
+        BOOST_TEST(newFlow->get_x_min() == sigma_min);
+        BOOST_TEST(newFlow->get_x_max() == sigma_max);
     }
 
 

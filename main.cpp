@@ -2,9 +2,8 @@
 #include <vector>
 
 
-#include "Leaf.h"
-//#include "Flow.h"
-#include "BS_thread_pool.hpp"
+#include "PhaseDiagram.h"
+#include "Flow.h"
 
 bool split_condition(std::vector<double> x_1, std::vector<double> x_2) {
     return true;
@@ -15,11 +14,8 @@ void sleep() {
 }
 
 int main() {
-    BS::thread_pool pool;
-    std::future<void> my_future = pool.submit(sleep);
-    std::cout << "Waiting... ";
-    my_future.wait();
-    std::cout << "Done.";
+    auto comp = std::make_shared<PhaseDiagram<phy::Flow>>(0.0, 0.0, 1.1, 0.7);
+    comp->compute();
 //    double mu = 0.4;
 //    double T = 0.4;
 //    double initial_box_size = 0.8;

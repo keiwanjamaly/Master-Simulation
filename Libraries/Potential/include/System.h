@@ -24,7 +24,7 @@ namespace phy {
 
     class System {
     public:
-        System() = delete;
+        System() = default;
 
         explicit System(const shared_ptr<Config_Base> &config) : m_config{config} {
             // declare and fill u with initial conditions
@@ -35,7 +35,7 @@ namespace phy {
                 m_u_data[i] = m_config->initial_condition(x_points[i]);
 
             // Create ERKStep memory structure and set function parameters
-            m_erk_mem = ERKStepCreate(f, m_config->get_t(), m_u, m_sunctx);
+            m_erk_mem = ERKStepCreate(f, m_config->get_t_start(), m_u, m_sunctx);
 
             // Set integration tolerances
             m_set_flag_SStolerances = ERKStepSStolerances(m_erk_mem, m_config->get_rel_tol(),
@@ -126,7 +126,12 @@ namespace phy {
 
         realtype *get_u_pointer() { return N_VGetArrayPointer(m_u); };
 
+        std::vector<double> &splitDecisionData() {
+            return v;
+        }
+
     private:
+        std::vector<double> v = {3.2, 12.4, 2.2};
         // CVODE objects
         sundials::Context m_sunctx;
         void *m_erk_mem;

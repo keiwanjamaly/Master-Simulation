@@ -7,10 +7,14 @@
 
 
 template<class T>
-concept Graph_Data = requires(T data, const double x, const double y) {
+concept Graph_Data = requires(T data) {
     data.splitDecisionData();
-    data.x;
-    data.y;
+    data.compute();
+};
+
+template<class T>
+concept Config_Data = requires(T config, const double x, const double y) {
+    config.copyAndSetXY(x, y);
 };
 
 enum DiagonalDirection {

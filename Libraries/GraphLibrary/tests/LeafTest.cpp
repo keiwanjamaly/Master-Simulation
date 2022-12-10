@@ -14,13 +14,16 @@ namespace dp {
             x = 0.5;
             y = 0.5;
             box_size = 2.0;
+            config = Empty_Config(x, y);
             test_leaf = make_shared<CurrLeaf>(x, y, box_size, box_size, split_decision,
                                               std::make_shared<Empty_Config>(
                                                       config));
+
+            std::cout << "bla" << std::endl;
         }
 
         shared_ptr<CurrLeaf> test_leaf;
-        Empty_Config config{};
+        Empty_Config config;
         double x{}, y{}, box_size{};
     };
 
@@ -42,10 +45,10 @@ namespace dp {
         double child_y = y + box_size / 4.0;
         Empty_Config config{};
         shared_ptr<CurrLeaf> parent_leaf = std::make_shared<CurrLeaf>(
-                CurrLeaf(x, y, box_size, box_size, split_decision,
-                         std::make_shared<Empty_Config>(config)));
-        shared_ptr<CurrLeaf> test_leaf = std::make_shared<CurrLeaf>(CurrLeaf(nw, parent_leaf,
-                                                                             std::make_shared<Empty_Config>(config)));
+                x, y, box_size, box_size, split_decision,
+                std::make_shared<Empty_Config>(config));
+        shared_ptr<CurrLeaf> test_leaf = std::make_shared<CurrLeaf>(nw, parent_leaf,
+                                                                    std::make_shared<Empty_Config>(config));
         BOOST_CHECK_EQUAL(parent_leaf, test_leaf->parent);
 
         BOOST_TEST(test_leaf->x == child_x, boost::test_tools::tolerance(0.0));
@@ -71,8 +74,8 @@ namespace dp {
         test_child = test_leaf->children[nw];
         BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
         BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
-        BOOST_CHECK_EQUAL(test_child->data->x, x_child_pos);
-        BOOST_CHECK_EQUAL(test_child->data->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->configuration->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->configuration->y, y_child_pos);
         BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing north-east coordinates
@@ -81,8 +84,8 @@ namespace dp {
         test_child = test_leaf->children[ne];
         BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
         BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
-        BOOST_CHECK_EQUAL(test_child->data->x, x_child_pos);
-        BOOST_CHECK_EQUAL(test_child->data->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->configuration->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->configuration->y, y_child_pos);
         BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing south-west coordinates
@@ -91,8 +94,8 @@ namespace dp {
         test_child = test_leaf->children[sw];
         BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
         BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
-        BOOST_CHECK_EQUAL(test_child->data->x, x_child_pos);
-        BOOST_CHECK_EQUAL(test_child->data->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->configuration->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->configuration->y, y_child_pos);
         BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
 
         // testing south-east coordinates
@@ -101,8 +104,8 @@ namespace dp {
         test_child = test_leaf->children[se];
         BOOST_CHECK_EQUAL(test_child->x, x_child_pos);
         BOOST_CHECK_EQUAL(test_child->y, y_child_pos);
-        BOOST_CHECK_EQUAL(test_child->data->x, x_child_pos);
-        BOOST_CHECK_EQUAL(test_child->data->y, y_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->configuration->x, x_child_pos);
+        BOOST_CHECK_EQUAL(test_child->data->configuration->y, y_child_pos);
         BOOST_CHECK_EQUAL(test_child->parent, test_leaf);
     }
 

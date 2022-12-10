@@ -15,6 +15,9 @@ namespace phy {
 
     class Flow : public Config_Base {
     public:
+
+        Flow(const Flow &flowObj) = default;
+
         Flow(sunrealtype mu, sunrealtype T, sunrealtype Lambda, sunrealtype N_flavor, sunrealtype t,
              sunrealtype t_final, sunrealtype x_min, sunrealtype x_max,
              int N) : m_mu{mu}, m_T{T}, m_Lambda{Lambda}, m_N_flavor{N_flavor}, Config_Base(t, t_final,
@@ -111,9 +114,21 @@ namespace phy {
 
         sunrealtype get_N_flavor() const { return m_N_flavor; };
 
+        void setMuT(sunrealtype mu, sunrealtype T) {
+            m_mu = mu;
+            m_T = T;
+        }
+
+        std::shared_ptr<Flow> copyAndSetXY(sunrealtype mu, sunrealtype T) {
+            std::shared_ptr<Flow> newFlow = std::make_shared<Flow>(*this);
+            newFlow->setMuT(mu, T);
+            return newFlow;
+        }
+
         void monitor(sunrealtype t) const final {
             std::cout << "t = " << t << "\t k = " << t2k(t) << "\n";
         }
+
 
     private:
         sunrealtype m_T, m_mu;
