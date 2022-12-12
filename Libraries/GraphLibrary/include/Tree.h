@@ -8,26 +8,27 @@
 #include "GraphLibrary_Types.h"
 
 namespace gl {
-    class Tree : public std::enable_shared_from_this<Tree> {
+    template<class T>
+    class Tree : public std::enable_shared_from_this<T> {
     public:
         Tree() = default;
 
-        explicit Tree(shared_ptr<Tree> parent) : m_parent{parent} {}
+        explicit Tree(shared_ptr<T> parent) : m_parent{parent} {}
 
         void attachLeaves() {
             if (hasChildren()) {
                 throw std::runtime_error("tried to attach children, but there are already children attached!");
             } else
-                m_children[nw] = make_shared<Tree>(this->shared_from_this());
-            m_children[ne] = make_shared<Tree>(this->shared_from_this());
-            m_children[sw] = make_shared<Tree>(this->shared_from_this());
-            m_children[se] = make_shared<Tree>(this->shared_from_this());
+                m_children[nw] = make_shared<T>(this->shared_from_this());
+            m_children[ne] = make_shared<T>(this->shared_from_this());
+            m_children[sw] = make_shared<T>(this->shared_from_this());
+            m_children[se] = make_shared<T>(this->shared_from_this());
         }
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "misc-no-recursion"
 
-        void getAllLeafs(std::vector<shared_ptr<Tree>> &vec) {
+        void getAllLeafs(std::vector<shared_ptr<T>> &vec) {
             vec.push_back(this->shared_from_this());
             if (hasChildren()) {
                 this->getChild(nw)->getAllLeafs(vec);
@@ -46,7 +47,7 @@ namespace gl {
                 return false;
         }
 
-        shared_ptr<Tree> getChildOfParent(DiagonalDirection dir) {
+        shared_ptr<T> getChildOfParent(DiagonalDirection dir) {
             if (isRoot())
                 throw std::runtime_error("there is no parent, this is root");
             else
@@ -54,7 +55,7 @@ namespace gl {
         }
 
 
-        virtual shared_ptr<Tree> getChild(DiagonalDirection dir) {
+        virtual shared_ptr<T> getChild(DiagonalDirection dir) {
             if (hasChildren())
                 return m_children[dir];
             else
@@ -77,12 +78,12 @@ namespace gl {
             return !m_children.empty();
         }
 
-        shared_ptr<Tree> getParent() const { return m_parent; };
+        shared_ptr<T> getParent() const { return m_parent; };
 
     private:
-        shared_ptr<Tree> m_parent{nullptr};
+        shared_ptr<T> m_parent{nullptr};
         // make sure, that the children are only accessed with getChild, even within the class!
-        map<DiagonalDirection, shared_ptr<Tree>> m_children;
+        map<DiagonalDirection, shared_ptr<T>> m_children;
     };
 }
 #endif //SIMULATION_TREE_H

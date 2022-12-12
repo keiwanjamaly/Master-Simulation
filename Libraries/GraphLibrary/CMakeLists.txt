@@ -6,6 +6,7 @@ set(GRAPH_INCLUDES
 
 set(GRAPH_TEST_SOURCE
         ${CMAKE_CURRENT_SOURCE_DIR}/tests/Tree.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/TreeWithNeighbours.cpp
         #        ${CMAKE_CURRENT_SOURCE_DIR}/tests/LeafTest.cpp
         #        ${CMAKE_CURRENT_SOURCE_DIR}/tests/LeafIntegrationTest.cpp
         #        ${CMAKE_CURRENT_SOURCE_DIR}/tests/LeafTestOnData.cpp

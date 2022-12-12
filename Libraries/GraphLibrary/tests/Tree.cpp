@@ -3,16 +3,21 @@
 #include "Tree.h"
 #include "GraphLibrary_Types.h"
 
+
 namespace gl {
+    class TestTree : public Tree<TestTree> {
+        using Tree::Tree;
+    };
+
     BOOST_AUTO_TEST_CASE(testConstructorOfTree) {
-        shared_ptr<gl::Tree> tree_parent = make_shared<Tree>();
-        shared_ptr<gl::Tree> tree_child = make_shared<Tree>(tree_parent);
-        BOOST_TEST(tree_parent->getParent(), nullptr);
-        BOOST_TEST(tree_child->getParent(), tree_parent);
+        shared_ptr<TestTree> tree_parent = make_shared<TestTree>();
+        shared_ptr<TestTree> tree_child = make_shared<TestTree>(tree_parent);
+        BOOST_TEST(tree_parent->getParent() == nullptr);
+        BOOST_TEST(tree_child->getParent() == tree_parent);
     }
 
     BOOST_AUTO_TEST_CASE(testAttatchChildrenAndGetChild) {
-        shared_ptr<gl::Tree> tree = make_shared<Tree>();
+        shared_ptr<TestTree> tree = make_shared<TestTree>();
 
         // nullptr should be returned, if there are no children attached
         BOOST_TEST(tree->getChild(nw) == nullptr);
@@ -32,7 +37,7 @@ namespace gl {
     }
 
     BOOST_AUTO_TEST_CASE(testHasChildren) {
-        shared_ptr<gl::Tree> tree = make_shared<Tree>();
+        shared_ptr<TestTree> tree = make_shared<TestTree>();
         tree->attachLeaves();
 
         BOOST_TEST(tree->hasChildren() == true);
@@ -40,7 +45,7 @@ namespace gl {
     }
 
     BOOST_AUTO_TEST_CASE(testIsRoot) {
-        shared_ptr<gl::Tree> tree = make_shared<Tree>();
+        shared_ptr<TestTree> tree = make_shared<TestTree>();
 
         tree->attachLeaves();
 
@@ -52,7 +57,7 @@ namespace gl {
     }
 
     BOOST_AUTO_TEST_CASE(testGetChildOfParent) {
-        shared_ptr<gl::Tree> tree = make_shared<Tree>();
+        shared_ptr<TestTree> tree = make_shared<TestTree>();
 
         BOOST_CHECK_THROW(tree->getChildOfParent(nw), std::runtime_error);
 
@@ -65,12 +70,12 @@ namespace gl {
     }
 
     BOOST_AUTO_TEST_CASE(testGetAllLeafs) {
-        shared_ptr<gl::Tree> tree = make_shared<Tree>();
+        shared_ptr<TestTree> tree = make_shared<TestTree>();
         tree->attachLeaves();
 
-        vector<shared_ptr<gl::Tree>> allLeafs;
+        vector<shared_ptr<TestTree>> allLeafs;
         tree->getAllLeafs(allLeafs);
-        vector<shared_ptr<gl::Tree>> referenceVector = {tree,
+        vector<shared_ptr<TestTree>> referenceVector = {tree,
                                                         tree->getChild(nw),
                                                         tree->getChild(ne),
                                                         tree->getChild(sw),
@@ -80,7 +85,7 @@ namespace gl {
     }
 
     BOOST_AUTO_TEST_CASE(testGetDepth) {
-        shared_ptr<gl::Tree> tree = make_shared<Tree>();
+        shared_ptr<TestTree> tree = make_shared<TestTree>();
         tree->attachLeaves();
 
         BOOST_TEST(tree->getDepth() == 0);
