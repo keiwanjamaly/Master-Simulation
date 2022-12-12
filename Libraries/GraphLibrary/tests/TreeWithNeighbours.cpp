@@ -59,31 +59,31 @@ namespace gl {
     };
 
     BOOST_FIXTURE_TEST_CASE(testNorthNeighbourFunction, TreeWithNeighbourTestFixture) {
-        // testing nw_nw get_diagonal_neighbour function
+        // testing nw_nw getDiagonalNeighbour function
         test_child = leaf_nw_nw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(north), nullptr);
 
-        // testing ne_ne get_diagonal_neighbour function
+        // testing ne_ne getDiagonalNeighbour function
         test_child = leaf_ne_ne;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(north), nullptr);
 
-        // testing nw_se get_diagonal_neighbour function
+        // testing nw_se getDiagonalNeighbour function
         test_child = leaf_nw_se;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(north), leaf_nw_ne);
 
-        // testing se_nw get_diagonal_neighbour function
+        // testing se_nw getDiagonalNeighbour function
         test_child = leaf_se_nw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(north), leaf_ne_sw);
 
-        // testing sw_sw get_diagonal_neighbour function
+        // testing sw_sw getDiagonalNeighbour function
         test_child = leaf_sw_sw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(north), leaf_sw_nw);
 
-        // testing se_se get_diagonal_neighbour function
+        // testing se_se getDiagonalNeighbour function
         test_child = leaf_se_se;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(north), leaf_se_ne);
 
-        // test, that only it gives the get_diagonal_neighbour only on one level
+        // test, that only it gives the getDiagonalNeighbour only on one level
         BOOST_CHECK_EQUAL(leaf_nw->getNeighbour(north), nullptr);
         BOOST_CHECK_EQUAL(leaf_ne->getNeighbour(north), nullptr);
         BOOST_CHECK_EQUAL(leaf_sw->getNeighbour(north), leaf_nw);
@@ -94,31 +94,31 @@ namespace gl {
     }
 
     BOOST_FIXTURE_TEST_CASE(testEastNeighbourFunction, TreeWithNeighbourTestFixture) {
-// testing nw_nw get_diagonal_neighbour function
+// testing nw_nw getDiagonalNeighbour function
         test_child = leaf_nw_nw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(east), leaf_nw_ne);
 
-// testing ne_ne get_diagonal_neighbour function
+// testing ne_ne getDiagonalNeighbour function
         test_child = leaf_ne_ne;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(east), nullptr);
 
-// testing nw_se get_diagonal_neighbour function
+// testing nw_se getDiagonalNeighbour function
         test_child = leaf_nw_se;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(east), leaf_ne_sw);
 
-// testing se_nw get_diagonal_neighbour function
+// testing se_nw getDiagonalNeighbour function
         test_child = leaf_se_nw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(east), leaf_se_ne);
 
-// testing sw_sw get_diagonal_neighbour function
+// testing sw_sw getDiagonalNeighbour function
         test_child = leaf_sw_sw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(east), leaf_sw_se);
 
-// testing se_se get_diagonal_neighbour function
+// testing se_se getDiagonalNeighbour function
         test_child = leaf_se_se;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(east), nullptr);
 
-// test, that only it gives the get_diagonal_neighbour only on one level
+// test, that only it gives the getDiagonalNeighbour only on one level
         BOOST_CHECK_EQUAL(leaf_nw->getNeighbour(east), leaf_ne);
         BOOST_CHECK_EQUAL(leaf_ne->getNeighbour(east), nullptr);
         BOOST_CHECK_EQUAL(leaf_sw->getNeighbour(east), leaf_se);
@@ -129,31 +129,31 @@ namespace gl {
     }
 
     BOOST_FIXTURE_TEST_CASE(testSouthNeighbourFunction, TreeWithNeighbourTestFixture) {
-// testing nw_nw get_diagonal_neighbour function
+// testing nw_nw getDiagonalNeighbour function
         test_child = leaf_nw_nw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(south), leaf_nw_sw);
 
-// testing ne_ne get_diagonal_neighbour function
+// testing ne_ne getDiagonalNeighbour function
         test_child = leaf_ne_ne;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(south), leaf_ne_se);
 
-// testing nw_se get_diagonal_neighbour function
+// testing nw_se getDiagonalNeighbour function
         test_child = leaf_nw_se;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(south), leaf_sw_ne);
 
-// testing se_nw get_diagonal_neighbour function
+// testing se_nw getDiagonalNeighbour function
         test_child = leaf_se_nw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(south), leaf_se_sw);
 
-// testing sw_sw get_diagonal_neighbour function
+// testing sw_sw getDiagonalNeighbour function
         test_child = leaf_sw_sw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(south), nullptr);
 
-// testing se_se get_diagonal_neighbour function
+// testing se_se getDiagonalNeighbour function
         test_child = leaf_se_se;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(south), nullptr);
 
-// test, that only it gives the get_diagonal_neighbour only on one level
+// test, that only it gives the getDiagonalNeighbour only on one level
         BOOST_CHECK_EQUAL(leaf_nw->getNeighbour(south), leaf_sw);
         BOOST_CHECK_EQUAL(leaf_ne->getNeighbour(south), leaf_se);
         BOOST_CHECK_EQUAL(leaf_sw->getNeighbour(south), nullptr);
@@ -164,31 +164,31 @@ namespace gl {
     }
 
     BOOST_FIXTURE_TEST_CASE(testWestNeighbourFunction, TreeWithNeighbourTestFixture) {
-// testing nw_nw get_diagonal_neighbour function
+// testing nw_nw getDiagonalNeighbour function
         test_child = leaf_nw_nw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(west), nullptr);
 
-// testing ne_ne get_diagonal_neighbour function
+// testing ne_ne getDiagonalNeighbour function
         test_child = leaf_ne_ne;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(west), leaf_ne_nw);
 
-// testing nw_se get_diagonal_neighbour function
+// testing nw_se getDiagonalNeighbour function
         test_child = leaf_nw_se;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(west), leaf_nw_sw);
 
-// testing se_nw get_diagonal_neighbour function
+// testing se_nw getDiagonalNeighbour function
         test_child = leaf_se_nw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(west), leaf_sw_ne);
 
-// testing sw_sw get_diagonal_neighbour function
+// testing sw_sw getDiagonalNeighbour function
         test_child = leaf_sw_sw;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(west), nullptr);
 
-// testing se_se get_diagonal_neighbour function
+// testing se_se getDiagonalNeighbour function
         test_child = leaf_se_se;
         BOOST_CHECK_EQUAL(test_child->getNeighbour(west), leaf_se_sw);
 
-// test, that only it gives the get_diagonal_neighbour only on one level
+// test, that only it gives the getDiagonalNeighbour only on one level
         BOOST_CHECK_EQUAL(leaf_nw->getNeighbour(west), nullptr);
         BOOST_CHECK_EQUAL(leaf_ne->getNeighbour(west), leaf_nw);
         BOOST_CHECK_EQUAL(leaf_sw->getNeighbour(west), nullptr);
@@ -199,111 +199,147 @@ namespace gl {
         BOOST_CHECK_EQUAL(leaf_nw_se->getChild(sw)->getNeighbour(west), nullptr);
     }
 
-//    BOOST_FIXTURE_TEST_CASE(testNorthWestNeighbour, NeighbourLeafTestFixture) {
-//        // testing nw_nw get_diagonal_neighbour function
-//        test_child = leaf_nw_nw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), nullptr);
-//
-//// testing ne_ne get_diagonal_neighbour function
-//        test_child = leaf_ne_ne;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), nullptr);
-//
-//// testing nw_se get_diagonal_neighbour function
-//        test_child = leaf_nw_se;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), leaf_nw_nw);
-//
-//// testing se_nw get_diagonal_neighbour function
-//        test_child = leaf_se_nw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), leaf_nw_se);
-//
-//// testing sw_sw get_diagonal_neighbour function
-//        test_child = leaf_sw_sw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), nullptr);
-//
-//// testing se_se get_diagonal_neighbour function
-//        test_child = leaf_se_se;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(nw), leaf_se_nw);
-//
-//// test, that only it gives the get_diagonal_neighbour only on one level
-//        BOOST_CHECK_EQUAL(leaf_nw->get_diagonal_neighbour(nw), nullptr);
-//        BOOST_CHECK_EQUAL(leaf_ne->get_diagonal_neighbour(nw), nullptr);
-//        BOOST_CHECK_EQUAL(leaf_sw->get_diagonal_neighbour(nw), nullptr);
-//        BOOST_CHECK_EQUAL(leaf_se->get_diagonal_neighbour(nw), leaf_nw);
-//
-//
-//        // test, that it returns a nullptr, when there is no leaf on the same level
-//        BOOST_CHECK_EQUAL(leaf_nw_se->children[sw]->get_diagonal_neighbour(nw), nullptr);
-//    }
-//
-//    BOOST_FIXTURE_TEST_CASE(testNorthEastNeighbour, NeighbourLeafTestFixture) {
-//        // testing nw_nw get_diagonal_neighbour function
-//        test_child = leaf_nw_nw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), nullptr);
-//
-//// testing ne_ne get_diagonal_neighbour function
-//        test_child = leaf_ne_ne;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), nullptr);
-//
-//// testing nw_se get_diagonal_neighbour function
-//        test_child = leaf_nw_se;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), leaf_ne_nw);
-//
-//// testing se_nw get_diagonal_neighbour function
-//        test_child = leaf_se_nw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), leaf_ne_se);
-//
-//// testing sw_sw get_diagonal_neighbour function
-//        test_child = leaf_sw_sw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), leaf_sw_ne);
-//
-//// testing se_se get_diagonal_neighbour function
-//        test_child = leaf_se_se;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(ne), nullptr);
-//
-//// test, that only it gives the get_diagonal_neighbour only on one level
-//        BOOST_CHECK_EQUAL(leaf_nw->get_diagonal_neighbour(ne), nullptr);
-//        BOOST_CHECK_EQUAL(leaf_ne->get_diagonal_neighbour(ne), nullptr);
-//        BOOST_CHECK_EQUAL(leaf_sw->get_diagonal_neighbour(ne), leaf_ne);
-//        BOOST_CHECK_EQUAL(leaf_se->get_diagonal_neighbour(ne), nullptr);
-//
-//
-//        // test, that it returns a nullptr, when there is no leaf on the same level
-//        BOOST_CHECK_EQUAL(leaf_nw_se->children[ne]->get_diagonal_neighbour(ne), nullptr);
-//    }
-//
-//    BOOST_FIXTURE_TEST_CASE(testSouthEastNeighbour, NeighbourLeafTestFixture) {
-//        // testing nw_nw get_diagonal_neighbour function
-//        test_child = leaf_nw_nw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), leaf_nw_se);
-//
-//// testing ne_ne get_diagonal_neighbour function
-//        test_child = leaf_ne_ne;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), nullptr);
-//
-//// testing nw_se get_diagonal_neighbour function
-//        test_child = leaf_nw_se;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), leaf_se_nw);
-//
-//// testing se_nw get_diagonal_neighbour function
-//        test_child = leaf_se_nw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), leaf_se_se);
-//
-//// testing sw_sw get_diagonal_neighbour function
-//        test_child = leaf_sw_sw;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), nullptr);
-//
-//// testing se_se get_diagonal_neighbour function
-//        test_child = leaf_se_se;
-//        BOOST_CHECK_EQUAL(test_child->get_diagonal_neighbour(se), nullptr);
-//
-//// test, that only it gives the get_diagonal_neighbour only on one level
-//        BOOST_CHECK_EQUAL(leaf_nw->get_diagonal_neighbour(se), leaf_se);
-//        BOOST_CHECK_EQUAL(leaf_ne->get_diagonal_neighbour(se), nullptr);
-//        BOOST_CHECK_EQUAL(leaf_sw->get_diagonal_neighbour(se), nullptr);
-//        BOOST_CHECK_EQUAL(leaf_se->get_diagonal_neighbour(se), nullptr);
-//
-//
-//        // test, that it returns a nullptr, when there is no leaf on the same level
-//        BOOST_CHECK_EQUAL(leaf_nw_se->children[sw]->get_diagonal_neighbour(se), nullptr);
-//    }
+    BOOST_FIXTURE_TEST_CASE(testNorthWestNeighbour, TreeWithNeighbourTestFixture) {
+        // testing nw_nw getDiagonalNeighbour function
+        test_child = leaf_nw_nw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(nw), nullptr);
+
+// testing ne_ne getDiagonalNeighbour function
+        test_child = leaf_ne_ne;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(nw), nullptr);
+
+// testing nw_se getDiagonalNeighbour function
+        test_child = leaf_nw_se;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(nw), leaf_nw_nw);
+
+// testing se_nw getDiagonalNeighbour function
+        test_child = leaf_se_nw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(nw), leaf_nw_se);
+
+// testing sw_sw getDiagonalNeighbour function
+        test_child = leaf_sw_sw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(nw), nullptr);
+
+// testing se_se getDiagonalNeighbour function
+        test_child = leaf_se_se;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(nw), leaf_se_nw);
+
+// test, that only it gives the getDiagonalNeighbour only on one level
+        BOOST_CHECK_EQUAL(leaf_nw->getDiagonalNeighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_ne->getDiagonalNeighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_sw->getDiagonalNeighbour(nw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_se->getDiagonalNeighbour(nw), leaf_nw);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        BOOST_CHECK_EQUAL(leaf_nw_se->getChild(sw)->getDiagonalNeighbour(nw), nullptr);
+    }
+
+    BOOST_FIXTURE_TEST_CASE(testNorthEastNeighbour, TreeWithNeighbourTestFixture) {
+        // testing nw_nw getDiagonalNeighbour function
+        test_child = leaf_nw_nw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(ne), nullptr);
+
+// testing ne_ne getDiagonalNeighbour function
+        test_child = leaf_ne_ne;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(ne), nullptr);
+
+// testing nw_se getDiagonalNeighbour function
+        test_child = leaf_nw_se;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(ne), leaf_ne_nw);
+
+// testing se_nw getDiagonalNeighbour function
+        test_child = leaf_se_nw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(ne), leaf_ne_se);
+
+// testing sw_sw getDiagonalNeighbour function
+        test_child = leaf_sw_sw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(ne), leaf_sw_ne);
+
+// testing se_se getDiagonalNeighbour function
+        test_child = leaf_se_se;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(ne), nullptr);
+
+// test, that only it gives the getDiagonalNeighbour only on one level
+        BOOST_CHECK_EQUAL(leaf_nw->getDiagonalNeighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(leaf_ne->getDiagonalNeighbour(ne), nullptr);
+        BOOST_CHECK_EQUAL(leaf_sw->getDiagonalNeighbour(ne), leaf_ne);
+        BOOST_CHECK_EQUAL(leaf_se->getDiagonalNeighbour(ne), nullptr);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        BOOST_CHECK_EQUAL(leaf_nw_se->getChild(ne)->getDiagonalNeighbour(ne), nullptr);
+    }
+
+    BOOST_FIXTURE_TEST_CASE(testSouthEastNeighbour, TreeWithNeighbourTestFixture) {
+        // testing nw_nw getDiagonalNeighbour function
+        test_child = leaf_nw_nw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(se), leaf_nw_se);
+
+// testing ne_ne getDiagonalNeighbour function
+        test_child = leaf_ne_ne;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(se), nullptr);
+
+// testing nw_se getDiagonalNeighbour function
+        test_child = leaf_nw_se;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(se), leaf_se_nw);
+
+// testing se_nw getDiagonalNeighbour function
+        test_child = leaf_se_nw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(se), leaf_se_se);
+
+// testing sw_sw getDiagonalNeighbour function
+        test_child = leaf_sw_sw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(se), nullptr);
+
+// testing se_se getDiagonalNeighbour function
+        test_child = leaf_se_se;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(se), nullptr);
+
+// test, that only it gives the getDiagonalNeighbour only on one level
+        BOOST_CHECK_EQUAL(leaf_nw->getDiagonalNeighbour(se), leaf_se);
+        BOOST_CHECK_EQUAL(leaf_ne->getDiagonalNeighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(leaf_sw->getDiagonalNeighbour(se), nullptr);
+        BOOST_CHECK_EQUAL(leaf_se->getDiagonalNeighbour(se), nullptr);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        BOOST_CHECK_EQUAL(leaf_nw_se->getChild(sw)->getDiagonalNeighbour(se), nullptr);
+    }
+
+    BOOST_FIXTURE_TEST_CASE(testSouthWestNeighbour, TreeWithNeighbourTestFixture) {
+        // testing nw_nw getDiagonalNeighbour function
+        test_child = leaf_nw_nw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(sw), nullptr);
+
+// testing ne_ne getDiagonalNeighbour function
+        test_child = leaf_ne_ne;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(sw), leaf_ne_sw);
+
+// testing nw_se getDiagonalNeighbour function
+        test_child = leaf_nw_se;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(sw), leaf_sw_nw);
+
+// testing se_nw getDiagonalNeighbour function
+        test_child = leaf_se_nw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(sw), leaf_sw_se);
+
+// testing sw_sw getDiagonalNeighbour function
+        test_child = leaf_sw_sw;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(sw), nullptr);
+
+// testing se_se getDiagonalNeighbour function
+        test_child = leaf_se_se;
+        BOOST_CHECK_EQUAL(test_child->getDiagonalNeighbour(sw), nullptr);
+
+// test, that only it gives the getDiagonalNeighbour only on one level
+        BOOST_CHECK_EQUAL(leaf_nw->getDiagonalNeighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_ne->getDiagonalNeighbour(sw), leaf_sw);
+        BOOST_CHECK_EQUAL(leaf_sw->getDiagonalNeighbour(sw), nullptr);
+        BOOST_CHECK_EQUAL(leaf_se->getDiagonalNeighbour(sw), nullptr);
+
+
+        // test, that it returns a nullptr, when there is no leaf on the same level
+        BOOST_CHECK_EQUAL(leaf_nw_se->getChild(sw)->getDiagonalNeighbour(sw), nullptr);
+    }
 }

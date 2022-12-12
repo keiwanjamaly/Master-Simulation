@@ -13,6 +13,9 @@ namespace gl {
     public:
         using Tree::Tree;
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
+
         shared_ptr<TreeWithNeighbours> getNeighbour(Direction dir, bool initial = true) {
 
             shared_ptr<TreeWithNeighbours> result, mu;
@@ -45,14 +48,46 @@ namespace gl {
             }
 
             if (initial) {
-                if (result == nullptr)
-                    return result;
-                else if (this->getDepth() == result->getDepth())
+                if (result != nullptr and this->getDepth() == result->getDepth())
                     return result;
                 else
                     return nullptr;
             } else
                 return result;
+        }
+
+#pragma clang diagnostic pop
+
+        shared_ptr<TreeWithNeighbours> getDiagonalNeighbour(DiagonalDirection dir) {
+            shared_ptr<TreeWithNeighbours> intermediate_neighbour;
+            switch (dir) {
+                case nw:
+                    intermediate_neighbour = this->getNeighbour(west);
+                    break;
+                case ne:
+                    intermediate_neighbour = this->getNeighbour(east);
+                    break;
+                case se:
+                    intermediate_neighbour = this->getNeighbour(east);
+                    break;
+                case sw:
+                    intermediate_neighbour = this->getNeighbour(west);
+                    break;
+            }
+
+            if (intermediate_neighbour == nullptr)
+                return intermediate_neighbour;
+
+            switch (dir) {
+                case nw:
+                    return intermediate_neighbour->getNeighbour(north);
+                case ne:
+                    return intermediate_neighbour->getNeighbour(north);
+                case se:
+                    return intermediate_neighbour->getNeighbour(south);
+                case sw:
+                    return intermediate_neighbour->getNeighbour(south);
+            }
         }
 
     private:
