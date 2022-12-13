@@ -16,35 +16,33 @@ namespace gl {
         TreeWithCoordinates(double x, double y, double width, double height) : Tree(), m_x{x}, m_y{y}, m_width{width},
                                                                                m_height{height} {}
 
-        TreeWithCoordinates(DiagonalDirection dir, shared_ptr<TreeWithCoordinates> parent) : Tree(parent) {
+        TreeWithCoordinates(shared_ptr<TreeWithCoordinates> parent, DiagonalDirection dir) : Tree(parent, dir) {
 
-            m_x = getParent()->m_x;
-            m_y = getParent()->m_y;
-            m_width = getParent()->m_width;
-            m_height = getParent()->m_height;
+            m_x = getParent()->getX();
+            m_y = getParent()->getY();
+            m_width = getParent()->getWidth() / 2;
+            m_height = getParent()->getHeight() / 2;
 
             switch (dir) {
                 case nw:
-                    m_x -= getParent()->getWidth() / 2;
-                    m_y += getParent()->getHeight() / 2;
+                    m_x -= getWidth();
+                    m_y += getHeight();
                     break;
                 case ne:
-                    m_x += getParent()->getWidth() / 2;
-                    m_y += getParent()->getHeight() / 2;
+                    m_x += getWidth();
+                    m_y += getHeight();
                     break;
                 case sw:
-                    m_x -= getParent()->getWidth() / 2;
-                    m_y -= getParent()->getHeight() / 2;
+                    m_x -= getWidth();
+                    m_y -= getHeight();
                     break;
                 case se:
-                    m_x += getParent()->getWidth() / 2;
-                    m_y -= getParent()->getHeight() / 2;
+                    m_x += getWidth();
+                    m_y -= getHeight();
                     break;
             }
-
-            m_width /= 2;
-            m_height /= 2;
         }
+
 
         double getX() const { return m_x; }
 

@@ -13,16 +13,18 @@ namespace gl {
     public:
         Tree() = default;
 
-        explicit Tree(shared_ptr<T> parent) : m_parent{parent} {}
+        explicit Tree(shared_ptr<T> parent, DiagonalDirection dir) : m_parent{parent},
+                                                                     m_relativePositionToParent{dir} {}
 
         void attachLeaves() {
             if (hasChildren()) {
                 throw std::runtime_error("tried to attach children, but there are already children attached!");
-            } else
-                m_children[nw] = make_shared<T>(this->shared_from_this());
-            m_children[ne] = make_shared<T>(this->shared_from_this());
-            m_children[sw] = make_shared<T>(this->shared_from_this());
-            m_children[se] = make_shared<T>(this->shared_from_this());
+            } else {
+                m_children[nw] = make_shared<T>(this->shared_from_this(), nw);
+                m_children[ne] = make_shared<T>(this->shared_from_this(), ne);
+                m_children[sw] = make_shared<T>(this->shared_from_this(), sw);
+                m_children[se] = make_shared<T>(this->shared_from_this(), se);
+            }
         }
 
 #pragma clang diagnostic push
@@ -40,7 +42,7 @@ namespace gl {
 
 #pragma clang diagnostic pop
 
-        bool isRoot() {
+        bool isRoot() const {
             if (m_parent == nullptr)
                 return true;
             else
@@ -80,10 +82,18 @@ namespace gl {
 
         shared_ptr<T> getParent() const { return m_parent; };
 
+        DiagonalDirection getRelPos() const {
+            if (isRoot())
+                throw std::runtime_error("Can not estimate relative child position, since leaf is root!");
+            else
+                return m_relativePositionToParent;
+        };
+
     private:
         shared_ptr<T> m_parent{nullptr};
         // make sure, that the children are only accessed with getChild, even within the class!
         map<DiagonalDirection, shared_ptr<T>> m_children;
+        DiagonalDirection m_relativePositionToParent;
     };
 }
 #endif //SIMULATION_TREE_H
