@@ -32,12 +32,11 @@ namespace gl {
     }
 
     BOOST_FIXTURE_TEST_CASE(TestChildConstructor, TreeWithCoordinatesTestFixture) {
-        TestTreeWithCoordinates(test_leaf, nw);
         test_child = make_shared<TestTreeWithCoordinates>(test_leaf, nw);
-        BOOST_TEST(test_leaf->getX() == -0.5);
-        BOOST_TEST(test_leaf->getY() == 1.0);
-        BOOST_TEST(test_leaf->getWidth() == width / 2);
-        BOOST_TEST(test_leaf->getHeight() == height / 2);
+        BOOST_TEST(test_child->getX() == -0.5);
+        BOOST_TEST(test_child->getY() == 1.0);
+        BOOST_TEST(test_child->getWidth() == width / 2);
+        BOOST_TEST(test_child->getHeight() == height / 2);
     }
 
     BOOST_FIXTURE_TEST_CASE(TestAttatchLeafs, TreeWithCoordinatesTestFixture) {

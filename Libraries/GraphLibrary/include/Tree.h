@@ -1,7 +1,3 @@
-//
-// Created by Keiwan Jamaly on 12.12.22.
-//
-
 #ifndef SIMULATION_TREE_H
 #define SIMULATION_TREE_H
 
@@ -13,10 +9,7 @@ namespace gl {
     public:
         Tree() = default;
 
-        Tree(shared_ptr<T> parent, DiagonalDirection dir) : m_parent{parent},
-                                                            m_relativePositionToParent{dir} {
-            std::cout << "hello" << std::endl;
-        }
+        Tree(shared_ptr<T> parent, DiagonalDirection /* dir */) : m_parent{parent} {}
 
         void attachLeaves() {
             if (hasChildren()) {
@@ -84,19 +77,10 @@ namespace gl {
             return !m_children.empty();
         }
 
-
-        DiagonalDirection getRelPos() const {
-            if (isRoot())
-                throw std::runtime_error("Can not estimate relative child position, since leaf is root!");
-            else
-                return m_relativePositionToParent;
-        };
-
     private:
         shared_ptr<T> m_parent{nullptr};
         // make sure, that the children are only accessed with getChild, even within the class!
         map<DiagonalDirection, shared_ptr<T>> m_children;
-        DiagonalDirection m_relativePositionToParent;
     };
 }
 #endif //SIMULATION_TREE_H

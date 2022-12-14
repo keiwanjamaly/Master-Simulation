@@ -19,8 +19,6 @@ namespace gl {
                   m_height{height} {}
 
         TreeWithCoordinates(shared_ptr<T> parent, DiagonalDirection dir) : TreeWithNeighbours<T>(parent, dir) {
-            std::cout << parent.get() << std::endl;
-
             m_x = this->getParent()->getX();
             m_y = this->getParent()->getY();
             m_width = this->getParent()->getWidth() / 2;

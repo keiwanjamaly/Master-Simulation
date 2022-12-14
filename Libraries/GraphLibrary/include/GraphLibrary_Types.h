@@ -14,14 +14,9 @@ namespace gl {
     using std::shared_ptr, std::make_shared, std::vector, std::future, std::map;
 
     template<class T>
-    concept GraphConcept = requires(T data) {
+    concept DataConcept = requires(T data) {
         data.splitDecisionData();
         data.compute();
-    };
-
-    template<class T>
-    concept ConfigConcept = requires(T config, const double x, const double y) {
-        config.copyAndSetXY(x, y);
     };
 
     enum DiagonalDirection {

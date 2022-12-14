@@ -9,14 +9,14 @@ namespace gl {
         using Tree::Tree;
     };
 
-    BOOST_AUTO_TEST_CASE(testConstructorOfTree) {
-        shared_ptr<TestTree> tree_parent = make_shared<TestTree>();
-        shared_ptr<TestTree> tree_child = make_shared<TestTree>(tree_parent, nw);
-        BOOST_TEST(tree_parent->getParent() == nullptr);
-        BOOST_CHECK_THROW(tree_parent->getRelPos(), std::runtime_error);
-        BOOST_TEST(tree_child->getParent() == tree_parent);
-        BOOST_TEST(tree_child->getRelPos() == nw);
-    }
+//    BOOST_AUTO_TEST_CASE(testConstructorOfTree) {
+//        shared_ptr<TestTree> tree_parent = make_shared<TestTree>();
+//        shared_ptr<TestTree> tree_child = make_shared<TestTree>(tree_parent, nw);
+//        BOOST_TEST(tree_parent->getParent() == nullptr);
+//        BOOST_CHECK_THROW(tree_parent->getRelPos(), std::runtime_error);
+//        BOOST_TEST(tree_child->getParent() == tree_parent);
+//        BOOST_TEST(tree_child->getRelPos() == nw);
+//    }
 
     BOOST_AUTO_TEST_CASE(testAttatchChildrenAndGetChild) {
         shared_ptr<TestTree> tree = make_shared<TestTree>();
