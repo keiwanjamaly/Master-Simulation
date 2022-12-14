@@ -83,17 +83,17 @@ namespace phy {
             // handle diffusion
             y_x = (ydata[0] - udata->lbc(ydata[0], ydata[1])) / dx;
             low = udata->Q(t, y_x);
-            for (int i = 0; i < N; i++) {
-                if (i != N - 1)
-                    y_x = (ydata[i + 1] - ydata[i]) / dx;
-                else
-                    y_x = (udata->rbc(ydata[N - 2], ydata[N - 1]) - ydata[N - 1]) / dx;
+            for (int i = 0; i < N - 1; i++) {
+                y_x = (ydata[i + 1] - ydata[i]) / dx;
                 high = udata->Q(t, y_x);
                 fdata[i] = (high - low) / (dx);
                 low = high;
             }
+            y_x = (udata->rbc(ydata[N - 2], ydata[N - 1]) - ydata[N - 1]) / dx;
+            high = udata->Q(t, y_x);
+            fdata[N - 1] = (high - low) / (dx);
 
-//          handle source
+            // handle source
             switch (udata->S_Implementation()) {
                 case analytically:
                     for (int i = 0; i < N; i++)

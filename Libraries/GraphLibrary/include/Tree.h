@@ -13,8 +13,10 @@ namespace gl {
     public:
         Tree() = default;
 
-        explicit Tree(shared_ptr<T> parent, DiagonalDirection dir) : m_parent{parent},
-                                                                     m_relativePositionToParent{dir} {}
+        Tree(shared_ptr<T> parent, DiagonalDirection dir) : m_parent{parent},
+                                                            m_relativePositionToParent{dir} {
+            std::cout << "hello" << std::endl;
+        }
 
         void attachLeaves() {
             if (hasChildren()) {
@@ -64,6 +66,8 @@ namespace gl {
                 return nullptr;
         }
 
+        shared_ptr<T> getParent() const { return m_parent; };
+
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "misc-no-recursion"
 
@@ -80,7 +84,6 @@ namespace gl {
             return !m_children.empty();
         }
 
-        shared_ptr<T> getParent() const { return m_parent; };
 
         DiagonalDirection getRelPos() const {
             if (isRoot())

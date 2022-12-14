@@ -4,6 +4,11 @@
 #include "GraphLibrary_Types.h"
 
 namespace gl {
+
+    class TestTreeWithCoordinates : public TreeWithCoordinates<TestTreeWithCoordinates> {
+        using TreeWithCoordinates::TreeWithCoordinates;
+    };
+
     class TreeWithCoordinatesTestFixture {
     public:
         TreeWithCoordinatesTestFixture() {
@@ -11,10 +16,10 @@ namespace gl {
             y = 0.5;
             width = 2.0;
             height = 1.0;
-            test_leaf = make_shared<TreeWithCoordinates>(x, y, width, height);
+            test_leaf = make_shared<TestTreeWithCoordinates>(x, y, width, height);
         }
 
-        shared_ptr<TreeWithCoordinates> test_leaf, test_child;
+        shared_ptr<TestTreeWithCoordinates> test_leaf, test_child;
         double x, y;
         double width, height;
     };
@@ -24,6 +29,15 @@ namespace gl {
         BOOST_TEST(test_leaf->getY() == y);
         BOOST_TEST(test_leaf->getWidth() == width);
         BOOST_TEST(test_leaf->getHeight() == height);
+    }
+
+    BOOST_FIXTURE_TEST_CASE(TestChildConstructor, TreeWithCoordinatesTestFixture) {
+        TestTreeWithCoordinates(test_leaf, nw);
+        test_child = make_shared<TestTreeWithCoordinates>(test_leaf, nw);
+        BOOST_TEST(test_leaf->getX() == -0.5);
+        BOOST_TEST(test_leaf->getY() == 1.0);
+        BOOST_TEST(test_leaf->getWidth() == width / 2);
+        BOOST_TEST(test_leaf->getHeight() == height / 2);
     }
 
     BOOST_FIXTURE_TEST_CASE(TestAttatchLeafs, TreeWithCoordinatesTestFixture) {

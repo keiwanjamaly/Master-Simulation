@@ -14,13 +14,13 @@ namespace gl {
     using std::shared_ptr, std::make_shared, std::vector, std::future, std::map;
 
     template<class T>
-    concept Graph_Data = requires(T data) {
+    concept GraphConcept = requires(T data) {
         data.splitDecisionData();
         data.compute();
     };
 
     template<class T>
-    concept Config_Data = requires(T config, const double x, const double y) {
+    concept ConfigConcept = requires(T config, const double x, const double y) {
         config.copyAndSetXY(x, y);
     };
 

@@ -5,23 +5,26 @@
 #ifndef SIMULATION_TREEWITHCOMPARISON_H
 #define SIMULATION_TREEWITHCOMPARISON_H
 
-#include "Tree.h"
+#include "TreeWithNeighbours.h"
 
 namespace gl {
 
-    class TreeWithCoordinates : public Tree<TreeWithCoordinates> {
+    template<class T>
+    class TreeWithCoordinates : public TreeWithNeighbours<T> {
     public:
         TreeWithCoordinates() = delete;
 
-        TreeWithCoordinates(double x, double y, double width, double height) : Tree(), m_x{x}, m_y{y}, m_width{width},
-                                                                               m_height{height} {}
+        TreeWithCoordinates(double x, double y, double width, double height)
+                : TreeWithNeighbours<T>(), m_x{x}, m_y{y}, m_width{width},
+                  m_height{height} {}
 
-        TreeWithCoordinates(shared_ptr<TreeWithCoordinates> parent, DiagonalDirection dir) : Tree(parent, dir) {
+        TreeWithCoordinates(shared_ptr<T> parent, DiagonalDirection dir) : TreeWithNeighbours<T>(parent, dir) {
+            std::cout << parent.get() << std::endl;
 
-            m_x = getParent()->getX();
-            m_y = getParent()->getY();
-            m_width = getParent()->getWidth() / 2;
-            m_height = getParent()->getHeight() / 2;
+            m_x = this->getParent()->getX();
+            m_y = this->getParent()->getY();
+            m_width = this->getParent()->getWidth() / 2;
+            m_height = this->getParent()->getHeight() / 2;
 
             switch (dir) {
                 case nw:

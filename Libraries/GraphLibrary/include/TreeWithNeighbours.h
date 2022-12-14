@@ -9,16 +9,17 @@
 
 namespace gl {
 
-    class TreeWithNeighbours : public Tree<TreeWithNeighbours> {
+    template<class T>
+    class TreeWithNeighbours : public Tree<T> {
     public:
-        using Tree::Tree;
+        using Tree<T>::Tree;
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "misc-no-recursion"
 
-        shared_ptr<TreeWithNeighbours> getNeighbour(Direction dir, bool initial = true) {
+        shared_ptr<T> getNeighbour(Direction dir, bool initial = true) {
 
-            shared_ptr<TreeWithNeighbours> result, mu;
+            shared_ptr<T> result, mu;
             // if leaf is a root itself
             if (this->isRoot()) {
                 return nullptr;
@@ -58,8 +59,8 @@ namespace gl {
 
 #pragma clang diagnostic pop
 
-        shared_ptr<TreeWithNeighbours> getDiagonalNeighbour(DiagonalDirection dir) {
-            shared_ptr<TreeWithNeighbours> intermediate_neighbour;
+        shared_ptr<T> getDiagonalNeighbour(DiagonalDirection dir) {
+            shared_ptr<T> intermediate_neighbour;
             switch (dir) {
                 case nw:
                     intermediate_neighbour = this->getNeighbour(west);

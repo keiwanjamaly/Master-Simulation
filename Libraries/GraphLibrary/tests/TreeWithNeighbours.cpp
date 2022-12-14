@@ -5,6 +5,10 @@
 
 namespace gl {
 
+    class TestTreeWithNeighbours : public TreeWithNeighbours<TestTreeWithNeighbours> {
+        using TreeWithNeighbours::TreeWithNeighbours;
+    };
+
     class TreeWithNeighbourTestFixture {
         // I'm going to test the neighbours of the following points
         // test points      test labels
@@ -17,7 +21,7 @@ namespace gl {
 
     public:
         TreeWithNeighbourTestFixture() {
-            test_leaf = make_shared<TreeWithNeighbours>();
+            test_leaf = make_shared<TestTreeWithNeighbours>();
 
             test_leaf->attachLeaves();
             leaf_nw = test_leaf->getChild(nw);
@@ -52,10 +56,10 @@ namespace gl {
             leaf_nw_se->attachLeaves();
         }
 
-        shared_ptr<TreeWithNeighbours> test_leaf;
-        shared_ptr<TreeWithNeighbours> test_child;
-        shared_ptr<TreeWithNeighbours> leaf_nw_nw, leaf_nw_ne, leaf_nw_sw, leaf_nw_se, leaf_ne_nw, leaf_ne_ne, leaf_ne_sw, leaf_ne_se, leaf_sw_nw, leaf_sw_ne, leaf_sw_sw, leaf_sw_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se;
-        shared_ptr<TreeWithNeighbours> leaf_nw, leaf_ne, leaf_sw, leaf_se;
+        shared_ptr<TestTreeWithNeighbours> test_leaf;
+        shared_ptr<TestTreeWithNeighbours> test_child;
+        shared_ptr<TestTreeWithNeighbours> leaf_nw_nw, leaf_nw_ne, leaf_nw_sw, leaf_nw_se, leaf_ne_nw, leaf_ne_ne, leaf_ne_sw, leaf_ne_se, leaf_sw_nw, leaf_sw_ne, leaf_sw_sw, leaf_sw_se, leaf_se_nw, leaf_se_ne, leaf_se_sw, leaf_se_se;
+        shared_ptr<TestTreeWithNeighbours> leaf_nw, leaf_ne, leaf_sw, leaf_se;
     };
 
     BOOST_FIXTURE_TEST_CASE(testNorthNeighbourFunction, TreeWithNeighbourTestFixture) {
