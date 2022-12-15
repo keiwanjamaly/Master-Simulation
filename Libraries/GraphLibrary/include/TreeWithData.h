@@ -10,9 +10,8 @@ namespace gl {
     template<class T, DataConcept Data, class Config>
     class TreeWithData : public TreeWithCoordinates<T> {
     public:
-        TreeWithData(double x, double y, double width, double height, shared_ptr<Config> config, int maxDepth = 5) :
-                TreeWithCoordinates<T>(x, y, width, height),
-                m_maxDepth{maxDepth}, m_config{config} {
+        TreeWithData(double x, double y, double width, double height, shared_ptr<Config> config) :
+                TreeWithCoordinates<T>(x, y, width, height), m_config{config} {
             m_pool = make_shared<BS::thread_pool>();
             initializeDataAndCompute();
         }
@@ -20,7 +19,6 @@ namespace gl {
         TreeWithData(shared_ptr<T> parent, DiagonalDirection dir) :
                 TreeWithCoordinates<T>(parent, dir) {
             m_pool = this->getParent()->getPoolPointer();
-            m_maxDepth = this->getParent()->getMaxDepth();
             m_config = this->getParent()->getConfigPointer();
             initializeDataAndCompute();
         }
@@ -31,8 +29,6 @@ namespace gl {
         }
 
         shared_ptr<BS::thread_pool> getPoolPointer() { return m_pool; };
-
-        int getMaxDepth() { return m_maxDepth; };
 
         shared_ptr<Config> getConfigPointer() { return m_config; };
 
@@ -59,8 +55,6 @@ namespace gl {
 
         shared_ptr<BS::thread_pool> m_pool;
         std::future<void> m_computing;
-
-        int m_maxDepth;
     };
 }
 
