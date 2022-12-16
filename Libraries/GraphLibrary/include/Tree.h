@@ -13,12 +13,16 @@ namespace gl {
 
         void attachLeaves() {
             if (m_children.empty()) {
-                m_children[nw] = make_shared<T>(this->shared_from_this(), nw);
-                m_children[ne] = make_shared<T>(this->shared_from_this(), ne);
-                m_children[sw] = make_shared<T>(this->shared_from_this(), sw);
-                m_children[se] = make_shared<T>(this->shared_from_this(), se);
+                setChild(make_shared<T>(this->shared_from_this(), nw), nw);
+                setChild(make_shared<T>(this->shared_from_this(), ne), ne);
+                setChild(make_shared<T>(this->shared_from_this(), sw), sw);
+                setChild(make_shared<T>(this->shared_from_this(), se), se);
             } else
                 throw std::runtime_error("failed to attach leafs, leafs already attached.");
+        }
+
+        void setChild(shared_ptr<T> child, DiagonalDirection dir) {
+            m_children[dir] = child;
         }
 
 #pragma clang diagnostic push
@@ -27,10 +31,14 @@ namespace gl {
         void getAllLeafs(std::vector<shared_ptr<T>> &vec) {
             vec.push_back(this->shared_from_this());
             if (hasChildren()) {
-                this->getChild(nw)->getAllLeafs(vec);
-                this->getChild(ne)->getAllLeafs(vec);
-                this->getChild(sw)->getAllLeafs(vec);
-                this->getChild(se)->getAllLeafs(vec);
+                if (this->getChild(nw) != nullptr)
+                    this->getChild(nw)->getAllLeafs(vec);
+                if (this->getChild(ne) != nullptr)
+                    this->getChild(ne)->getAllLeafs(vec);
+                if (this->getChild(sw) != nullptr)
+                    this->getChild(sw)->getAllLeafs(vec);
+                if (this->getChild(se) != nullptr)
+                    this->getChild(se)->getAllLeafs(vec);
             }
         }
 
@@ -46,13 +54,18 @@ namespace gl {
         shared_ptr<T> getChildOfParent(DiagonalDirection dir) {
             if (isRoot())
                 throw std::runtime_error("there is no parent, this is root");
-            else
-                return m_parent->getChild(dir)->shared_from_this();
+            else {
+                if (m_parent->getChild(dir) != nullptr)
+                    return m_parent->getChild(dir)->shared_from_this();
+                else
+                    return nullptr;
+            }
         }
 
 
         virtual shared_ptr<T> getChild(DiagonalDirection dir) {
-            if (hasChildren())
+            // check if child exist
+            if (m_children.find(dir) != m_children.end())
                 return m_children[dir];
             else
                 return nullptr;

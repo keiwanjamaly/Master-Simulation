@@ -39,7 +39,6 @@ namespace gl {
         }
 
         BOOST_TEST(output.is_equal(content));
-//        BOOST_TEST(true);
     }
 
 } // dp
