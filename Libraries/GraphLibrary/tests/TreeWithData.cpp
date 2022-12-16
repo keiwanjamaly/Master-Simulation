@@ -37,7 +37,7 @@ namespace gl {
         test_child = make_shared<TestTreeWithData<dp::Test_Data, dp::Empty_Config>>(test_leaf, nw);
         BOOST_TEST(test_child->getConfig() == config);
         BOOST_TEST(test_child->getPoolPointer()->get_thread_count() == std::thread::hardware_concurrency());
-        BOOST_TEST(test_child->getDataPointer()->value[0] == 0.0);
+        BOOST_TEST(test_child->getDataPointer()->value[0] == 1.0);
     }
 
 }

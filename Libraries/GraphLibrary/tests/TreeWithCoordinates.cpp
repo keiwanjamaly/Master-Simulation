@@ -33,8 +33,8 @@ namespace gl {
 
     BOOST_FIXTURE_TEST_CASE(TestChildConstructor, TreeWithCoordinatesTestFixture) {
         test_child = make_shared<TestTreeWithCoordinates>(test_leaf, nw);
-        BOOST_TEST(test_child->getX() == -0.5);
-        BOOST_TEST(test_child->getY() == 1.0);
+        BOOST_TEST(test_child->getX() == 0.0);
+        BOOST_TEST(test_child->getY() == 0.75);
         BOOST_TEST(test_child->getWidth() == width / 2);
         BOOST_TEST(test_child->getHeight() == height / 2);
     }
@@ -47,29 +47,29 @@ namespace gl {
         test_leaf->attachLeaves();
 
         // testing north-west coordinates
-        x_child_pos = x - child_box_size_x;
-        y_child_pos = y + child_box_size_y;
+        x_child_pos = x - child_box_size_x / 2;
+        y_child_pos = y + child_box_size_y / 2;
         test_child = test_leaf->getChild(nw);
         BOOST_CHECK_EQUAL(test_child->getX(), x_child_pos);
         BOOST_CHECK_EQUAL(test_child->getY(), y_child_pos);
 
         // testing north-east coordinates
-        x_child_pos = x + child_box_size_x;
-        y_child_pos = y + child_box_size_y;
+        x_child_pos = x + child_box_size_x / 2;
+        y_child_pos = y + child_box_size_y / 2;
         test_child = test_leaf->getChild(ne);
         BOOST_CHECK_EQUAL(test_child->getX(), x_child_pos);
         BOOST_CHECK_EQUAL(test_child->getY(), y_child_pos);
 
         // testing south-west coordinates
-        x_child_pos = x - child_box_size_x;
-        y_child_pos = y - child_box_size_y;
+        x_child_pos = x - child_box_size_x / 2;
+        y_child_pos = y - child_box_size_y / 2;
         test_child = test_leaf->getChild(sw);
         BOOST_CHECK_EQUAL(test_child->getX(), x_child_pos);
         BOOST_CHECK_EQUAL(test_child->getY(), y_child_pos);
 
         // testing south-east coordinates
-        x_child_pos = x + child_box_size_x;
-        y_child_pos = y - child_box_size_y;
+        x_child_pos = x + child_box_size_x / 2;
+        y_child_pos = y - child_box_size_y / 2;
         test_child = test_leaf->getChild(se);
         BOOST_CHECK_EQUAL(test_child->getX(), x_child_pos);
         BOOST_CHECK_EQUAL(test_child->getY(), y_child_pos);
