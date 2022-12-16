@@ -2,7 +2,6 @@
 #define SIMULATION_TREEWITHDATA_H
 
 #include "TreeWithCoordinates.h"
-#include "TreeWithNeighbours.h"
 #include "GraphLibrary_Types.h"
 #include "BS_thread_pool.hpp"
 
@@ -32,12 +31,6 @@ namespace gl {
 
         shared_ptr<Config> getConfigPointer() { return m_config; };
 
-        shared_ptr<T> getChild(DiagonalDirection dir) final {
-            shared_ptr<T> child = Tree<T>::getChild(dir);
-            child->waitForComputationComplete();
-            return child;
-        }
-
         shared_ptr<Config> getConfig() { return m_config; };
 
         void waitForComputationComplete() {
@@ -54,7 +47,7 @@ namespace gl {
         shared_ptr<Config> m_config;
 
         shared_ptr<BS::thread_pool> m_pool;
-        std::future<void> m_computing;
+        std::shared_future<void> m_computing;
     };
 }
 

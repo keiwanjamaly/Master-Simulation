@@ -26,20 +26,20 @@ namespace gl {
 
             switch (dir) {
                 case nw:
-                    m_x -= getWidth();
-                    m_y += getHeight();
+                    m_x -= getWidth() / 2;
+                    m_y += getHeight() / 2;
                     break;
                 case ne:
-                    m_x += getWidth();
-                    m_y += getHeight();
+                    m_x += getWidth() / 2;
+                    m_y += getHeight() / 2;
                     break;
                 case sw:
-                    m_x -= getWidth();
-                    m_y -= getHeight();
+                    m_x -= getWidth() / 2;
+                    m_y -= getHeight() / 2;
                     break;
                 case se:
-                    m_x += getWidth();
-                    m_y -= getHeight();
+                    m_x += getWidth() / 2;
+                    m_y -= getHeight() / 2;
                     break;
             }
         }

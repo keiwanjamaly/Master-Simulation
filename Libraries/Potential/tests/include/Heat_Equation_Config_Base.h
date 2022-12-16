@@ -32,15 +32,7 @@ namespace phy {
 
         sunrealtype lbc(sunrealtype u0, sunrealtype u1) final { return 2 * u0 - u1; };
 
-        sunrealtype lbc_1_0(sunrealtype u0, sunrealtype u1) final { return 2; };
-
-        sunrealtype lbc_0_1(sunrealtype u0, sunrealtype u1) final { return -1; };
-
         sunrealtype rbc(sunrealtype uN_minus_2, sunrealtype uN_minus_1) final { return 2 * uN_minus_1 - uN_minus_2; };
-
-        sunrealtype rbc_1_0(sunrealtype uN_minus_2, sunrealtype uN_minus_1) final { return -1; };
-
-        sunrealtype rbc_0_1(sunrealtype uN_minus_2, sunrealtype uN_minus_1) final { return 2; };
 
         sunrealtype initial_condition(sunrealtype x) final { return analytic_solution(RCONST(0.0), x); };
 

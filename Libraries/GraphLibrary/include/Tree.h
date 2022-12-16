@@ -12,14 +12,13 @@ namespace gl {
         Tree(shared_ptr<T> parent, DiagonalDirection /* dir */) : m_parent{parent} {}
 
         void attachLeaves() {
-            if (hasChildren()) {
-                throw std::runtime_error("tried to attach children, but there are already children attached!");
-            } else {
+            if (m_children.empty()) {
                 m_children[nw] = make_shared<T>(this->shared_from_this(), nw);
                 m_children[ne] = make_shared<T>(this->shared_from_this(), ne);
                 m_children[sw] = make_shared<T>(this->shared_from_this(), sw);
                 m_children[se] = make_shared<T>(this->shared_from_this(), se);
-            }
+            } else
+                throw std::runtime_error("failed to attach leafs, leafs already attached.");
         }
 
 #pragma clang diagnostic push
@@ -73,8 +72,26 @@ namespace gl {
 
 #pragma clang diagnostic pop
 
-        bool hasChildren() {
+        virtual bool hasChildren() {
             return !m_children.empty();
+        }
+
+        [[maybe_unused]] std::string printPath(std::string stream = "") {
+            if (isRoot()) {
+                return "root" + stream;
+            } else {
+                if (this->shared_from_this() == getChildOfParent(nw)) {
+                    return getParent()->printPath(" -> " + ("nw" + stream));
+                } else if (this->shared_from_this() == getChildOfParent(ne)) {
+                    return getParent()->printPath(" -> " + ("ne" + stream));
+                } else if (this->shared_from_this() == getChildOfParent(sw)) {
+                    return getParent()->printPath(" -> " + ("sw" + stream));
+                } else if (this->shared_from_this() == getChildOfParent(se)) {
+                    return getParent()->printPath(" -> " + ("se" + stream));
+                } else {
+                    throw std::runtime_error("something went wrong");
+                }
+            }
         }
 
     private:

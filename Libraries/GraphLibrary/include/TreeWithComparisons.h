@@ -17,9 +17,13 @@ namespace gl {
             shared_ptr<T> neighbour = this->getNeighbour(dir);
             if (neighbour == nullptr)
                 return false;
-            else
+            else {
+                if (this->getDataPointer()->splitDecisionData().size() == 0 or
+                    neighbour->getDataPointer()->splitDecisionData().size() == 0)
+                    throw std::runtime_error("data was not calculated");
                 return this->getConfig()->splitDecision(this->getDataPointer()->splitDecisionData(),
                                                         neighbour->getDataPointer()->splitDecisionData());
+            }
         }
 
         bool comparison(DiagonalDirection dir) {

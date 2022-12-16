@@ -70,6 +70,8 @@ namespace dp {
 
     class TestDensity : public Test_Data {
     public:
+        using Test_Data::Test_Data;
+
         void compute() {
             value = {1 / (1 + exp(10 * (sqrt(x * x + y * y) - 3)))};
         }

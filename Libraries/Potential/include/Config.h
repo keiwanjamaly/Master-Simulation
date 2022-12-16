@@ -77,15 +77,7 @@ namespace phy {
 
         virtual sunrealtype lbc(sunrealtype, sunrealtype) = 0;
 
-        virtual sunrealtype lbc_1_0(sunrealtype, sunrealtype) = 0;
-
-        virtual sunrealtype lbc_0_1(sunrealtype, sunrealtype) = 0;
-
         virtual sunrealtype rbc(sunrealtype, sunrealtype) = 0;
-
-        virtual sunrealtype rbc_1_0(sunrealtype, sunrealtype) = 0;
-
-        virtual sunrealtype rbc_0_1(sunrealtype, sunrealtype) = 0;
 
         virtual sunrealtype initial_condition(sunrealtype) = 0;
 
